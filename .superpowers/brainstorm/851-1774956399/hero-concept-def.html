@@ -1,0 +1,291 @@
+<style>
+  * { box-sizing: border-box; }
+  .question-header { margin-bottom: 2rem; }
+  .question-header h2 { font-size: 1.4rem; margin-bottom: 0.4rem; }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .card {
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+    background: #0d0d0d;
+  }
+  .card:hover { border-color: #444; transform: translateY(-2px); }
+  .card.selected { border-color: #22c55e; box-shadow: 0 0 0 1px #22c55e22; }
+
+  .card-preview {
+    height: 240px;
+    background: #080808;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ==========================================
+     D — Split Screen: Left identity / Right data grid
+  ========================================== */
+  .preview-d {
+    display: flex;
+  }
+  .preview-d .left {
+    width: 55%;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid #1a1a1a;
+  }
+  .preview-d .right {
+    width: 45%;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    justify-content: center;
+  }
+  .preview-d .d-label { font-size: 0.5rem; font-family: monospace; color: #333; letter-spacing: 0.15em; }
+  .preview-d .d-name { font-size: 1.7rem; font-weight: 900; color: #fff; letter-spacing: -0.04em; text-transform: uppercase; line-height: 0.95; }
+  .preview-d .d-name span { color: #22c55e; }
+  .preview-d .d-cta {
+    font-size: 0.6rem;
+    font-family: monospace;
+    color: #22c55e;
+    border: 1px solid #22c55e44;
+    padding: 0.25rem 0.6rem;
+    display: inline-block;
+    border-radius: 3px;
+  }
+  .preview-d .data-row {
+    font-size: 0.52rem;
+    font-family: monospace;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid #111;
+    color: #333;
+  }
+  .preview-d .data-row .val { color: #22c55e99; }
+  .preview-d .data-row .val.white { color: #555; }
+
+  /* ==========================================
+     E — Mission Control / Dashboard
+  ========================================== */
+  .preview-e {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-family: monospace;
+  }
+  .preview-e .e-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #1a1a1a;
+  }
+  .preview-e .e-title { font-size: 0.55rem; letter-spacing: 0.15em; color: #333; }
+  .preview-e .e-live { display: flex; align-items: center; gap: 0.3rem; font-size: 0.5rem; color: #22c55e; }
+  .preview-e .e-live-dot { width: 5px; height: 5px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 5px #22c55e; }
+  .preview-e .e-name-row { display: flex; align-items: baseline; gap: 0.5rem; }
+  .preview-e .e-big { font-size: 1.9rem; font-weight: 900; color: #fff; letter-spacing: -0.04em; text-transform: uppercase; }
+  .preview-e .e-role-tag {
+    font-size: 0.5rem;
+    color: #22c55e;
+    border: 1px solid #22c55e33;
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .preview-e .e-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.4rem;
+    margin-top: 0.25rem;
+  }
+  .preview-e .e-stat {
+    background: #0e0e0e;
+    border: 1px solid #1a1a1a;
+    border-radius: 4px;
+    padding: 0.4rem 0.5rem;
+  }
+  .preview-e .e-stat-val { font-size: 1rem; font-weight: 700; color: #fff; letter-spacing: -0.03em; }
+  .preview-e .e-stat-val span { color: #22c55e; font-size: 0.7rem; }
+  .preview-e .e-stat-label { font-size: 0.48rem; color: #333; letter-spacing: 0.1em; margin-top: 0.1rem; }
+  .preview-e .e-bar-row { display: flex; gap: 2px; margin-top: 0.25rem; }
+  .preview-e .e-bar { height: 3px; border-radius: 2px; background: #1a1a1a; flex: 1; }
+  .preview-e .e-bar.filled { background: #22c55e; }
+  .preview-e .e-bar.half { background: #22c55e55; }
+
+  /* ==========================================
+     F — Horizontal Ticker / Marquee
+  ========================================== */
+  .preview-f {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0;
+    overflow: hidden;
+  }
+  .preview-f .f-ticker-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .preview-f .f-ticker {
+    font-size: 3.8rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.03em;
+    color: #fff;
+    white-space: nowrap;
+    animation: ticker 8s linear infinite;
+    padding-left: 100%;
+  }
+  @keyframes ticker {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-60%); }
+  }
+  .preview-f .f-ticker .sep { color: #22c55e; margin: 0 0.3em; font-weight: 300; }
+  .preview-f .f-bottom {
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #1a1a1a;
+    background: #080808;
+  }
+  .preview-f .f-meta { font-size: 0.55rem; font-family: monospace; color: #444; letter-spacing: 0.1em; }
+  .preview-f .f-cta {
+    font-size: 0.55rem;
+    font-family: monospace;
+    color: #22c55e;
+    border: 1px solid #22c55e33;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+  }
+
+  /* Card body */
+  .card-body {
+    padding: 0.9rem 1.25rem 1.1rem;
+    border-top: 1px solid #1a1a1a;
+  }
+  .card-body h3 { font-size: 0.88rem; font-weight: 600; color: #e5e5e5; margin-bottom: 0.35rem; }
+  .card-body p { font-size: 0.78rem; color: #666; line-height: 1.55; }
+  .card-body .motion-note { margin-top: 0.6rem; font-size: 0.7rem; color: #22c55e99; font-family: monospace; }
+
+  .note {
+    margin-top: 1.5rem;
+    padding: 0.75rem 1rem;
+    background: #0d0d0d;
+    border: 1px solid #1a1a1a;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    color: #555;
+    font-family: monospace;
+  }
+  .note span { color: #22c55e88; }
+</style>
+
+<div class="question-header">
+  <h2>Hero concepts D–F — three more directions</h2>
+  <p class="subtitle">Still brutalist + terminal green. These go further into layout, data, and motion territory. Keep A–C in mind.</p>
+</div>
+
+<div class="cards">
+
+  <!-- D: Split screen -->
+  <div class="card" data-choice="d" onclick="toggleSelect(this)">
+    <div class="card-preview preview-d">
+      <div class="left">
+        <div class="d-label">001 / IDENTITY</div>
+        <div class="d-name">YOO<br>BIN<br><span>SEO.</span></div>
+        <div class="d-cta">[ Enter ]</div>
+      </div>
+      <div class="right">
+        <div class="data-row"><span>ROLE</span><span class="val">UI/UX</span></div>
+        <div class="data-row"><span>TYPE</span><span class="val">FOUNDER</span></div>
+        <div class="data-row"><span>LOC</span><span class="val">BAY AREA</span></div>
+        <div class="data-row"><span>STATUS</span><span class="val">OPEN</span></div>
+        <div class="data-row"><span>YEAR</span><span class="val white">2026</span></div>
+        <div class="data-row"><span>WORKS</span><span class="val white">2</span></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>D — Split: Identity + Data Panel</h3>
+      <p>Left half is pure name — right half is a live data panel with your stats. Like a system inspector sidebar next to the subject.</p>
+      <div class="motion-note">↳ Motion: left slides in, right rows stagger up, panel scans on load</div>
+    </div>
+  </div>
+
+  <!-- E: Mission control dashboard -->
+  <div class="card" data-choice="e" onclick="toggleSelect(this)">
+    <div class="card-preview preview-e">
+      <div class="e-header">
+        <span class="e-title">YS_PORTFOLIO // MISSION CONTROL</span>
+        <span class="e-live"><span class="e-live-dot"></span>LIVE</span>
+      </div>
+      <div class="e-name-row">
+        <span class="e-big">YOOBIN SEO</span>
+        <span class="e-role-tag">DESIGNER+FOUNDER</span>
+      </div>
+      <div class="e-stats">
+        <div class="e-stat">
+          <div class="e-stat-val">2<span>+</span></div>
+          <div class="e-stat-label">PRODUCTS BUILT</div>
+        </div>
+        <div class="e-stat">
+          <div class="e-stat-val">∞<span></span></div>
+          <div class="e-stat-label">IN PROGRESS</div>
+        </div>
+        <div class="e-stat">
+          <div class="e-stat-val">1<span>K+</span></div>
+          <div class="e-stat-label">BETA USERS</div>
+        </div>
+      </div>
+      <div class="e-bar-row">
+        <div class="e-bar filled"></div><div class="e-bar filled"></div><div class="e-bar filled"></div>
+        <div class="e-bar half"></div><div class="e-bar half"></div><div class="e-bar"></div>
+        <div class="e-bar"></div><div class="e-bar"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>E — Mission Control Dashboard</h3>
+      <p>Hero feels like a live ops dashboard. Stats, progress bars, a "LIVE" indicator. Quantifies your work upfront — bold and confident.</p>
+      <div class="motion-note">↳ Motion: counters count up, bars fill, rows cascade in on load</div>
+    </div>
+  </div>
+
+  <!-- F: Marquee ticker -->
+  <div class="card" data-choice="f" onclick="toggleSelect(this)">
+    <div class="card-preview preview-f">
+      <div class="f-ticker-wrap">
+        <div class="f-ticker">
+          YOOBIN SEO<span class="sep">/</span>UI UX<span class="sep">/</span>FOUNDER<span class="sep">/</span>BUILDER<span class="sep">/</span>YOOBIN SEO<span class="sep">/</span>
+        </div>
+      </div>
+      <div class="f-bottom">
+        <span class="f-meta">BAY AREA · 2026 · OPEN TO WORK</span>
+        <span class="f-cta">[ View Work ]</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>F — Infinite Marquee Ticker</h3>
+      <p>Your name and roles scroll as a massive infinite ticker. Immediately kinetic — the page is in motion before you even scroll. Below sits a pinned identity bar.</p>
+      <div class="motion-note">↳ Motion: continuous CSS marquee, pauses on hover, Lenis scroll entry</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="note">
+  <span>// REMINDER</span> — A (ghost stamp), B (terminal boot), C (oversized type) are still on the table. You can also mix — e.g. F's ticker as a section break inside A's layout.
+</div>

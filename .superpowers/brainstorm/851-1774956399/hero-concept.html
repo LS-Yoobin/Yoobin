@@ -1,0 +1,196 @@
+<style>
+  * { box-sizing: border-box; }
+  .question-header { margin-bottom: 2rem; }
+  .question-header h2 { font-size: 1.4rem; margin-bottom: 0.4rem; }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .card {
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+    background: #0d0d0d;
+  }
+  .card:hover { border-color: #444; transform: translateY(-2px); }
+  .card.selected { border-color: #22c55e; box-shadow: 0 0 0 1px #22c55e22; }
+
+  .card-preview {
+    height: 240px;
+    background: #080808;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* --- Hero A: Full-bleed name stamp --- */
+  .preview-a {
+    padding: 0;
+    justify-content: flex-end;
+    align-items: flex-start;
+  }
+  .preview-a .bg-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 5.5rem;
+    font-weight: 900;
+    letter-spacing: -0.05em;
+    text-transform: uppercase;
+    color: transparent;
+    -webkit-text-stroke: 1px #1e1e1e;
+    white-space: nowrap;
+    user-select: none;
+  }
+  .preview-a .fg-content {
+    position: relative;
+    padding: 1.25rem;
+    width: 100%;
+  }
+  .preview-a .counter { font-size: 0.55rem; font-family: monospace; color: #333; letter-spacing: 0.15em; margin-bottom: 0.5rem; }
+  .preview-a .name { font-size: 1.8rem; font-weight: 900; color: #fff; letter-spacing: -0.04em; text-transform: uppercase; line-height: 1; }
+  .preview-a .green-dot { display: inline-block; width: 6px; height: 6px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 6px #22c55e; margin-left: 4px; vertical-align: middle; }
+  .preview-a .role { font-size: 0.6rem; color: #444; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 0.4rem; }
+
+  /* --- Hero B: Typewriter / terminal reveal --- */
+  .preview-b { flex-direction: column; align-items: flex-start; padding: 1.5rem; font-family: monospace; }
+  .preview-b .prompt-line { font-size: 0.65rem; color: #333; margin-bottom: 0.75rem; }
+  .preview-b .cmd { color: #22c55e; font-size: 0.7rem; }
+  .preview-b .output-name { font-size: 2rem; font-weight: 700; color: #fff; letter-spacing: -0.03em; margin: 0.25rem 0; }
+  .preview-b .output-role { font-size: 0.65rem; color: #555; }
+  .preview-b .cursor { display: inline-block; width: 8px; height: 1rem; background: #22c55e; margin-left: 2px; vertical-align: text-bottom; animation: blink 1s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .preview-b .status-bar {
+    margin-top: auto;
+    width: 100%;
+    padding-top: 0.75rem;
+    border-top: 1px solid #1a1a1a;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.55rem;
+    color: #2a2a2a;
+  }
+
+  /* --- Hero C: Oversized typographic grid --- */
+  .preview-c { padding: 1.25rem; align-items: flex-start; justify-content: space-between; flex-direction: column; }
+  .preview-c .top-label { font-size: 0.55rem; letter-spacing: 0.2em; color: #333; text-transform: uppercase; font-family: monospace; }
+  .preview-c .giant-name {
+    font-size: 3.8rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.05em;
+    line-height: 0.88;
+    color: #fff;
+    position: relative;
+  }
+  .preview-c .giant-name .highlight { color: #22c55e; }
+  .preview-c .bottom-strip {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .preview-c .tags { display: flex; gap: 0.4rem; }
+  .preview-c .t {
+    font-size: 0.55rem;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid #22c55e33;
+    color: #22c55e99;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    font-family: monospace;
+  }
+  .preview-c .scroll-hint { font-size: 0.55rem; color: #2a2a2a; font-family: monospace; letter-spacing: 0.1em; }
+
+  /* Card body */
+  .card-body {
+    padding: 0.9rem 1.25rem 1.1rem;
+    border-top: 1px solid #1a1a1a;
+  }
+  .card-body h3 { font-size: 0.88rem; font-weight: 600; color: #e5e5e5; margin-bottom: 0.35rem; }
+  .card-body p { font-size: 0.78rem; color: #666; line-height: 1.55; }
+  .card-body .motion-note {
+    margin-top: 0.6rem;
+    font-size: 0.7rem;
+    color: #22c55e99;
+    font-family: monospace;
+  }
+</style>
+
+<div class="question-header">
+  <h2>Hero section concept — what's the first thing visitors see?</h2>
+  <p class="subtitle">All three are full-screen, dark, and use terminal green as the accent. The difference is the <em>story</em> told on first load.</p>
+</div>
+
+<div class="cards">
+
+  <!-- A: Name stamp + ghost type -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-preview preview-a">
+      <div class="bg-text">YOOBIN</div>
+      <div class="fg-content">
+        <div class="counter">001 / YOOBIN SEO</div>
+        <div class="name">Yoobin <span style="color:#22c55e">Seo</span><span class="green-dot"></span></div>
+        <div class="role">UI/UX · Founder · Product Builder</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Ghost Stamp + Identity</h3>
+      <p>Oversized ghost letterform fills the background. Foreground content animates in on load — name, role, status indicator. Clean depth with no 3D.</p>
+      <div class="motion-note">↳ Motion: stagger fade-in, ghost scale, subtle parallax on scroll</div>
+    </div>
+  </div>
+
+  <!-- B: Terminal reveal -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-preview preview-b">
+      <div class="prompt-line">~ portfolio v1.0.0 — initialized</div>
+      <div class="cmd">&gt; whoami</div>
+      <div class="output-name">Yoobin Seo<span class="cursor"></span></div>
+      <div class="output-role">UI/UX Designer · Founder · Bay Area</div>
+      <div class="cmd" style="margin-top:0.75rem">&gt; ls ./work</div>
+      <div style="font-size:0.6rem; color:#555; margin-top:0.25rem">bloggo/ &nbsp; linkedspaces/ &nbsp; more...</div>
+      <div class="status-bar">
+        <span>READY</span>
+        <span>v1.0.0</span>
+        <span>YS © 2026</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Terminal Boot Sequence</h3>
+      <p>Page loads like a terminal booting up. Each line types in sequentially. The cursor blinks. Visitors feel like they just SSH'd into your portfolio.</p>
+      <div class="motion-note">↳ Motion: sequential typewriter, cursor blink, line-by-line reveal</div>
+    </div>
+  </div>
+
+  <!-- C: Oversized grid type -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-preview preview-c">
+      <div class="top-label">// PORTFOLIO 2026</div>
+      <div class="giant-name">YOO<span class="highlight">_</span><br>BIN<br>SEO.</div>
+      <div class="bottom-strip">
+        <div class="tags">
+          <span class="t">UI/UX</span>
+          <span class="t">FOUNDER</span>
+          <span class="t">BAY AREA</span>
+        </div>
+        <span class="scroll-hint">SCROLL ↓</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Oversized Typographic Grid</h3>
+      <p>Name fills the entire viewport. The cursor underscore blinks. Tag pills appear below. Pure typographic confidence — no images, no 3D, just weight.</p>
+      <div class="motion-note">↳ Motion: word-by-word split reveal, cursor blink, scroll-driven exit</div>
+    </div>
+  </div>
+
+</div>

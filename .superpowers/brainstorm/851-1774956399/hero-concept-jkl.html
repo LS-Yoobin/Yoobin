@@ -1,0 +1,384 @@
+<style>
+  * { box-sizing: border-box; }
+  .question-header { margin-bottom: 2rem; }
+  .question-header h2 { font-size: 1.4rem; margin-bottom: 0.4rem; }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+  .card {
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+    background: #0d0d0d;
+  }
+  .card:hover { border-color: #444; transform: translateY(-2px); }
+  .card.selected { border-color: #22c55e; box-shadow: 0 0 0 1px #22c55e22; }
+  .card-preview {
+    height: 240px;
+    background: #080808;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ==========================================
+     J — Film Strip / Frame Counter
+  ========================================== */
+  .preview-j {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+  }
+  .preview-j .film-strip-edge {
+    width: 18px;
+    background: #050505;
+    border-right: 1px solid #111;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 0;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .preview-j .film-strip-edge.right {
+    border-right: none;
+    border-left: 1px solid #111;
+  }
+  .preview-j .sprocket {
+    width: 8px;
+    height: 6px;
+    background: #111;
+    border-radius: 1px;
+    border: 1px solid #1a1a1a;
+    flex-shrink: 0;
+  }
+  .preview-j .film-frames {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .preview-j .frame {
+    flex: 1;
+    border-bottom: 1px solid #111;
+    padding: 0 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+  }
+  .preview-j .frame:last-child { border-bottom: none; }
+  .preview-j .frame-num {
+    font-size: 0.45rem;
+    font-family: monospace;
+    color: #1f1f1f;
+    letter-spacing: 0.05em;
+  }
+  .preview-j .frame-word {
+    font-size: 1.55rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.04em;
+    color: #fff;
+    line-height: 1;
+  }
+  .preview-j .frame.active-frame { background: #0c0c0c; }
+  .preview-j .frame.active-frame .frame-word { color: #22c55e; }
+  .preview-j .frame.active-frame .frame-num { color: #22c55e44; }
+  .preview-j .frame-tag {
+    font-size: 0.45rem;
+    font-family: monospace;
+    color: #222;
+    text-align: right;
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+  }
+
+  /* ==========================================
+     K — Noise Atmosphere + Whisper Text
+  ========================================== */
+  .preview-k {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .preview-k .k-grain {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(ellipse 120% 80% at 50% 50%, #0e1a0e 0%, #080808 60%, #040404 100%);
+    z-index: 0;
+  }
+  .preview-k .k-vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 30%, rgba(0,0,0,0.85) 100%);
+    z-index: 1;
+  }
+  /* Pixel noise via SVG filter trick */
+  .preview-k .k-noise-overlay {
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+    z-index: 2;
+  }
+  .preview-k .k-content { position: relative; z-index: 3; }
+  .preview-k .k-eyebrow {
+    font-size: 0.5rem;
+    font-family: monospace;
+    letter-spacing: 0.3em;
+    color: #22c55e66;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+  .preview-k .k-name {
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    color: #e8e8e8;
+    line-height: 1;
+    text-shadow: 0 0 40px rgba(34,197,94,0.15);
+  }
+  .preview-k .k-name .dim { color: #444; }
+  .preview-k .k-rule {
+    width: 32px;
+    height: 1px;
+    background: #22c55e44;
+    margin: 0.75rem auto;
+  }
+  .preview-k .k-sub {
+    font-size: 0.55rem;
+    color: #444;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  /* ==========================================
+     L — Blueprint / Technical Grid
+  ========================================== */
+  .preview-l {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* Blueprint grid */
+  .preview-l .l-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(#22c55e08 1px, transparent 1px),
+      linear-gradient(90deg, #22c55e08 1px, transparent 1px),
+      linear-gradient(#22c55e04 1px, transparent 1px),
+      linear-gradient(90deg, #22c55e04 1px, transparent 1px);
+    background-size: 40px 40px, 40px 40px, 8px 8px, 8px 8px;
+    background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+  }
+  .preview-l .l-center { position: relative; z-index: 2; text-align: center; }
+  /* Measurement lines */
+  .preview-l .l-h-rule {
+    position: absolute;
+    top: 50%;
+    left: 0; right: 0;
+    height: 1px;
+    background: #22c55e1a;
+  }
+  .preview-l .l-v-rule {
+    position: absolute;
+    left: 50%;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: #22c55e1a;
+  }
+  .preview-l .l-dim-top {
+    position: absolute;
+    top: 8px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.45rem;
+    font-family: monospace;
+    color: #22c55e44;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+  .preview-l .l-dim-left {
+    position: absolute;
+    left: 8px; top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    font-size: 0.45rem;
+    font-family: monospace;
+    color: #22c55e44;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+  .preview-l .l-dim-right {
+    position: absolute;
+    right: 8px; top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    font-size: 0.45rem;
+    font-family: monospace;
+    color: #333;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+  .preview-l .l-corner { position:absolute; width:10px; height:10px; border-color:#22c55e33; border-style:solid; }
+  .preview-l .l-corner.tl { top:8px; left:8px; border-width:1px 0 0 1px; }
+  .preview-l .l-corner.tr { top:8px; right:8px; border-width:1px 1px 0 0; }
+  .preview-l .l-corner.bl { bottom:8px; left:8px; border-width:0 0 1px 1px; }
+  .preview-l .l-corner.br { bottom:8px; right:8px; border-width:0 1px 1px 0; }
+  .preview-l .l-name {
+    font-size: 1.7rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.04em;
+    color: #fff;
+    line-height: 0.95;
+    text-align: center;
+  }
+  .preview-l .l-name span { color: #22c55e; }
+  .preview-l .l-spec {
+    margin-top: 0.5rem;
+    font-size: 0.5rem;
+    font-family: monospace;
+    color: #22c55e55;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .preview-l .l-dot {
+    position: absolute;
+    width: 4px; height: 4px;
+    background: #22c55e;
+    border-radius: 50%;
+    box-shadow: 0 0 6px #22c55e;
+  }
+  .preview-l .l-dot.d1 { top: 50%; left: 50%; transform: translate(-50%,-50%); }
+
+  /* Card body */
+  .card-body {
+    padding: 0.9rem 1.25rem 1.1rem;
+    border-top: 1px solid #1a1a1a;
+  }
+  .card-body h3 { font-size: 0.88rem; font-weight: 600; color: #e5e5e5; margin-bottom: 0.35rem; }
+  .card-body p { font-size: 0.78rem; color: #666; line-height: 1.55; }
+  .card-body .motion-note { margin-top: 0.6rem; font-size: 0.7rem; color: #22c55e99; font-family: monospace; }
+
+  .note {
+    margin-top: 1.5rem;
+    padding: 0.75rem 1rem;
+    background: #0d0d0d;
+    border: 1px solid #1a1a1a;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    color: #555;
+    font-family: monospace;
+  }
+  .note span { color: #22c55e88; }
+</style>
+
+<div class="question-header">
+  <h2>Hero concepts J–L — three more</h2>
+  <p class="subtitle">Film strip, atmospheric noise, and blueprint grid. Pick one or call out a hybrid across any of the A–L options.</p>
+</div>
+
+<div class="cards">
+
+  <!-- J: Film strip -->
+  <div class="card" data-choice="j" onclick="toggleSelect(this)">
+    <div class="card-preview preview-j">
+      <div class="film-strip-edge">
+        <div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div>
+        <div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div>
+        <div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div>
+      </div>
+      <div class="film-frames">
+        <div class="frame">
+          <span class="frame-num">001</span>
+          <span class="frame-word">YOOBIN</span>
+          <span class="frame-tag">DESIGNER<br>FOUNDER</span>
+        </div>
+        <div class="frame active-frame">
+          <span class="frame-num">002</span>
+          <span class="frame-word">SEO.</span>
+          <span class="frame-tag">BAY AREA<br>2026</span>
+        </div>
+        <div class="frame">
+          <span class="frame-num">003</span>
+          <span class="frame-word">BUILDER</span>
+          <span class="frame-tag">OPEN<br>TO WORK</span>
+        </div>
+        <div class="frame">
+          <span class="frame-num">004</span>
+          <span class="frame-word">↓ SCROLL</span>
+          <span class="frame-tag">ENTER<br>SITE</span>
+        </div>
+      </div>
+      <div class="film-strip-edge right">
+        <div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div>
+        <div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div>
+        <div class="sprocket"></div><div class="sprocket"></div><div class="sprocket"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>J — Film Strip / Frame Reel</h3>
+      <p>Your identity is split across four film frames with sprocket holes on both edges. One frame is highlighted green. Cinematic and brutalist simultaneously.</p>
+      <div class="motion-note">↳ Motion: frames slide up on load, active frame pulses, scroll advances frames</div>
+    </div>
+  </div>
+
+  <!-- K: Noise atmosphere -->
+  <div class="card" data-choice="k" onclick="toggleSelect(this)">
+    <div class="card-preview preview-k">
+      <div class="k-grain"></div>
+      <div class="k-vignette"></div>
+      <div class="k-noise-overlay"></div>
+      <div class="k-content">
+        <div class="k-eyebrow">// portfolio · 2026</div>
+        <div class="k-name">YOOBIN <span class="dim">/</span><br>SEO</div>
+        <div class="k-rule"></div>
+        <div class="k-sub">UI/UX · Founder · Bay Area</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>K — Noise Atmosphere</h3>
+      <p>Heavy grain texture, deep green vignette glow from center, subtle text shadow. Quiet and atmospheric — feels like a darkroom or a late-night terminal session.</p>
+      <div class="motion-note">↳ Motion: fade up from black, grain pulses, glow breathes slowly</div>
+    </div>
+  </div>
+
+  <!-- L: Blueprint grid -->
+  <div class="card" data-choice="l" onclick="toggleSelect(this)">
+    <div class="card-preview preview-l">
+      <div class="l-grid"></div>
+      <div class="l-h-rule"></div>
+      <div class="l-v-rule"></div>
+      <div class="l-corner tl"></div>
+      <div class="l-corner tr"></div>
+      <div class="l-corner bl"></div>
+      <div class="l-corner br"></div>
+      <div class="l-dim-top">W: 100VW</div>
+      <div class="l-dim-left">H: 100VH</div>
+      <div class="l-dim-right">ORIGIN: 0,0</div>
+      <div class="l-dot d1"></div>
+      <div class="l-center">
+        <div class="l-name">YOOBIN<br><span>SEO.</span></div>
+        <div class="l-spec">UI/UX · FOUNDER · BUILDER</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>L — Blueprint / Technical Grid</h3>
+      <p>Fine grid lines, measurement annotations, dimension labels, corner registration marks. Name is plotted at the origin. Feels like a product spec sheet or engineering drawing.</p>
+      <div class="motion-note">↳ Motion: grid draws in, dimensions annotate sequentially, name plots last</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="note">
+  <span>// FULL MENU</span> — A ghost · B terminal · C oversized type · D split panel · E dashboard · F marquee · G glitch · H HUD · I ruled rows · J film strip · K noise · L blueprint
+</div>

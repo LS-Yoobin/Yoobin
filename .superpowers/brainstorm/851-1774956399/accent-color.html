@@ -1,0 +1,154 @@
+<style>
+  * { box-sizing: border-box; }
+  .question-header { margin-bottom: 2rem; }
+  .question-header h2 { font-size: 1.4rem; margin-bottom: 0.4rem; }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  .card {
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+    background: #0d0d0d;
+  }
+  .card:hover { border-color: #444; transform: translateY(-2px); }
+  .card.selected { border-color: #fff; }
+
+  .card-preview {
+    height: 180px;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: #080808;
+  }
+
+  .top { display: flex; justify-content: space-between; align-items: center; }
+  .idx { font-size: 0.6rem; letter-spacing: 0.15em; color: #333; font-family: monospace; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; }
+
+  .name-block { font-size: 2.2rem; font-weight: 900; letter-spacing: -0.04em; text-transform: uppercase; line-height: 0.9; color: #fff; }
+
+  .bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+  .role { font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: #444; }
+  .tag { font-size: 0.6rem; font-family: monospace; padding: 0.2rem 0.5rem; border-radius: 4px; }
+
+  /* A: Pure monochrome */
+  .dot-mono { background: #fff; }
+  .tag-mono { border: 1px solid #2a2a2a; color: #333; }
+
+  /* B: Electric blue */
+  .dot-blue { background: #3b82f6; box-shadow: 0 0 8px #3b82f6; }
+  .tag-blue { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); color: #3b82f6; }
+  .accent-blue { color: #3b82f6; }
+
+  /* C: Neon green */
+  .dot-green { background: #22c55e; box-shadow: 0 0 8px #22c55e; }
+  .tag-green { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); color: #22c55e; }
+  .accent-green { color: #22c55e; }
+
+  /* D: Hot amber */
+  .dot-amber { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
+  .tag-amber { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); color: #f59e0b; }
+  .accent-amber { color: #f59e0b; }
+
+  .card-body {
+    padding: 0.9rem 1.25rem 1.1rem;
+    border-top: 1px solid #1a1a1a;
+  }
+  .card-body h3 { font-size: 0.88rem; font-weight: 600; color: #e5e5e5; margin-bottom: 0.3rem; }
+  .card-body p { font-size: 0.78rem; color: #666; line-height: 1.5; }
+
+  .divider { width: 24px; height: 1px; background: #2a2a2a; margin: 0.5rem 0; }
+</style>
+
+<div class="question-header">
+  <h2>Accent color — how much color do you want?</h2>
+  <p class="subtitle">Brutalist works in pure black/white, but one accent color can make it electric. All options use the same dark base.</p>
+</div>
+
+<div class="cards">
+
+  <!-- A: Monochrome -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-preview">
+      <div class="top">
+        <span class="idx">001 / YOOBIN SEO</span>
+        <span class="dot dot-mono"></span>
+      </div>
+      <div class="name-block">YOOBIN<br>SEO.</div>
+      <div class="bottom">
+        <span class="role">Bay Area · UI/UX · Founder</span>
+        <span class="tag tag-mono">[ View Work ]</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Pure Monochrome</h3>
+      <p>Black, white, and grey only. Maximum tension. Timeless and uncompromising. Reminds you of classic print design or old-school hacker aesthetic.</p>
+    </div>
+  </div>
+
+  <!-- B: Electric Blue -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-preview">
+      <div class="top">
+        <span class="idx">001 / YOOBIN SEO</span>
+        <span class="dot dot-blue"></span>
+      </div>
+      <div class="name-block">YOOBIN<br><span class="accent-blue">SEO.</span></div>
+      <div class="bottom">
+        <span class="role">Bay Area · UI/UX · Founder</span>
+        <span class="tag tag-blue">[ View Work ]</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Electric Blue</h3>
+      <p>Cold, technical, precise. Blue reads as trustworthy and product-minded. Good signal for a product builder / designer audience.</p>
+    </div>
+  </div>
+
+  <!-- C: Neon Green -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-preview">
+      <div class="top">
+        <span class="idx">001 / YOOBIN SEO</span>
+        <span class="dot dot-green"></span>
+      </div>
+      <div class="name-block">YOOBIN<br><span class="accent-green">SEO.</span></div>
+      <div class="bottom">
+        <span class="role">Bay Area · UI/UX · Founder</span>
+        <span class="tag tag-green">[ View Work ]</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Terminal Green</h3>
+      <p>Hacker energy. Green on black is iconic — references terminals, builds, code. Makes the "builder" identity pop. Polarizing but memorable.</p>
+    </div>
+  </div>
+
+  <!-- D: Hot Amber -->
+  <div class="card" data-choice="d" onclick="toggleSelect(this)">
+    <div class="card-preview">
+      <div class="top">
+        <span class="idx">001 / YOOBIN SEO</span>
+        <span class="dot dot-amber"></span>
+      </div>
+      <div class="name-block">YOOBIN<br><span class="accent-amber">SEO.</span></div>
+      <div class="bottom">
+        <span class="role">Bay Area · UI/UX · Founder</span>
+        <span class="tag tag-amber">[ View Work ]</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>D — Hot Amber</h3>
+      <p>Warm, energetic, distinctive. Amber on black feels like warning systems or industrial design. Stands out from the sea of blue tech portfolios.</p>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,282 @@
+<style>
+  * { box-sizing: border-box; }
+  .question-header {
+    margin-bottom: 2rem;
+  }
+  .question-header h2 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .question-header p { color: #888; font-size: 0.95rem; }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+  }
+
+  .card {
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+    background: #111;
+  }
+  .card:hover { border-color: #555; transform: translateY(-2px); }
+  .card.selected { border-color: #fff; }
+
+  .card-preview {
+    height: 220px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Direction A: Editorial Minimal */
+  .preview-a {
+    background: #0a0a0a;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.5rem;
+  }
+  .preview-a .label-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: #555;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .preview-a .big-name {
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    font-family: Georgia, serif;
+    letter-spacing: -0.03em;
+  }
+  .preview-a .role-line {
+    font-size: 0.7rem;
+    color: #444;
+    margin-top: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .preview-a .accent-line {
+    width: 32px;
+    height: 1px;
+    background: #fff;
+    margin-top: 1rem;
+  }
+
+  /* Direction B: Cinematic Dark */
+  .preview-b {
+    background: linear-gradient(160deg, #0d0d12 0%, #0a0a0a 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem;
+    text-align: center;
+    position: relative;
+  }
+  .preview-b::before {
+    content: '';
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .preview-b .initials {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    position: relative;
+  }
+  .preview-b .tagline {
+    font-size: 0.65rem;
+    color: #6366f1;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-top: 0.75rem;
+    position: relative;
+  }
+  .preview-b .glow-dot {
+    width: 4px;
+    height: 4px;
+    background: #6366f1;
+    border-radius: 50%;
+    margin: 0.75rem auto 0;
+    box-shadow: 0 0 8px #6366f1;
+    position: relative;
+  }
+
+  /* Direction C: Brutalist Modern */
+  .preview-c {
+    background: #080808;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+  }
+  .preview-c .top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .preview-c .index {
+    font-size: 0.6rem;
+    color: #333;
+    letter-spacing: 0.1em;
+  }
+  .preview-c .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 6px #22c55e;
+  }
+  .preview-c .hero-text {
+    font-size: 2.1rem;
+    font-weight: 900;
+    color: #fff;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+  }
+  .preview-c .bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .preview-c .descriptor {
+    font-size: 0.6rem;
+    color: #444;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .preview-c .bracket {
+    font-size: 0.7rem;
+    color: #333;
+    letter-spacing: -0.02em;
+  }
+
+  .card-body {
+    padding: 1rem 1.25rem 1.25rem;
+    border-top: 1px solid #1a1a1a;
+  }
+  .card-body h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #e5e5e5;
+    margin-bottom: 0.4rem;
+  }
+  .card-body p {
+    font-size: 0.78rem;
+    color: #666;
+    line-height: 1.5;
+  }
+  .card-body .keywords {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-top: 0.6rem;
+  }
+  .card-body .kw {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 20px;
+    border: 1px solid #2a2a2a;
+    color: #555;
+    letter-spacing: 0.05em;
+  }
+
+  .note {
+    margin-top: 1.5rem;
+    padding: 0.75rem 1rem;
+    background: #111;
+    border: 1px solid #1f1f1f;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    color: #555;
+  }
+</style>
+
+<div class="question-header">
+  <h2>What's the overall visual personality of your portfolio?</h2>
+  <p class="subtitle">This sets the tone for everything — typography, spacing, motion, hero concept. Pick the direction that feels most like <em>you</em>.</p>
+</div>
+
+<div class="cards">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-preview preview-a">
+      <div class="label-tag">Portfolio — 2026</div>
+      <div class="big-name">Yoobin<br>Seo</div>
+      <div class="role-line">UI/UX · Founder · Product</div>
+      <div class="accent-line"></div>
+    </div>
+    <div class="card-body">
+      <h3>A — Editorial Minimal</h3>
+      <p>High-contrast serif typography. Refined whitespace. Slow, deliberate motion. Feels like a fashion editorial or design magazine.</p>
+      <div class="keywords">
+        <span class="kw">serif</span>
+        <span class="kw">editorial</span>
+        <span class="kw">restrained</span>
+        <span class="kw">typographic</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-preview preview-b">
+      <div class="initials">YS</div>
+      <div class="tagline">Designer · Builder · Founder</div>
+      <div class="glow-dot"></div>
+    </div>
+    <div class="card-body">
+      <h3>B — Cinematic Dark</h3>
+      <p>Subtle glow, depth layers, ambient color. Motion feels filmic — slow dissolves, parallax, light leaks. Feels like an interactive film title sequence.</p>
+      <div class="keywords">
+        <span class="kw">glow</span>
+        <span class="kw">depth</span>
+        <span class="kw">cinematic</span>
+        <span class="kw">filmic</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-preview preview-c">
+      <div class="top-row">
+        <span class="index">001 / PORTFOLIO</span>
+        <span class="status-dot"></span>
+      </div>
+      <div class="hero-text">Yoobin<br>Seo.</div>
+      <div class="bottom-row">
+        <span class="descriptor">Bay Area · 2026</span>
+        <span class="bracket">[ Open ]</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Brutalist Modern</h3>
+      <p>Heavy weight sans-serif, monospace accents, data-driven UI details. Motion is snappy and mechanical. Feels like a terminal crossed with a creative studio.</p>
+      <div class="keywords">
+        <span class="kw">sans-serif</span>
+        <span class="kw">mono</span>
+        <span class="kw">bold</span>
+        <span class="kw">technical</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="note">
+  These are visual directions, not final designs. Picking one shapes every downstream decision — typography, color, hero concept, and motion style. You can also describe a hybrid.
+</div>

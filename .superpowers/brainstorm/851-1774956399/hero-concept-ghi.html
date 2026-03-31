@@ -1,0 +1,340 @@
+<style>
+  * { box-sizing: border-box; }
+  .question-header { margin-bottom: 2rem; }
+  .question-header h2 { font-size: 1.4rem; margin-bottom: 0.4rem; }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .card {
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+    background: #0d0d0d;
+  }
+  .card:hover { border-color: #444; transform: translateY(-2px); }
+  .card.selected { border-color: #22c55e; box-shadow: 0 0 0 1px #22c55e22; }
+
+  .card-preview {
+    height: 240px;
+    background: #080808;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ==========================================
+     G — Glitch / Scanline
+  ========================================== */
+  .preview-g {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .preview-g .scanlines {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(0,0,0,0.35) 3px,
+      rgba(0,0,0,0.35) 4px
+    );
+    pointer-events: none;
+    z-index: 2;
+  }
+  .preview-g .g-name {
+    font-size: 2.2rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.04em;
+    color: #fff;
+    position: relative;
+    z-index: 3;
+    line-height: 1;
+  }
+  .preview-g .g-name .glitch-layer {
+    position: absolute;
+    inset: 0;
+    color: #22c55e;
+    clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%);
+    transform: translateX(-3px);
+    opacity: 0.7;
+  }
+  .preview-g .g-name .glitch-layer-2 {
+    position: absolute;
+    inset: 0;
+    color: #ff0055;
+    clip-path: polygon(0 65%, 100% 65%, 100% 75%, 0 75%);
+    transform: translateX(3px);
+    opacity: 0.5;
+  }
+  .preview-g .g-sub {
+    font-size: 0.6rem;
+    font-family: monospace;
+    color: #22c55e88;
+    letter-spacing: 0.2em;
+    margin-top: 0.75rem;
+    position: relative;
+    z-index: 3;
+    text-transform: uppercase;
+  }
+  .preview-g .g-noise {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.5;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .preview-g .g-bar {
+    position: absolute;
+    left: 0; right: 0;
+    height: 2px;
+    background: #22c55e22;
+    top: 40%;
+    z-index: 4;
+    animation: scanbar 3s ease-in-out infinite;
+  }
+  @keyframes scanbar {
+    0%   { top: 10%; opacity: 0; }
+    20%  { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { top: 90%; opacity: 0; }
+  }
+
+  /* ==========================================
+     H — HUD / Targeting Reticle
+  ========================================== */
+  .preview-h {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: monospace;
+  }
+  /* corner brackets */
+  .preview-h::before, .preview-h::after {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    border-color: #22c55e55;
+    border-style: solid;
+  }
+  .preview-h::before { top: 12px; left: 12px; border-width: 1px 0 0 1px; }
+  .preview-h::after  { bottom: 12px; right: 12px; border-width: 0 1px 1px 0; }
+  .preview-h .h-tl { position:absolute; top:12px; right:12px; width:18px; height:18px; border-top:1px solid #22c55e55; border-right:1px solid #22c55e55; }
+  .preview-h .h-bl { position:absolute; bottom:12px; left:12px; width:18px; height:18px; border-bottom:1px solid #22c55e55; border-left:1px solid #22c55e55; }
+  /* crosshair lines */
+  .preview-h .h-cross-h {
+    position: absolute;
+    top: 50%; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, #22c55e22 20%, #22c55e33 50%, #22c55e22 80%, transparent);
+  }
+  .preview-h .h-cross-v {
+    position: absolute;
+    left: 50%; top: 0; bottom: 0; width: 1px;
+    background: linear-gradient(180deg, transparent, #22c55e22 20%, #22c55e33 50%, #22c55e22 80%, transparent);
+  }
+  .preview-h .h-center {
+    position: relative;
+    text-align: center;
+    z-index: 2;
+  }
+  .preview-h .h-target-ring {
+    position: absolute;
+    width: 80px; height: 80px;
+    border: 1px solid #22c55e22;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .preview-h .h-target-ring-2 {
+    position: absolute;
+    width: 120px; height: 120px;
+    border: 1px solid #22c55e11;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .preview-h .h-label-tl { position:absolute; top:18px; left:20px; font-size:0.48rem; color:#22c55e55; letter-spacing:0.1em; }
+  .preview-h .h-label-tr { position:absolute; top:18px; right:20px; font-size:0.48rem; color:#333; letter-spacing:0.1em; text-align:right; }
+  .preview-h .h-label-bl { position:absolute; bottom:18px; left:20px; font-size:0.48rem; color:#333; letter-spacing:0.1em; }
+  .preview-h .h-label-br { position:absolute; bottom:18px; right:20px; font-size:0.48rem; color:#22c55e55; letter-spacing:0.1em; text-align:right; }
+  .preview-h .h-name { font-size: 1.6rem; font-weight: 900; color: #fff; letter-spacing: -0.04em; text-transform: uppercase; line-height: 1; }
+  .preview-h .h-name span { color: #22c55e; }
+  .preview-h .h-sub { font-size: 0.5rem; color: #22c55e88; letter-spacing: 0.25em; margin-top: 0.35rem; text-transform: uppercase; }
+
+  /* ==========================================
+     I — Stacked Horizontal Rules / Ruled Lines
+  ========================================== */
+  .preview-i {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+    overflow: hidden;
+  }
+  .preview-i .i-row {
+    display: flex;
+    align-items: center;
+    padding: 0 1.25rem;
+    height: 52px;
+    border-bottom: 1px solid #111;
+    position: relative;
+    transition: background 0.2s;
+  }
+  .preview-i .i-row:first-child { border-top: 1px solid #111; }
+  .preview-i .i-row .i-num {
+    font-size: 0.5rem;
+    font-family: monospace;
+    color: #222;
+    width: 28px;
+    flex-shrink: 0;
+  }
+  .preview-i .i-row .i-word {
+    font-size: 2rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.04em;
+    color: #fff;
+    flex: 1;
+    line-height: 1;
+  }
+  .preview-i .i-row .i-tag {
+    font-size: 0.5rem;
+    font-family: monospace;
+    color: #333;
+    letter-spacing: 0.1em;
+    text-align: right;
+  }
+  /* highlight rows */
+  .preview-i .i-row.active { background: #0d0d0d; }
+  .preview-i .i-row.active .i-word { color: #22c55e; }
+  .preview-i .i-row.active .i-num { color: #22c55e55; }
+  .preview-i .i-row.active .i-tag { color: #22c55e66; }
+  /* left accent bar */
+  .preview-i .i-row.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: #22c55e;
+  }
+
+  /* Card body */
+  .card-body {
+    padding: 0.9rem 1.25rem 1.1rem;
+    border-top: 1px solid #1a1a1a;
+  }
+  .card-body h3 { font-size: 0.88rem; font-weight: 600; color: #e5e5e5; margin-bottom: 0.35rem; }
+  .card-body p { font-size: 0.78rem; color: #666; line-height: 1.55; }
+  .card-body .motion-note { margin-top: 0.6rem; font-size: 0.7rem; color: #22c55e99; font-family: monospace; }
+
+  .note {
+    margin-top: 1.5rem;
+    padding: 0.75rem 1rem;
+    background: #0d0d0d;
+    border: 1px solid #1a1a1a;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    color: #555;
+    font-family: monospace;
+  }
+  .note span { color: #22c55e88; }
+</style>
+
+<div class="question-header">
+  <h2>Hero concepts G–I — three more</h2>
+  <p class="subtitle">Glitch, HUD, and ruled lines. A–F are still on the table.</p>
+</div>
+
+<div class="cards">
+
+  <!-- G: Glitch -->
+  <div class="card" data-choice="g" onclick="toggleSelect(this)">
+    <div class="card-preview preview-g">
+      <div class="g-noise"></div>
+      <div class="scanlines"></div>
+      <div class="g-bar"></div>
+      <div class="g-name">
+        YOOBIN SEO
+        <div class="glitch-layer">YOOBIN SEO</div>
+        <div class="glitch-layer-2">YOOBIN SEO</div>
+      </div>
+      <div class="g-sub">UI/UX · FOUNDER · BAY AREA</div>
+    </div>
+    <div class="card-body">
+      <h3>G — Glitch + Scanlines</h3>
+      <p>Horizontal scanlines over the entire hero. Name renders with RGB-split glitch layers and a slow vertical scan bar. Feels corrupted, raw, alive.</p>
+      <div class="motion-note">↳ Motion: glitch jitter on load, scan bar loops, hover intensifies glitch</div>
+    </div>
+  </div>
+
+  <!-- H: HUD reticle -->
+  <div class="card" data-choice="h" onclick="toggleSelect(this)">
+    <div class="card-preview preview-h">
+      <div class="h-tl"></div>
+      <div class="h-bl"></div>
+      <div class="h-cross-h"></div>
+      <div class="h-cross-v"></div>
+      <div class="h-target-ring"></div>
+      <div class="h-target-ring-2"></div>
+      <div class="h-label-tl">ID // YS_001</div>
+      <div class="h-label-tr">BAY AREA<br>2026</div>
+      <div class="h-label-bl">STATUS // OPEN</div>
+      <div class="h-label-br">LOCK<br>CONFIRMED</div>
+      <div class="h-center">
+        <div class="h-name">YOOBIN<br><span>SEO.</span></div>
+        <div class="h-sub">DESIGNER · FOUNDER · BUILDER</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>H — HUD / Targeting Reticle</h3>
+      <p>Crosshairs, corner brackets, concentric target rings, and corner metadata labels. Feels like a heads-up display locking onto a subject. Tactical and cinematic.</p>
+      <div class="motion-note">↳ Motion: brackets slide in, rings pulse, crosshairs draw on load</div>
+    </div>
+  </div>
+
+  <!-- I: Ruled lines / list rows -->
+  <div class="card" data-choice="i" onclick="toggleSelect(this)">
+    <div class="card-preview preview-i">
+      <div class="i-row">
+        <span class="i-num">01</span>
+        <span class="i-word">YOOBIN</span>
+        <span class="i-tag">NAME</span>
+      </div>
+      <div class="i-row active">
+        <span class="i-num">02</span>
+        <span class="i-word">SEO.</span>
+        <span class="i-tag">DESIGNER</span>
+      </div>
+      <div class="i-row">
+        <span class="i-num">03</span>
+        <span class="i-word">FOUNDER</span>
+        <span class="i-tag">BUILDER</span>
+      </div>
+      <div class="i-row">
+        <span class="i-num">04</span>
+        <span class="i-word">BAY AREA</span>
+        <span class="i-tag">OPEN</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>I — Ruled Rows / List Manifest</h3>
+      <p>Your identity is presented as rows in a register — each word or attribute its own line item. One row is highlighted in green. Feels like a ledger or manifest.</p>
+      <div class="motion-note">↳ Motion: rows wipe in staggered, active row pulses, scroll reveals next section</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="note">
+  <span>// ALL OPTIONS</span> — A ghost stamp · B terminal boot · C oversized type · D split panel · E dashboard · F marquee ticker · G glitch · H HUD reticle · I ruled rows
+</div>

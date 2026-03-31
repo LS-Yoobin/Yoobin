@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hero H — Space Refinement</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #000;
+    color: #fff;
+    font-family: 'Courier New', monospace;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* ============================================================
+     STAR FIELD
+  ============================================================ */
+  .stars {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .star {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    animation: twinkle var(--dur, 3s) ease-in-out infinite var(--delay, 0s);
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: var(--min-op, 0.2); transform: scale(1); }
+    50%       { opacity: var(--max-op, 0.9); transform: scale(1.3); }
+  }
+
+  /* ============================================================
+     NEBULA / DEEP SPACE GLOW
+  ============================================================ */
+  .nebula {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 20% 30%, rgba(34,197,94,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 80% 70%, rgba(99,102,241,0.05) 0%, transparent 60%),
+      radial-gradient(ellipse 80% 50% at 50% 50%, rgba(34,197,94,0.02) 0%, transparent 70%),
+      radial-gradient(ellipse 100% 100% at 50% 50%, #000408 0%, #000 100%);
+  }
+
+  /* ============================================================
+     METEORITES
+  ============================================================ */
+  /* Shooting stars drawn on canvas — no CSS needed */
+  #meteor-canvas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ============================================================
+     SPACESHIPS
+  ============================================================ */
+  .ship {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Ship SVG inline — classic fighter silhouette */
+  .ship svg { display: block; }
+
+  /* Ship 1 — flies left to right across middle */
+  .ship-1 {
+    top: 22%;
+    left: -80px;
+    animation: ship-lr 9s linear infinite 2s;
+  }
+  /* Ship 2 — flies right to left, lower */
+  .ship-2 {
+    top: 68%;
+    right: -80px;
+    animation: ship-rl 11s linear infinite 6s;
+    transform: scaleX(-1);
+  }
+  /* Ship 3 — smaller, faster, top third */
+  .ship-3 {
+    top: 15%;
+    left: -50px;
+    animation: ship-lr-fast 7s linear infinite 13s;
+    transform: scale(0.6);
+  }
+  /* Ship 4 — diagonal drift */
+  .ship-4 {
+    top: 45%;
+    right: -80px;
+    animation: ship-diag 14s linear infinite 4s;
+    transform: scaleX(-1) rotate(-8deg);
+  }
+
+  @keyframes ship-lr {
+    0%   { opacity: 0; left: -80px; top: 22%; }
+    5%   { opacity: 1; }
+    92%  { opacity: 1; }
+    95%  { opacity: 0; left: calc(100vw + 80px); top: 26%; }
+    100% { opacity: 0; left: calc(100vw + 80px); }
+  }
+  @keyframes ship-rl {
+    0%   { opacity: 0; right: -80px; }
+    5%   { opacity: 1; }
+    92%  { opacity: 1; }
+    95%  { opacity: 0; right: calc(100vw + 80px); }
+    100% { opacity: 0; }
+  }
+  @keyframes ship-lr-fast {
+    0%   { opacity: 0; left: -50px; top: 15%; }
+    4%   { opacity: 0.8; }
+    93%  { opacity: 0.8; }
+    96%  { opacity: 0; left: calc(100vw + 50px); top: 12%; }
+    100% { opacity: 0; }
+  }
+  @keyframes ship-diag {
+    0%   { opacity: 0; right: -80px; top: 45%; }
+    4%   { opacity: 0.7; }
+    93%  { opacity: 0.7; }
+    96%  { opacity: 0; right: calc(100vw + 80px); top: 38%; }
+    100% { opacity: 0; }
+  }
+
+  /* Engine glow trail */
+  .ship-glow {
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(34,197,94,0.6));
+    filter: blur(1px);
+  }
+  .ship-2 .ship-glow, .ship-4 .ship-glow {
+    left: 100%;
+    right: auto;
+    background: linear-gradient(270deg, transparent, rgba(34,197,94,0.6));
+  }
+
+  /* ============================================================
+     HUD OVERLAY
+  ============================================================ */
+  .hud {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Corner brackets */
+  .bracket {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border-color: rgba(34,197,94,0.5);
+    border-style: solid;
+    animation: bracket-pulse 4s ease-in-out infinite;
+  }
+  @keyframes bracket-pulse {
+    0%, 100% { border-color: rgba(34,197,94,0.4); }
+    50%       { border-color: rgba(34,197,94,0.7); }
+  }
+  .bracket.tl { top: 24px; left: 24px; border-width: 1px 0 0 1px; }
+  .bracket.tr { top: 24px; right: 24px; border-width: 1px 1px 0 0; }
+  .bracket.bl { bottom: 24px; left: 24px; border-width: 0 0 1px 1px; }
+  .bracket.br { bottom: 24px; right: 24px; border-width: 0 1px 1px 0; }
+
+  /* Crosshair lines */
+  .cross-h {
+    position: absolute;
+    top: 50%;
+    left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(34,197,94,0.15) 20%, rgba(34,197,94,0.25) 50%, rgba(34,197,94,0.15) 80%, transparent 100%);
+    transition: top 0.08s ease-out;
+    will-change: top;
+  }
+  .cross-v {
+    position: absolute;
+    left: 50%;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, transparent 0%, rgba(34,197,94,0.15) 20%, rgba(34,197,94,0.25) 50%, rgba(34,197,94,0.15) 80%, transparent 100%);
+    transition: left 0.08s ease-out;
+    will-change: left;
+  }
+
+  /* Target rings */
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(34,197,94,0.12);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation: ring-rotate 20s linear infinite;
+    transition: top 0.12s ease-out, left 0.12s ease-out;
+    will-change: top, left;
+  }
+  .ring.r1 { width: 200px; height: 200px; border-color: rgba(34,197,94,0.18); animation-duration: 25s; }
+  .ring.r2 { width: 320px; height: 320px; animation-duration: 40s; animation-direction: reverse; }
+  .ring.r3 { width: 460px; height: 460px; border-color: rgba(34,197,94,0.07); animation-duration: 60s; }
+  @keyframes ring-rotate {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to   { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  /* Tick marks on ring 1 */
+  .ring.r1::before, .ring.r1::after {
+    content: '';
+    position: absolute;
+    width: 6px; height: 1px;
+    background: rgba(34,197,94,0.5);
+    top: 50%;
+  }
+  .ring.r1::before { left: -3px; }
+  .ring.r1::after  { right: -3px; }
+
+  /* HUD corner metadata */
+  .hud-meta {
+    position: absolute;
+    font-size: 0.98rem;
+    color: rgba(34,197,94,0.45);
+    letter-spacing: 0.12em;
+    line-height: 1.7;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+  }
+  .hud-meta.tl { top: 36px; left: 36px; }
+  .hud-meta.tr { top: 36px; right: 36px; text-align: right; }
+  .hud-meta.bl { bottom: 36px; left: 36px; }
+  .hud-meta.br { bottom: 36px; right: 36px; text-align: right; }
+
+  .hud-meta .dim { color: rgba(34,197,94,0.2); }
+  .hud-meta .bright { color: rgba(34,197,94,0.7); font-weight: 900; letter-spacing: 0.08em; }
+
+  /* Scanning line across entire screen */
+  .scan-line {
+    position: absolute;
+    left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(34,197,94,0.08) 30%, rgba(34,197,94,0.15) 50%, rgba(34,197,94,0.08) 70%, transparent);
+    animation: full-scan 8s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes full-scan {
+    0%   { top: 0%; opacity: 0; }
+    5%   { opacity: 1; }
+    95%  { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+  }
+
+  /* ============================================================
+     CENTER CONTENT
+  ============================================================ */
+  .center {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Lock-on dot at center */
+  .lock-dot {
+    position: absolute;
+    width: 6px; height: 6px;
+    background: #22c55e;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 8px 2px rgba(34,197,94,0.6), 0 0 20px 4px rgba(34,197,94,0.2);
+    z-index: 11;
+  }
+
+  .id-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: rgba(34,197,94,0.55);
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+    animation: fade-in 1s ease 0.5s both;
+  }
+
+  .name {
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.03em;
+    line-height: 0.9;
+    color: #fff;
+    text-shadow: 0 0 60px rgba(34,197,94,0.1);
+    animation: fade-in 1s ease 0.2s both;
+  }
+  .name .green { color: #22c55e; text-shadow: 0 0 30px rgba(34,197,94,0.4); }
+
+  .role {
+    font-size: 1.4rem;
+    font-weight: 900;
+    letter-spacing: 0.25em;
+    -webkit-text-stroke: 0.5px rgba(34,197,94,0.4);
+    color: rgba(34,197,94,0.6);
+    text-transform: uppercase;
+    margin-top: 1.2rem;
+    animation: fade-in 1s ease 0.8s both;
+  }
+
+  .divider {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(180deg, rgba(34,197,94,0.5), transparent);
+    margin: 1.2rem auto;
+    animation: fade-in 1s ease 1s both;
+  }
+
+  .scroll-hint {
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: rgba(34,197,94,0.3);
+    text-transform: uppercase;
+    animation: fade-in 1s ease 1.2s both;
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ============================================================
+     BOTTOM STATUS BAR
+  ============================================================ */
+  .status-bar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 32px;
+    border-top: 1px solid rgba(34,197,94,0.1);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 2rem;
+    font-size: 0.5rem;
+    font-family: 'Courier New', monospace;
+    color: rgba(34,197,94,0.25);
+    letter-spacing: 0.12em;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(4px);
+  }
+  .status-bar .live {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: rgba(34,197,94,0.7);
+  }
+  .live-dot {
+    width: 5px; height: 5px;
+    background: #22c55e;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #22c55e;
+    animation: live-pulse 2s ease-in-out infinite;
+  }
+  @keyframes live-pulse {
+    0%, 100% { box-shadow: 0 0 5px #22c55e; }
+    50%       { box-shadow: 0 0 10px #22c55e, 0 0 20px rgba(34,197,94,0.4); }
+  }
+  .status-bar .spacer { flex: 1; }
+
+  /* ============================================================
+     MISSILES & EXPLOSIONS
+  ============================================================ */
+  .missile {
+    position: fixed;
+    width: 18px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #22c55e 60%, #fff);
+    border-radius: 3px;
+    box-shadow: 0 0 6px #22c55e, 0 0 14px rgba(34,197,94,0.5);
+    pointer-events: none;
+    z-index: 60;
+    transform-origin: left center;
+  }
+  .missile::after {
+    content: '';
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(34,197,94,0.4));
+  }
+
+  @keyframes explode-ring {
+    0%   { width: 0px; height: 0px; opacity: 1; margin: 0; }
+    100% { width: 90px; height: 90px; opacity: 0; margin: -45px; }
+  }
+  @keyframes explode-core {
+    0%   { width: 8px; height: 8px; opacity: 1; margin: -4px; }
+    40%  { width: 24px; height: 24px; opacity: 1; margin: -12px; }
+    100% { width: 60px; height: 60px; opacity: 0; margin: -30px; }
+  }
+  @keyframes spark-fly {
+    0%   { opacity: 1; transform: translate(0,0) scale(1); }
+    100% { opacity: 0; transform: translate(var(--sx), var(--sy)) scale(0); }
+  }
+
+  .explosion {
+    position: fixed;
+    pointer-events: none;
+    z-index: 60;
+  }
+  .explosion .exp-core {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff 0%, #22c55e 40%, transparent 70%);
+    box-shadow: 0 0 20px #22c55e, 0 0 40px rgba(34,197,94,0.4);
+    animation: explode-core 0.5s ease-out forwards;
+  }
+  .explosion .exp-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(34,197,94,0.7);
+    animation: explode-ring 0.6s ease-out forwards;
+  }
+  .explosion .exp-ring2 {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(34,197,94,0.3);
+    animation: explode-ring 0.8s ease-out 0.1s forwards;
+  }
+  .explosion .spark {
+    position: absolute;
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 4px #22c55e;
+    animation: spark-fly 0.6s ease-out forwards;
+  }
+
+  /* ============================================================
+     NOTE OVERLAY
+  ============================================================ */
+  .note-overlay {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.7);
+    border: 1px solid rgba(34,197,94,0.2);
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-size: 0.6rem;
+    color: rgba(34,197,94,0.5);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+    z-index: 100;
+    font-family: 'Courier New', monospace;
+  }
+  .note-overlay span { color: rgba(34,197,94,0.85); }
+</style>
+</head>
+<body>
+
+<!-- Stars -->
+<div class="stars" id="stars"></div>
+
+<!-- Nebula / deep space glow -->
+<div class="nebula"></div>
+
+<!-- Scanning line -->
+<div class="scan-line"></div>
+
+<!-- Shooting stars canvas -->
+<canvas id="meteor-canvas"></canvas>
+
+<!-- Spaceships -->
+<div class="ship ship-1">
+  <div class="ship-glow"></div>
+  <svg width="64" height="28" viewBox="0 0 64 28" fill="none">
+    <!-- Main body -->
+    <path d="M8 14 L20 8 L52 12 L60 14 L52 16 L20 20 Z" fill="#0a0a0a" stroke="rgba(34,197,94,0.6)" stroke-width="0.8"/>
+    <!-- Cockpit -->
+    <ellipse cx="38" cy="14" rx="8" ry="4" fill="#050505" stroke="rgba(34,197,94,0.4)" stroke-width="0.6"/>
+    <ellipse cx="38" cy="14" rx="5" ry="2.5" fill="rgba(34,197,94,0.08)"/>
+    <!-- Wings -->
+    <path d="M24 12 L18 4 L28 10 Z" fill="#080808" stroke="rgba(34,197,94,0.4)" stroke-width="0.6"/>
+    <path d="M24 16 L18 24 L28 18 Z" fill="#080808" stroke="rgba(34,197,94,0.4)" stroke-width="0.6"/>
+    <!-- Engine glow -->
+    <ellipse cx="10" cy="14" rx="3" ry="2" fill="rgba(34,197,94,0.3)"/>
+    <ellipse cx="10" cy="14" rx="1.5" ry="1" fill="rgba(34,197,94,0.7)"/>
+  </svg>
+</div>
+
+<div class="ship ship-2">
+  <div class="ship-glow"></div>
+  <svg width="64" height="28" viewBox="0 0 64 28" fill="none">
+    <path d="M8 14 L20 8 L52 12 L60 14 L52 16 L20 20 Z" fill="#0a0a0a" stroke="rgba(34,197,94,0.5)" stroke-width="0.8"/>
+    <ellipse cx="38" cy="14" rx="8" ry="4" fill="#050505" stroke="rgba(34,197,94,0.35)" stroke-width="0.6"/>
+    <ellipse cx="38" cy="14" rx="5" ry="2.5" fill="rgba(34,197,94,0.06)"/>
+    <path d="M24 12 L18 4 L28 10 Z" fill="#080808" stroke="rgba(34,197,94,0.35)" stroke-width="0.6"/>
+    <path d="M24 16 L18 24 L28 18 Z" fill="#080808" stroke="rgba(34,197,94,0.35)" stroke-width="0.6"/>
+    <ellipse cx="10" cy="14" rx="3" ry="2" fill="rgba(34,197,94,0.25)"/>
+    <ellipse cx="10" cy="14" rx="1.5" ry="1" fill="rgba(34,197,94,0.6)"/>
+  </svg>
+</div>
+
+<div class="ship ship-3">
+  <div class="ship-glow"></div>
+  <svg width="64" height="28" viewBox="0 0 64 28" fill="none">
+    <!-- Smaller, sleeker variant -->
+    <path d="M12 14 L22 10 L50 13 L56 14 L50 15 L22 18 Z" fill="#0a0a0a" stroke="rgba(34,197,94,0.45)" stroke-width="0.8"/>
+    <ellipse cx="36" cy="14" rx="6" ry="3" fill="#050505" stroke="rgba(34,197,94,0.3)" stroke-width="0.6"/>
+    <path d="M26 12 L20 6 L30 11 Z" fill="#080808" stroke="rgba(34,197,94,0.3)" stroke-width="0.6"/>
+    <path d="M26 16 L20 22 L30 17 Z" fill="#080808" stroke="rgba(34,197,94,0.3)" stroke-width="0.6"/>
+    <ellipse cx="13" cy="14" rx="2.5" ry="1.5" fill="rgba(34,197,94,0.5)"/>
+  </svg>
+</div>
+
+<div class="ship ship-4">
+  <div class="ship-glow"></div>
+  <svg width="80" height="36" viewBox="0 0 80 36" fill="none">
+    <!-- Larger, heavier cruiser -->
+    <path d="M6 18 L18 10 L60 14 L74 18 L60 22 L18 26 Z" fill="#0a0a0a" stroke="rgba(34,197,94,0.4)" stroke-width="0.8"/>
+    <!-- Top fin -->
+    <path d="M30 14 L26 4 L38 12 Z" fill="#070707" stroke="rgba(34,197,94,0.3)" stroke-width="0.6"/>
+    <path d="M30 22 L26 32 L38 24 Z" fill="#070707" stroke="rgba(34,197,94,0.3)" stroke-width="0.6"/>
+    <!-- Secondary wings -->
+    <path d="M20 16 L14 8 L24 13 Z" fill="#060606" stroke="rgba(34,197,94,0.25)" stroke-width="0.5"/>
+    <path d="M20 20 L14 28 L24 23 Z" fill="#060606" stroke="rgba(34,197,94,0.25)" stroke-width="0.5"/>
+    <!-- Bridge -->
+    <rect x="44" y="15" width="14" height="6" rx="1" fill="#050505" stroke="rgba(34,197,94,0.35)" stroke-width="0.6"/>
+    <rect x="46" y="16" width="10" height="4" rx="1" fill="rgba(34,197,94,0.05)"/>
+    <!-- Engines -->
+    <ellipse cx="8" cy="15" rx="3" ry="2" fill="rgba(34,197,94,0.3)"/>
+    <ellipse cx="8" cy="21" rx="3" ry="2" fill="rgba(34,197,94,0.3)"/>
+    <ellipse cx="8" cy="15" rx="1.5" ry="1" fill="rgba(34,197,94,0.7)"/>
+    <ellipse cx="8" cy="21" rx="1.5" ry="1" fill="rgba(34,197,94,0.7)"/>
+  </svg>
+</div>
+
+<!-- HUD overlay -->
+<div class="hud">
+  <div class="bracket tl"></div>
+  <div class="bracket tr"></div>
+  <div class="bracket bl"></div>
+  <div class="bracket br"></div>
+
+  <div class="cross-h"></div>
+  <div class="cross-v"></div>
+
+  <div class="ring r1"></div>
+  <div class="ring r2"></div>
+  <div class="ring r3"></div>
+
+  <div class="lock-dot"></div>
+
+  <div class="hud-meta tl">
+    <div class="bright">ID // YOOBINHERE</div>
+    <div>Bay Area, CA</div>
+  </div>
+  <div class="hud-meta tr">
+    <div class="bright">BAY AREA</div>
+    <div>2026</div>
+  </div>
+  <div class="hud-meta bl">
+    <div class="bright">LOCKED IN</div>
+  </div>
+  <div class="hud-meta br">
+    <div class="bright">37.7749° N 122.4194° W</div>
+  </div>
+
+  <div class="center">
+    <div class="id-tag">// Portfolio — 2026</div>
+    <div class="name">YOOBIN<br><span class="green">SEO.</span></div>
+    <div class="role">UI/UX Designer · Co-Founder · Product Builder</div>
+    <div class="divider"></div>
+    <div class="scroll-hint">Scroll to explore</div>
+  </div>
+</div>
+
+<!-- Status bar -->
+<div class="status-bar">
+  <div class="live"><div class="live-dot"></div>LIVE</div>
+  <div>YS_PORTFOLIO v1.0.0</div>
+  <div>SECTOR: DESIGN + PRODUCT</div>
+  <div class="spacer"></div>
+  <div>BAY AREA, CA</div>
+  <div>2026.03.31</div>
+</div>
+
+<!-- Preview note -->
+<div class="note-overlay">MOCKUP PREVIEW — <span>Hero H · Space Refinement</span> · Ships fly every 5–7s · Meteorites streak continuously</div>
+
+<script>
+  // Mouse-tracking crosshair
+  const crossH   = document.querySelector('.cross-h');
+  const crossV   = document.querySelector('.cross-v');
+  const rings     = document.querySelectorAll('.ring');
+  const lockDot   = document.querySelector('.lock-dot');
+
+  let targetX = window.innerWidth  / 2;
+  let targetY = window.innerHeight / 2;
+  let currentX = targetX;
+  let currentY = targetY;
+
+  document.addEventListener('mousemove', (e) => {
+    targetX = e.clientX;
+    targetY = e.clientY;
+  });
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  function tick() {
+    // Smooth follow — crosshair snappy, rings slightly laggier
+    currentX = lerp(currentX, targetX, 0.12);
+    currentY = lerp(currentY, targetY, 0.12);
+
+    const xPct = (currentX / window.innerWidth)  * 100;
+    const yPct = (currentY / window.innerHeight) * 100;
+
+    crossH.style.top  = yPct + '%';
+    crossV.style.left = xPct + '%';
+
+    rings.forEach((ring, i) => {
+      const lag = 0.06 - i * 0.015; // each ring slightly laggier
+      ring.style.top  = yPct + '%';
+      ring.style.left = xPct + '%';
+    });
+
+    if (lockDot) {
+      lockDot.style.top  = yPct + '%';
+      lockDot.style.left = xPct + '%';
+    }
+
+    requestAnimationFrame(tick);
+  }
+  // tick() is replaced by gameTick() below after missile setup
+
+  // ============================================================
+  // MISSILE GAME
+  // ============================================================
+  const ships = document.querySelectorAll('.ship');
+  const MISSILE_SPEED = 18;
+  const HIT_RADIUS = 52;
+  let missiles = [];
+  let hitShips = new Set();
+  let killCount = 0;
+
+  // Kill counter display
+  const killDisplay = document.createElement('div');
+  killDisplay.style.cssText = `
+    position: fixed; top: 50px; left: 50%; transform: translateX(-50%);
+    font-family: 'Courier New', monospace; font-size: 0.7rem; font-weight: 900;
+    color: rgba(34,197,94,0.5); letter-spacing: 0.3em; z-index: 100;
+    text-transform: uppercase; pointer-events: none; text-align: center;
+  `;
+  document.body.appendChild(killDisplay);
+
+  function updateKillDisplay() {
+    killDisplay.textContent = killCount > 0 ? `TARGETS DESTROYED: ${killCount}` : '';
+  }
+
+  // Track ship velocity for predictive targeting
+  const shipTrack = new Map(); // ship -> { cx, cy, vx, vy }
+
+  function getShipRect(ship) {
+    const rect = ship.getBoundingClientRect();
+    if (rect.width < 1) return null;
+    // Must be actually visible — ignore opacity:0 ships mid-animation
+    const opacity = parseFloat(getComputedStyle(ship).opacity);
+    if (opacity < 0.15) return null;
+    if (rect.right  < -20 || rect.left > window.innerWidth  + 20) return null;
+    if (rect.bottom < -20 || rect.top  > window.innerHeight + 20) return null;
+    return rect;
+  }
+
+  // Update ship velocity tracking each frame
+  function trackShips() {
+    ships.forEach(ship => {
+      const rect = getShipRect(ship);
+      if (!rect) { shipTrack.delete(ship); return; }
+      const cx = rect.left + rect.width  / 2;
+      const cy = rect.top  + rect.height / 2;
+      const prev = shipTrack.get(ship);
+      shipTrack.set(ship, {
+        cx, cy,
+        vx: prev ? cx - prev.cx : 0,
+        vy: prev ? cy - prev.cy : 0,
+      });
+    });
+  }
+
+  function getNearestShip(x, y) {
+    let nearest = null, nearestDist = Infinity;
+    ships.forEach(ship => {
+      if (hitShips.has(ship)) return;
+      const rect = getShipRect(ship);
+      if (!rect) return;
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top  + rect.height / 2;
+      const dist = Math.hypot(cx - x, cy - y);
+      if (dist < nearestDist) { nearestDist = dist; nearest = { ship, cx, cy }; }
+    });
+    return nearest;
+  }
+
+  // Ship debris shapes — angular hull fragments
+  const DEBRIS_SHAPES = [
+    'M0,-6 L5,4 L-3,6 Z',
+    'M-5,-3 L4,-5 L6,2 L-2,5 Z',
+    'M0,-4 L6,0 L3,6 L-4,3 Z',
+    'M-4,-4 L2,-6 L5,1 Z',
+    'M0,-7 L3,0 L-3,4 L-5,-2 Z',
+    'M2,-5 L7,2 L1,6 L-3,0 Z',
+    'M-6,0 L0,-5 L4,3 L-2,5 Z',
+    'M-3,-3 L5,-4 L4,4 L-4,2 Z',
+  ];
+
+  function spawnDebris(x, y, ship) {
+    const pieceCount = 8 + Math.floor(Math.random() * 5);
+    const container = document.createElement('div');
+    container.style.cssText = `position:fixed;left:0;top:0;width:0;height:0;pointer-events:none;z-index:60;`;
+    document.body.appendChild(container);
+
+    const pieces = [];
+    for (let i = 0; i < pieceCount; i++) {
+      const angle = (Math.random() * Math.PI * 2);
+      const speed = 1.5 + Math.random() * 4;
+      const rotSpeed = (Math.random() - 0.5) * 12;
+      const scale = 0.6 + Math.random() * 1.2;
+      const shape = DEBRIS_SHAPES[Math.floor(Math.random() * DEBRIS_SHAPES.length)];
+      const opacity = 0.7 + Math.random() * 0.3;
+      const color = Math.random() > 0.4 ? 'rgba(34,197,94,0.9)' : 'rgba(180,255,180,0.7)';
+
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('width', '20');
+      svg.setAttribute('height', '20');
+      svg.setAttribute('viewBox', '-10 -10 20 20');
+      svg.style.cssText = `position:fixed;pointer-events:none;filter:drop-shadow(0 0 3px rgba(34,197,94,0.8));`;
+
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', shape);
+      path.setAttribute('fill', color);
+      path.setAttribute('stroke', 'rgba(34,197,94,0.6)');
+      path.setAttribute('stroke-width', '0.5');
+      svg.appendChild(path);
+      container.appendChild(svg);
+
+      pieces.push({ el: svg, x, y, dx: Math.cos(angle) * speed, dy: Math.sin(angle) * speed, rot: Math.random() * 360, rotSpeed, scale, opacity, life: 1.0, decay: 0.012 + Math.random() * 0.016 });
+    }
+
+    // Animate debris with rAF
+    function animateDebris() {
+      let alive = false;
+      pieces.forEach(p => {
+        if (p.life <= 0) { p.el.style.display = 'none'; return; }
+        alive = true;
+        p.x   += p.dx;
+        p.y   += p.dy;
+        p.dy  += 0.04; // gentle gravity
+        p.dx  *= 0.98; // drag
+        p.rot += p.rotSpeed;
+        p.life -= p.decay;
+        const op = Math.max(0, p.life);
+        p.el.style.left      = (p.x - 10) + 'px';
+        p.el.style.top       = (p.y - 10) + 'px';
+        p.el.style.opacity   = op;
+        p.el.style.transform = `scale(${p.scale}) rotate(${p.rot}deg)`;
+      });
+      if (alive) requestAnimationFrame(animateDebris);
+      else container.remove();
+    }
+    requestAnimationFrame(animateDebris);
+  }
+
+  function spawnExplosion(x, y, ship) {
+    // Core flash + rings
+    const el = document.createElement('div');
+    el.className = 'explosion';
+    el.style.left = x + 'px';
+    el.style.top  = y + 'px';
+
+    const core = document.createElement('div'); core.className = 'exp-core'; el.appendChild(core);
+    const ring = document.createElement('div'); ring.className = 'exp-ring'; el.appendChild(ring);
+    const ring2 = document.createElement('div'); ring2.className = 'exp-ring2'; el.appendChild(ring2);
+
+    const sparkCount = 12;
+    for (let i = 0; i < sparkCount; i++) {
+      const spark = document.createElement('div');
+      spark.className = 'spark';
+      const angle = (i / sparkCount) * Math.PI * 2;
+      const dist = 30 + Math.random() * 50;
+      spark.style.setProperty('--sx', Math.cos(angle) * dist + 'px');
+      spark.style.setProperty('--sy', Math.sin(angle) * dist + 'px');
+      spark.style.animationDelay = (Math.random() * 0.1) + 's';
+      el.appendChild(spark);
+    }
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 900);
+
+    // Debris pieces
+    if (ship) spawnDebris(x, y, ship);
+  }
+
+  function fireMissile(fromX, fromY) {
+    const target = getNearestShip(fromX, fromY);
+    if (!target) return;
+
+    const angle = Math.atan2(target.cy - fromY, target.cx - fromX);
+    const missile = document.createElement('div');
+    missile.className = 'missile';
+    missile.style.left = fromX + 'px';
+    missile.style.top  = fromY + 'px';
+    missile.style.transform = `rotate(${angle}rad)`;
+    document.body.appendChild(missile);
+
+    missiles.push({
+      el: missile,
+      x: fromX, y: fromY,
+      dx: Math.cos(angle) * MISSILE_SPEED,
+      dy: Math.sin(angle) * MISSILE_SPEED,
+      target: target.ship,
+      angle,
+      dead: false
+    });
+  }
+
+  document.addEventListener('click', () => {
+    fireMissile(currentX, currentY);
+    // Rapid fire: shoot 3 in a slight spread
+    setTimeout(() => fireMissile(currentX, currentY), 60);
+  });
+
+  function updateMissiles() {
+    missiles = missiles.filter(m => !m.dead);
+    missiles.forEach(m => {
+      // Home in on target if still alive
+      if (m.target && !hitShips.has(m.target)) {
+        const rect = getShipRect(m.target);
+        if (rect) {
+          const tx = rect.left + rect.width  / 2;
+          const ty = rect.top  + rect.height / 2;
+          // Predictive lead targeting — aim where ship will be
+          const track = shipTrack.get(m.target);
+          const leadFrames = Math.hypot(tx - m.x, ty - m.y) / MISSILE_SPEED;
+          const aimX = tx + (track ? track.vx * leadFrames * 0.8 : 0);
+          const aimY = ty + (track ? track.vy * leadFrames * 0.8 : 0);
+          const angle = Math.atan2(aimY - m.y, aimX - m.x);
+          // Hard steer toward intercept point, always full speed
+          m.dx = lerp(m.dx, Math.cos(angle) * MISSILE_SPEED, 0.45);
+          m.dy = lerp(m.dy, Math.sin(angle) * MISSILE_SPEED, 0.45);
+          // Renormalize so speed never drops
+          const spd = Math.hypot(m.dx, m.dy);
+          m.dx = (m.dx / spd) * MISSILE_SPEED;
+          m.dy = (m.dy / spd) * MISSILE_SPEED;
+          const newAngle = Math.atan2(m.dy, m.dx);
+          m.el.style.transform = `rotate(${newAngle}rad)`;
+
+          // Collision check
+          const dist = Math.hypot(tx - m.x, ty - m.y);
+          if (dist < HIT_RADIUS) {
+            // HIT
+            spawnExplosion(tx, ty, m.target);
+            hitShips.add(m.target);
+            m.target.style.opacity = '0';
+            m.target.style.transition = 'opacity 0.05s';
+            killCount++;
+            updateKillDisplay();
+            // Respawn ship after 4 seconds
+            const deadShip = m.target;
+            setTimeout(() => {
+              deadShip.style.opacity = '';
+              deadShip.style.transition = '';
+              hitShips.delete(deadShip);
+            }, 4000);
+            m.dead = true;
+            m.el.remove();
+            return;
+          }
+        }
+      }
+
+      m.x += m.dx;
+      m.y += m.dy;
+      m.el.style.left = m.x + 'px';
+      m.el.style.top  = m.y + 'px';
+
+      // Remove if off screen
+      if (m.x < -50 || m.x > window.innerWidth + 50 || m.y < -50 || m.y > window.innerHeight + 50) {
+        m.dead = true;
+        m.el.remove();
+      }
+    });
+  }
+
+  // Main game loop — replaces original tick()
+  requestAnimationFrame(function startGame() {
+    gameTick();
+  });
+  // Live coordinate display — bottom right corner
+  const coordEl = document.querySelector('.hud-meta.br .bright');
+
+  // Map pixel position to fake geo coords centered on Bay Area
+  function toGeoCoord(px, py) {
+    const latBase = 37.7749, lonBase = -122.4194;
+    const latRange = 0.08, lonRange = 0.12;
+    const lat = latBase + ((0.5 - py / window.innerHeight) * latRange);
+    const lon = lonBase + ((px / window.innerWidth - 0.5) * lonRange);
+    const latStr = Math.abs(lat).toFixed(4) + '° ' + (lat >= 0 ? 'N' : 'S');
+    const lonStr = Math.abs(lon).toFixed(4) + '° ' + (lon <= 0 ? 'W' : 'E');
+    return latStr + ' ' + lonStr;
+  }
+
+  function gameTick() {
+    currentX = lerp(currentX, targetX, 0.12);
+    currentY = lerp(currentY, targetY, 0.12);
+    const xPct = (currentX / window.innerWidth)  * 100;
+    const yPct = (currentY / window.innerHeight) * 100;
+    crossH.style.top  = yPct + '%';
+    crossV.style.left = xPct + '%';
+    rings.forEach(ring => { ring.style.top = yPct + '%'; ring.style.left = xPct + '%'; });
+    if (lockDot) { lockDot.style.top = yPct + '%'; lockDot.style.left = xPct + '%'; }
+    // Live coordinates
+    if (coordEl) coordEl.textContent = toGeoCoord(currentX, currentY);
+    updateMissiles();
+    drawShootingStars();
+    requestAnimationFrame(gameTick);
+  }
+
+  // ============================================================
+  // SHOOTING STARS — canvas-based for natural feel
+  // ============================================================
+  const meteorCanvas = document.getElementById('meteor-canvas');
+  const mctx = meteorCanvas.getContext('2d');
+
+  function resizeMeteorCanvas() {
+    meteorCanvas.width  = window.innerWidth;
+    meteorCanvas.height = window.innerHeight;
+  }
+  resizeMeteorCanvas();
+  window.addEventListener('resize', resizeMeteorCanvas);
+
+  let shootingStars = [];
+
+  function spawnShootingStar() {
+    // Always spawn from top edge or right edge, travel down-left
+    const fromEdge = Math.random() < 0.7 ? 'top' : 'right';
+    let x, y;
+    if (fromEdge === 'top') {
+      x = Math.random() * window.innerWidth * 1.2;
+      y = -10;
+    } else {
+      x = window.innerWidth + 10;
+      y = Math.random() * window.innerHeight * 0.5;
+    }
+
+    // Angle: mostly downward-left (200-250 deg range), slight variance
+    const angleDeg = 200 + Math.random() * 50;
+    const angleRad = angleDeg * Math.PI / 180;
+    const speed    = 6 + Math.random() * 12;
+    const length   = 80 + Math.random() * 220;
+    const thickness = 0.4 + Math.random() * 1.2;
+    const brightness = 0.5 + Math.random() * 0.5; // vary per star
+    const hasTint  = Math.random() > 0.6; // some stars get the green tint
+
+    shootingStars.push({
+      x, y,
+      dx: Math.cos(angleRad) * speed,
+      dy: Math.sin(angleRad) * speed,
+      length,
+      thickness,
+      brightness,
+      hasTint,
+      life: 1.0,
+      // Unique decay: fast stars fade quicker, longer stars linger
+      decay: 0.008 + Math.random() * 0.018,
+      // trail history for smooth multi-point tail
+      trail: [],
+      maxTrail: Math.floor(length / speed) + 4,
+    });
+  }
+
+  // Schedule next star with natural random gap (1.5 - 5s)
+  function scheduleNextStar() {
+    const delay = 1500 + Math.random() * 3500;
+    setTimeout(() => {
+      spawnShootingStar();
+      // Occasional burst: 10% chance of a second star right after
+      if (Math.random() < 0.10) {
+        setTimeout(spawnShootingStar, 150 + Math.random() * 400);
+      }
+      scheduleNextStar();
+    }, delay);
+  }
+
+  // Seed a couple on load with short delays
+  setTimeout(spawnShootingStar, 600);
+  setTimeout(spawnShootingStar, 3200);
+  scheduleNextStar();
+
+  function drawShootingStars() {
+    mctx.clearRect(0, 0, meteorCanvas.width, meteorCanvas.height);
+
+    shootingStars = shootingStars.filter(s => s.life > 0);
+
+    shootingStars.forEach(s => {
+      // Push current head to trail
+      s.trail.push({ x: s.x, y: s.y });
+      if (s.trail.length > s.maxTrail) s.trail.shift();
+
+      // Move head
+      s.x += s.dx;
+      s.y += s.dy;
+      s.life -= s.decay;
+
+      if (s.trail.length < 2) return;
+
+      // Draw tail: gradient from transparent (old) to bright (head)
+      for (let i = 1; i < s.trail.length; i++) {
+        const t   = i / s.trail.length; // 0 = tail, 1 = head
+        const op  = t * t * s.life * s.brightness; // ease-in opacity
+
+        // Color: white core with optional green tint at head
+        let r = 255, g = 255, b = 255;
+        if (s.hasTint && t > 0.6) {
+          const tintT = (t - 0.6) / 0.4;
+          g = Math.round(255);
+          r = Math.round(255 - tintT * 100);
+          b = Math.round(255 - tintT * 80);
+        }
+
+        mctx.beginPath();
+        mctx.moveTo(s.trail[i - 1].x, s.trail[i - 1].y);
+        mctx.lineTo(s.trail[i].x, s.trail[i].y);
+        mctx.strokeStyle = `rgba(${r},${g},${b},${op.toFixed(3)})`;
+        mctx.lineWidth   = s.thickness * t;
+        mctx.lineCap     = 'round';
+        mctx.stroke();
+      }
+
+      // Bright glowing head dot
+      if (s.trail.length > 0) {
+        const head = s.trail[s.trail.length - 1];
+        const glow = mctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, s.thickness * 4);
+        const headOp = s.life * s.brightness;
+        glow.addColorStop(0,   `rgba(255,255,255,${headOp.toFixed(3)})`);
+        glow.addColorStop(0.4, s.hasTint
+          ? `rgba(180,255,200,${(headOp * 0.6).toFixed(3)})`
+          : `rgba(200,220,255,${(headOp * 0.5).toFixed(3)})`);
+        glow.addColorStop(1,   'rgba(0,0,0,0)');
+        mctx.beginPath();
+        mctx.arc(head.x, head.y, s.thickness * 4, 0, Math.PI * 2);
+        mctx.fillStyle = glow;
+        mctx.fill();
+      }
+    });
+  }
+
+  // Generate star field
+  const starsEl = document.getElementById('stars');
+  const starCount = 200;
+  for (let i = 0; i < starCount; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() < 0.7 ? 1 : Math.random() < 0.8 ? 1.5 : 2;
+    const x = Math.random() * 100;
+    const y = Math.random() * 100;
+    const dur = 2 + Math.random() * 4;
+    const delay = Math.random() * 5;
+    const minOp = 0.1 + Math.random() * 0.2;
+    const maxOp = 0.5 + Math.random() * 0.5;
+    star.style.cssText = `
+      width: ${size}px;
+      height: ${size}px;
+      left: ${x}%;
+      top: ${y}%;
+      --dur: ${dur}s;
+      --delay: -${delay}s;
+      --min-op: ${minOp};
+      --max-op: ${maxOp};
+    `;
+    starsEl.appendChild(star);
+  }
+</script>
+</body>
+</html>

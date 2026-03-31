@@ -1,0 +1,506 @@
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .gallery-header {
+    margin-bottom: 2rem;
+  }
+  .gallery-header h2 { font-size: 1.4rem; margin-bottom: 0.4rem; }
+  .gallery-header p { color: #666; font-size: 0.85rem; }
+  .gallery-header .meta {
+    display: flex; gap: 1.5rem; margin-top: 0.75rem;
+    font-size: 0.7rem; font-family: monospace; color: #333;
+  }
+  .gallery-header .meta span { color: #22c55e88; }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .card {
+    border: 1px solid #1e1e1e;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+    background: #0d0d0d;
+  }
+  .card:hover { border-color: #3a3a3a; transform: translateY(-2px); }
+  .card.selected {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 1px #22c55e33, 0 4px 20px #22c55e11;
+  }
+  .card.selected .card-letter { color: #22c55e; }
+
+  .card-preview {
+    height: 180px;
+    background: #080808;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-footer {
+    padding: 0.7rem 0.9rem 0.8rem;
+    border-top: 1px solid #161616;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .card-letter {
+    font-size: 1rem;
+    font-weight: 900;
+    color: #2a2a2a;
+    font-family: monospace;
+    transition: color 0.2s;
+    flex-shrink: 0;
+    width: 18px;
+  }
+  .card-info h3 { font-size: 0.78rem; font-weight: 600; color: #ccc; line-height: 1.3; }
+  .card-info p { font-size: 0.68rem; color: #555; line-height: 1.4; margin-top: 0.15rem; }
+
+  /* ============================================================
+     A — Ghost Stamp
+  ============================================================ */
+  .preview-a { display: flex; flex-direction: column; justify-content: flex-end; padding: 0; }
+  .preview-a .bg-text {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-size: 4.5rem; font-weight: 900; letter-spacing: -0.05em;
+    text-transform: uppercase; color: transparent;
+    -webkit-text-stroke: 1px #1a1a1a; white-space: nowrap; user-select: none;
+  }
+  .preview-a .fg { position: relative; padding: 1rem; }
+  .preview-a .counter { font-size: 0.5rem; font-family: monospace; color: #2a2a2a; letter-spacing: 0.15em; margin-bottom: 0.35rem; }
+  .preview-a .name { font-size: 1.5rem; font-weight: 900; color: #fff; letter-spacing: -0.04em; text-transform: uppercase; line-height: 1; }
+  .preview-a .name span { color: #22c55e; }
+  .preview-a .role { font-size: 0.5rem; color: #333; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 0.3rem; }
+
+  /* ============================================================
+     B — Terminal Boot
+  ============================================================ */
+  .preview-b { padding: 1rem; font-family: monospace; display: flex; flex-direction: column; gap: 0.3rem; justify-content: center; }
+  .preview-b .prompt { font-size: 0.55rem; color: #2a2a2a; }
+  .preview-b .cmd { color: #22c55e; font-size: 0.6rem; }
+  .preview-b .out-name { font-size: 1.6rem; font-weight: 700; color: #fff; letter-spacing: -0.03em; line-height: 1.1; }
+  .preview-b .out-role { font-size: 0.55rem; color: #444; }
+  .preview-b .cursor { display: inline-block; width: 7px; height: 0.85rem; background: #22c55e; margin-left: 2px; vertical-align: text-bottom; animation: blink 1s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .preview-b .status { margin-top: auto; padding-top: 0.6rem; border-top: 1px solid #111; display: flex; justify-content: space-between; font-size: 0.48rem; color: #222; }
+
+  /* ============================================================
+     C — Oversized Type
+  ============================================================ */
+  .preview-c { padding: 1rem; display: flex; flex-direction: column; justify-content: space-between; }
+  .preview-c .top { font-size: 0.48rem; font-family: monospace; color: #222; letter-spacing: 0.2em; }
+  .preview-c .giant { font-size: 3.2rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.05em; line-height: 0.88; color: #fff; }
+  .preview-c .giant span { color: #22c55e; }
+  .preview-c .bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+  .preview-c .tags { display: flex; gap: 0.3rem; }
+  .preview-c .t { font-size: 0.48rem; padding: 0.15rem 0.4rem; border: 1px solid #22c55e33; color: #22c55e77; border-radius: 20px; font-family: monospace; }
+  .preview-c .scroll { font-size: 0.48rem; color: #222; font-family: monospace; }
+
+  /* ============================================================
+     D — Split Panel
+  ============================================================ */
+  .preview-d { display: flex; height: 100%; }
+  .preview-d .left { width: 55%; padding: 1rem; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid #111; }
+  .preview-d .right { width: 45%; padding: 0.7rem; display: flex; flex-direction: column; gap: 0; justify-content: center; }
+  .preview-d .d-label { font-size: 0.45rem; font-family: monospace; color: #222; letter-spacing: 0.12em; }
+  .preview-d .d-name { font-size: 1.55rem; font-weight: 900; color: #fff; letter-spacing: -0.04em; text-transform: uppercase; line-height: 0.95; }
+  .preview-d .d-name span { color: #22c55e; }
+  .preview-d .d-cta { font-size: 0.5rem; font-family: monospace; color: #22c55e; border: 1px solid #22c55e33; padding: 0.2rem 0.5rem; display: inline-block; border-radius: 3px; }
+  .preview-d .data-row { font-size: 0.48rem; font-family: monospace; display: flex; justify-content: space-between; padding: 0.28rem 0; border-bottom: 1px solid #0f0f0f; color: #2a2a2a; }
+  .preview-d .data-row .val { color: #22c55e88; }
+
+  /* ============================================================
+     E — Mission Control
+  ============================================================ */
+  .preview-e { padding: 0.85rem; display: flex; flex-direction: column; gap: 0.45rem; font-family: monospace; }
+  .preview-e .e-hdr { display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.4rem; border-bottom: 1px solid #111; }
+  .preview-e .e-title { font-size: 0.48rem; letter-spacing: 0.12em; color: #222; }
+  .preview-e .e-live { display: flex; align-items: center; gap: 0.25rem; font-size: 0.45rem; color: #22c55e; }
+  .preview-e .e-dot { width: 4px; height: 4px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 4px #22c55e; }
+  .preview-e .e-namerow { display: flex; align-items: baseline; gap: 0.4rem; }
+  .preview-e .e-big { font-size: 1.55rem; font-weight: 900; color: #fff; letter-spacing: -0.04em; text-transform: uppercase; }
+  .preview-e .e-tag { font-size: 0.45rem; color: #22c55e; border: 1px solid #22c55e33; padding: 0.12rem 0.35rem; border-radius: 3px; white-space: nowrap; }
+  .preview-e .e-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.3rem; }
+  .preview-e .e-stat { background: #0b0b0b; border: 1px solid #161616; border-radius: 3px; padding: 0.35rem 0.4rem; }
+  .preview-e .e-val { font-size: 0.9rem; font-weight: 700; color: #fff; letter-spacing: -0.03em; }
+  .preview-e .e-val span { color: #22c55e; font-size: 0.6rem; }
+  .preview-e .e-lbl { font-size: 0.42rem; color: #2a2a2a; letter-spacing: 0.08em; margin-top: 0.05rem; }
+  .preview-e .e-bars { display: flex; gap: 2px; }
+  .preview-e .e-bar { height: 2px; border-radius: 2px; background: #111; flex: 1; }
+  .preview-e .e-bar.on { background: #22c55e; }
+  .preview-e .e-bar.half { background: #22c55e44; }
+
+  /* ============================================================
+     F — Marquee Ticker
+  ============================================================ */
+  .preview-f { display: flex; flex-direction: column; justify-content: space-between; }
+  .preview-f .f-ticker-wrap { flex: 1; display: flex; align-items: center; overflow: hidden; }
+  .preview-f .f-ticker {
+    font-size: 3rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.03em;
+    color: #fff; white-space: nowrap; animation: ticker 10s linear infinite; padding-left: 100%;
+  }
+  @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-55%); } }
+  .preview-f .f-ticker .sep { color: #22c55e; margin: 0 0.2em; font-weight: 300; }
+  .preview-f .f-bar { padding: 0.6rem 1rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #111; }
+  .preview-f .f-meta { font-size: 0.48rem; font-family: monospace; color: #333; letter-spacing: 0.1em; }
+  .preview-f .f-cta { font-size: 0.48rem; font-family: monospace; color: #22c55e; border: 1px solid #22c55e33; padding: 0.18rem 0.45rem; border-radius: 3px; }
+
+  /* ============================================================
+     G — Glitch + Scanlines
+  ============================================================ */
+  .preview-g { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .preview-g .scanlines { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.3) 3px, rgba(0,0,0,0.3) 4px); pointer-events: none; z-index: 2; }
+  .preview-g .g-name { font-size: 1.9rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.04em; color: #fff; position: relative; z-index: 3; line-height: 1; }
+  .preview-g .g-name .gl1 { position: absolute; inset: 0; color: #22c55e; clip-path: polygon(0 28%, 100% 28%, 100% 48%, 0 48%); transform: translateX(-3px); opacity: 0.65; }
+  .preview-g .g-name .gl2 { position: absolute; inset: 0; color: #ff0055; clip-path: polygon(0 62%, 100% 62%, 100% 72%, 0 72%); transform: translateX(3px); opacity: 0.45; }
+  .preview-g .g-sub { font-size: 0.52rem; font-family: monospace; color: #22c55e77; letter-spacing: 0.2em; margin-top: 0.6rem; position: relative; z-index: 3; text-transform: uppercase; }
+  .preview-g .g-scanbar { position: absolute; left: 0; right: 0; height: 1px; background: #22c55e1a; z-index: 4; animation: scanbar 4s ease-in-out infinite; }
+  @keyframes scanbar { 0% { top: 5%; opacity:0; } 15% { opacity:1; } 85% { opacity:1; } 100% { top: 95%; opacity:0; } }
+
+  /* ============================================================
+     H — HUD Reticle
+  ============================================================ */
+  .preview-h { display: flex; align-items: center; justify-content: center; font-family: monospace; }
+  .preview-h::before { content:''; position:absolute; top:10px; left:10px; width:14px; height:14px; border-top:1px solid #22c55e44; border-left:1px solid #22c55e44; }
+  .preview-h::after  { content:''; position:absolute; bottom:10px; right:10px; width:14px; height:14px; border-bottom:1px solid #22c55e44; border-right:1px solid #22c55e44; }
+  .preview-h .h-tr { position:absolute; top:10px; right:10px; width:14px; height:14px; border-top:1px solid #22c55e44; border-right:1px solid #22c55e44; }
+  .preview-h .h-bl { position:absolute; bottom:10px; left:10px; width:14px; height:14px; border-bottom:1px solid #22c55e44; border-left:1px solid #22c55e44; }
+  .preview-h .h-cx { position:absolute; top:50%; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,#22c55e1a 30%,#22c55e2a 50%,#22c55e1a 70%,transparent); }
+  .preview-h .h-cy { position:absolute; left:50%; top:0; bottom:0; width:1px; background:linear-gradient(180deg,transparent,#22c55e1a 30%,#22c55e2a 50%,#22c55e1a 70%,transparent); }
+  .preview-h .h-ring1 { position:absolute; width:70px; height:70px; border:1px solid #22c55e1a; border-radius:50%; top:50%; left:50%; transform:translate(-50%,-50%); }
+  .preview-h .h-ring2 { position:absolute; width:110px; height:110px; border:1px solid #22c55e0d; border-radius:50%; top:50%; left:50%; transform:translate(-50%,-50%); }
+  .preview-h .h-meta { position:absolute; font-size:0.42rem; color:#22c55e44; letter-spacing:0.08em; }
+  .preview-h .h-meta.tl { top:14px; left:18px; }
+  .preview-h .h-meta.br { bottom:14px; right:18px; text-align:right; }
+  .preview-h .h-content { position:relative; z-index:2; text-align:center; }
+  .preview-h .h-name { font-size:1.45rem; font-weight:900; color:#fff; letter-spacing:-0.04em; text-transform:uppercase; line-height:1; }
+  .preview-h .h-name span { color:#22c55e; }
+  .preview-h .h-sub { font-size:0.45rem; color:#22c55e77; letter-spacing:0.2em; margin-top:0.3rem; text-transform:uppercase; }
+
+  /* ============================================================
+     I — Ruled Rows
+  ============================================================ */
+  .preview-i { display:flex; flex-direction:column; justify-content:center; }
+  .preview-i .i-row { display:flex; align-items:center; padding:0 1rem; height:44px; border-bottom:1px solid #0f0f0f; position:relative; }
+  .preview-i .i-row:first-child { border-top:1px solid #0f0f0f; }
+  .preview-i .i-num { font-size:0.45rem; font-family:monospace; color:#1e1e1e; width:24px; flex-shrink:0; }
+  .preview-i .i-word { font-size:1.65rem; font-weight:900; text-transform:uppercase; letter-spacing:-0.04em; color:#fff; flex:1; line-height:1; }
+  .preview-i .i-tag { font-size:0.45rem; font-family:monospace; color:#2a2a2a; letter-spacing:0.08em; text-align:right; }
+  .preview-i .i-row.active { background:#0b0b0b; }
+  .preview-i .i-row.active::before { content:''; position:absolute; left:0; top:0; bottom:0; width:2px; background:#22c55e; }
+  .preview-i .i-row.active .i-word { color:#22c55e; }
+  .preview-i .i-row.active .i-num { color:#22c55e44; }
+  .preview-i .i-row.active .i-tag { color:#22c55e55; }
+
+  /* ============================================================
+     J — Film Strip
+  ============================================================ */
+  .preview-j { display:flex; height:100%; }
+  .preview-j .edge { width:16px; background:#040404; display:flex; flex-direction:column; align-items:center; padding:6px 0; gap:7px; flex-shrink:0; border-right:1px solid #111; }
+  .preview-j .edge.r { border-right:none; border-left:1px solid #111; }
+  .preview-j .sp { width:7px; height:5px; background:#0e0e0e; border-radius:1px; border:1px solid #181818; flex-shrink:0; }
+  .preview-j .frames { flex:1; display:flex; flex-direction:column; }
+  .preview-j .fr { flex:1; border-bottom:1px solid #0f0f0f; padding:0 0.65rem; display:flex; align-items:center; justify-content:space-between; position:relative; }
+  .preview-j .fr:last-child { border-bottom:none; }
+  .preview-j .fr-num { font-size:0.42rem; font-family:monospace; color:#1a1a1a; }
+  .preview-j .fr-word { font-size:1.35rem; font-weight:900; text-transform:uppercase; letter-spacing:-0.04em; color:#fff; line-height:1; }
+  .preview-j .fr-tag { font-size:0.42rem; font-family:monospace; color:#1e1e1e; text-align:right; line-height:1.4; }
+  .preview-j .fr.on { background:#0b0b0b; }
+  .preview-j .fr.on .fr-word { color:#22c55e; }
+  .preview-j .fr.on .fr-num { color:#22c55e44; }
+  .preview-j .fr.on .fr-tag { color:#22c55e55; }
+
+  /* ============================================================
+     K — Noise Atmosphere
+  ============================================================ */
+  .preview-k { display:flex; align-items:center; justify-content:center; text-align:center; }
+  .preview-k .k-bg { position:absolute; inset:0; background:radial-gradient(ellipse 120% 80% at 50% 50%, #0e1a0e 0%, #080808 55%, #030303 100%); }
+  .preview-k .k-vig { position:absolute; inset:0; background:radial-gradient(ellipse 80% 80% at 50% 50%, transparent 20%, rgba(0,0,0,0.8) 100%); }
+  .preview-k .k-overlay { position:absolute; inset:0; opacity:0.05; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  .preview-k .k-content { position:relative; z-index:3; }
+  .preview-k .k-eyebrow { font-size:0.45rem; font-family:monospace; letter-spacing:0.3em; color:#22c55e55; text-transform:uppercase; margin-bottom:0.5rem; }
+  .preview-k .k-name { font-size:1.8rem; font-weight:900; letter-spacing:-0.04em; text-transform:uppercase; color:#e0e0e0; line-height:1; text-shadow:0 0 40px rgba(34,197,94,0.12); }
+  .preview-k .k-name .dim { color:#333; }
+  .preview-k .k-rule { width:24px; height:1px; background:#22c55e33; margin:0.5rem auto; }
+  .preview-k .k-sub { font-size:0.48rem; color:#333; letter-spacing:0.2em; text-transform:uppercase; }
+
+  /* ============================================================
+     L — Blueprint Grid
+  ============================================================ */
+  .preview-l { display:flex; align-items:center; justify-content:center; }
+  .preview-l .l-grid { position:absolute; inset:0; background-image:linear-gradient(#22c55e07 1px,transparent 1px),linear-gradient(90deg,#22c55e07 1px,transparent 1px),linear-gradient(#22c55e03 1px,transparent 1px),linear-gradient(90deg,#22c55e03 1px,transparent 1px); background-size:40px 40px,40px 40px,8px 8px,8px 8px; }
+  .preview-l .l-cx { position:absolute; top:50%; left:0; right:0; height:1px; background:#22c55e18; }
+  .preview-l .l-cy { position:absolute; left:50%; top:0; bottom:0; width:1px; background:#22c55e18; }
+  .preview-l .l-c { position:absolute; width:10px; height:10px; border-color:#22c55e2a; border-style:solid; }
+  .preview-l .l-c.tl { top:8px; left:8px; border-width:1px 0 0 1px; }
+  .preview-l .l-c.tr { top:8px; right:8px; border-width:1px 1px 0 0; }
+  .preview-l .l-c.bl { bottom:8px; left:8px; border-width:0 0 1px 1px; }
+  .preview-l .l-c.br { bottom:8px; right:8px; border-width:0 1px 1px 0; }
+  .preview-l .l-ann { position:absolute; font-size:0.42rem; font-family:monospace; color:#22c55e33; letter-spacing:0.08em; }
+  .preview-l .l-ann.top { top:8px; left:50%; transform:translateX(-50%); }
+  .preview-l .l-ann.lft { left:8px; top:50%; transform:translateY(-50%) rotate(-90deg); }
+  .preview-l .l-dot { position:absolute; width:4px; height:4px; background:#22c55e; border-radius:50%; box-shadow:0 0 5px #22c55e; top:50%; left:50%; transform:translate(-50%,-50%); z-index:3; }
+  .preview-l .l-content { position:relative; z-index:2; text-align:center; }
+  .preview-l .l-name { font-size:1.5rem; font-weight:900; text-transform:uppercase; letter-spacing:-0.04em; color:#fff; line-height:0.95; }
+  .preview-l .l-name span { color:#22c55e; }
+  .preview-l .l-spec { margin-top:0.4rem; font-size:0.45rem; font-family:monospace; color:#22c55e44; letter-spacing:0.12em; text-transform:uppercase; }
+
+  /* ============================================================
+     Footer
+  ============================================================ */
+  .gallery-footer {
+    margin-top: 1.5rem;
+    padding: 0.75rem 1rem;
+    background: #0a0a0a;
+    border: 1px solid #161616;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    color: #444;
+    font-family: monospace;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .gallery-footer span { color: #22c55e77; }
+  .selected-display { color: #22c55e; }
+</style>
+
+<div class="gallery-header">
+  <h2>All Hero Concepts — A through L</h2>
+  <p class="subtitle">Click any card to select it. You can pick a favorite or note which elements you want to combine.</p>
+  <div class="meta">
+    <div>Direction: <span>Brutalist Modern</span></div>
+    <div>Accent: <span>Terminal Green #22c55e</span></div>
+    <div>Options: <span>12</span></div>
+  </div>
+</div>
+
+<div class="gallery">
+
+  <!-- A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-preview preview-a">
+      <div class="bg-text">YOOBIN</div>
+      <div class="fg">
+        <div class="counter">001 / YOOBIN SEO</div>
+        <div class="name">Yoobin <span>Seo</span></div>
+        <div class="role">UI/UX · FOUNDER · PRODUCT</div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="card-letter">A</div>
+      <div class="card-info"><h3>Ghost Stamp + Identity</h3><p>Oversized ghost letterform behind staggered content reveal</p></div>
+    </div>
+  </div>
+
+  <!-- B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-preview preview-b">
+      <div class="prompt">~ portfolio v1.0.0 — initialized</div>
+      <div class="cmd">&gt; whoami</div>
+      <div class="out-name">Yoobin Seo<span class="cursor"></span></div>
+      <div class="out-role">UI/UX Designer · Founder · Bay Area</div>
+      <div class="cmd" style="margin-top:0.5rem">&gt; ls ./work</div>
+      <div style="font-size:0.52rem;color:#444;margin-top:0.2rem">bloggo/&nbsp;&nbsp;linkedspaces/&nbsp;&nbsp;more...</div>
+      <div class="status"><span>READY</span><span>v1.0.0</span><span>YS © 2026</span></div>
+    </div>
+    <div class="card-footer">
+      <div class="card-letter">B</div>
+      <div class="card-info"><h3>Terminal Boot Sequence</h3><p>Page loads like a terminal — line-by-line typewriter reveal</p></div>
+    </div>
+  </div>
+
+  <!-- C -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-preview preview-c">
+      <div class="top">// PORTFOLIO 2026</div>
+      <div class="giant">YOO<span>_</span><br>BIN<br>SEO.</div>
+      <div class="bottom">
+        <div class="tags"><span class="t">UI/UX</span><span class="t">FOUNDER</span><span class="t">BAY AREA</span></div>
+        <span class="scroll">SCROLL ↓</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="card-letter">C</div>
+      <div class="card-info"><h3>Oversized Typographic Grid</h3><p>Name fills the viewport — pure typographic confidence</p></div>
+    </div>
+  </div>
+
+  <!-- D -->
+  <div class="card" data-choice="d" onclick="toggleSelect(this)">
+    <div class="card-preview preview-d">
+      <div class="left">
+        <div class="d-label">001 / IDENTITY</div>
+        <div class="d-name">YOO<br>BIN<br><span>SEO.</span></div>
+        <div class="d-cta">[ Enter ]</div>
+      </div>
+      <div class="right">
+        <div class="data-row"><span>ROLE</span><span class="val">UI/UX</span></div>
+        <div class="data-row"><span>TYPE</span><span class="val">FOUNDER</span></div>
+        <div class="data-row"><span>LOC</span><span class="val">BAY AREA</span></div>
+        <div class="data-row"><span>STATUS</span><span class="val">OPEN</span></div>
+        <div class="data-row"><span>YEAR</span><span class="val" style="color:#444">2026</span></div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="card-letter">D</div>
+      <div class="card-info"><h3>Split: Identity + Data Panel</h3><p>Name left, live attribute panel right — system inspector energy</p></div>
+    </div>
+  </div>
+
+  <!-- E -->
+  <div class="card" data-choice="e" onclick="toggleSelect(this)">
+    <div class="card-preview preview-e">
+      <div class="e-hdr">
+        <span class="e-title">YS_PORTFOLIO // MISSION CONTROL</span>
+        <span class="e-live"><span class="e-dot"></span>LIVE</span>
+      </div>
+      <div class="e-namerow">
+        <span class="e-big">YOOBIN SEO</span>
+        <span class="e-tag">DESIGNER+FOUNDER</span>
+      </div>
+      <div class="e-stats">
+        <div class="e-stat"><div class="e-val">2<span>+</span></div><div class="e-lbl">PRODUCTS BUILT</div></div>
+        <div class="e-stat"><div class="e-val">∞</div><div class="e-lbl">IN PROGRESS</div></div>
+        <div class="e-stat"><div class="e-val">1<span>K+</span></div><div class="e-lbl">BETA USERS</div></div>
+      </div>
+      <div class="e-bars">
+        <div class="e-bar on"></div><div class="e-bar on"></div><div class="e-bar on"></div>
+        <div class="e-bar half"></div><div class="e-bar half"></div>
+        <div class="e-bar"></div><div class="e-bar"></div><div class="e-bar"></div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="card-letter">E</div>
+      <div class="card-info"><h3>Mission Control Dashboard</h3><p>Stats, progress bars, live indicator — quantifies your work immediately</p></div>
+    </div>
+  </div>
+
+  <!-- F -->
+  <div class="card" data-choice="f" onclick="toggleSelect(this)">
+    <div class="card-preview preview-f">
+      <div class="f-ticker-wrap">
+        <div class="f-ticker">YOOBIN SEO<span class="sep">/</span>UI UX<span class="sep">/</span>FOUNDER<span class="sep">/</span>BUILDER<span class="sep">/</span>YOOBIN SEO<span class="sep">/</span></div>
+      </div>
+      <div class="f-bar">
+        <span class="f-meta">BAY AREA · 2026 · OPEN</span>
+        <span class="f-cta">[ View Work ]</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="card-letter">F</div>
+      <div class="card-info"><h3>Infinite Marquee Ticker</h3><p>Giant kinetic ticker — page is in motion before you scroll</p></div>
+    </div>
+  </div>
+
+  <!-- G -->
+  <div class="card" data-choice="g" onclick="toggleSelect(this)">
+    <div class="card-preview preview-g">
+      <div class="scanlines"></div>
+      <div class="g-scanbar"></div>
+      <div class="g-name">YOOBIN SEO<div class="gl1">YOOBIN SEO</div><div class="gl2">YOOBIN SEO</div></div>
+      <div class="g-sub">UI/UX · FOUNDER · BAY AREA</div>
+    </div>
+    <div class="card-footer">
+      <div class="card-letter">G</div>
+      <div class="card-info"><h3>Glitch + Scanlines</h3><p>RGB-split layers, horizontal scanlines, slow scan bar animation</p></div>
+    </div>
+  </div>
+
+  <!-- H -->
+  <div class="card" data-choice="h" onclick="toggleSelect(this)">
+    <div class="card-preview preview-h">
+      <div class="h-tr"></div><div class="h-bl"></div>
+      <div class="h-cx"></div><div class="h-cy"></div>
+      <div class="h-ring1"></div><div class="h-ring2"></div>
+      <div class="h-meta tl">ID // YS_001<br>BAY AREA</div>
+      <div class="h-meta br">STATUS: OPEN<br>LOCK ON</div>
+      <div class="h-content">
+        <div class="h-name">YOOBIN<br><span>SEO.</span></div>
+        <div class="h-sub">DESIGNER · FOUNDER · BUILDER</div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="card-letter">H</div>
+      <div class="card-info"><h3>HUD / Targeting Reticle</h3><p>Crosshairs, rings, corner brackets — tactical heads-up display</p></div>
+    </div>
+  </div>
+
+  <!-- I -->
+  <div class="card" data-choice="i" onclick="toggleSelect(this)">
+    <div class="card-preview preview-i">
+      <div class="i-row"><span class="i-num">01</span><span class="i-word">YOOBIN</span><span class="i-tag">NAME</span></div>
+      <div class="i-row active"><span class="i-num">02</span><span class="i-word">SEO.</span><span class="i-tag">DESIGNER</span></div>
+      <div class="i-row"><span class="i-num">03</span><span class="i-word">FOUNDER</span><span class="i-tag">BUILDER</span></div>
+      <div class="i-row"><span class="i-num">04</span><span class="i-word">BAY AREA</span><span class="i-tag">OPEN</span></div>
+    </div>
+    <div class="card-footer">
+      <div class="card-letter">I</div>
+      <div class="card-info"><h3>Ruled Rows / List Manifest</h3><p>Identity as line items in a register — one row lit green</p></div>
+    </div>
+  </div>
+
+  <!-- J -->
+  <div class="card" data-choice="j" onclick="toggleSelect(this)">
+    <div class="card-preview preview-j">
+      <div class="edge"><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div></div>
+      <div class="frames">
+        <div class="fr"><span class="fr-num">001</span><span class="fr-word">YOOBIN</span><span class="fr-tag">DESIGNER</span></div>
+        <div class="fr on"><span class="fr-num">002</span><span class="fr-word">SEO.</span><span class="fr-tag">FOUNDER</span></div>
+        <div class="fr"><span class="fr-num">003</span><span class="fr-word">BUILDER</span><span class="fr-tag">BAY AREA</span></div>
+        <div class="fr"><span class="fr-num">004</span><span class="fr-word">↓ SCROLL</span><span class="fr-tag">ENTER</span></div>
+      </div>
+      <div class="edge r"><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div></div>
+    </div>
+    <div class="card-footer">
+      <div class="card-letter">J</div>
+      <div class="card-info"><h3>Film Strip / Frame Reel</h3><p>Identity across four film frames with sprocket holes — cinematic and brutalist</p></div>
+    </div>
+  </div>
+
+  <!-- K -->
+  <div class="card" data-choice="k" onclick="toggleSelect(this)">
+    <div class="card-preview preview-k">
+      <div class="k-bg"></div><div class="k-vig"></div><div class="k-overlay"></div>
+      <div class="k-content">
+        <div class="k-eyebrow">// portfolio · 2026</div>
+        <div class="k-name">YOOBIN <span class="dim">/</span><br>SEO</div>
+        <div class="k-rule"></div>
+        <div class="k-sub">UI/UX · Founder · Bay Area</div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="card-letter">K</div>
+      <div class="card-info"><h3>Noise Atmosphere</h3><p>Grain, deep green vignette glow — darkroom and atmospheric</p></div>
+    </div>
+  </div>
+
+  <!-- L -->
+  <div class="card" data-choice="l" onclick="toggleSelect(this)">
+    <div class="card-preview preview-l">
+      <div class="l-grid"></div>
+      <div class="l-cx"></div><div class="l-cy"></div>
+      <div class="l-c tl"></div><div class="l-c tr"></div><div class="l-c bl"></div><div class="l-c br"></div>
+      <div class="l-ann top">W: 100VW</div>
+      <div class="l-ann lft">H: 100VH</div>
+      <div class="l-dot"></div>
+      <div class="l-content">
+        <div class="l-name">YOOBIN<br><span>SEO.</span></div>
+        <div class="l-spec">UI/UX · FOUNDER · BUILDER</div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="card-letter">L</div>
+      <div class="card-info"><h3>Blueprint / Technical Grid</h3><p>Grid lines, dimension annotations, name plotted at origin</p></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="gallery-footer">
+  <span>// 12 concepts · brutalist modern · terminal green</span>
+  <span>Click to select — or describe a hybrid in the terminal</span>
+</div>
