@@ -1081,7 +1081,7 @@
   /* ---- Experience Journey section ---- */
   #section-experience {
     position: relative;
-    height: 560vh;
+    height: 700vh;
     padding-top: 0;
     margin-top: 9rem;
   }
@@ -1093,7 +1093,7 @@
   }
   .ej-sticky {
     position: sticky;
-    top: 6.5rem;
+    top: 0;
     height: 100vh;
     overflow: hidden;
     background:
@@ -1111,27 +1111,57 @@
       radial-gradient(circle at 44% 84%, rgba(80,255,143,0.08), transparent 22%);
     pointer-events: none;
   }
-  .ej-lane {
+  .ej-road {
+    --dash-offset: 0px;
     position: absolute;
     left: 50%;
-    top: -16%;
+    top: -18%;
     transform: translateX(-50%);
-    width: 1px;
-    height: 152%;
-    background: linear-gradient(to bottom, transparent, rgba(110,255,162,0.84), transparent);
-    box-shadow: 0 0 14px rgba(70,255,137,0.33);
-    will-change: transform;
+    width: clamp(170px, 19vw, 300px);
+    height: 156%;
+    border-left: 1px solid rgba(120,255,170,0.24);
+    border-right: 1px solid rgba(120,255,170,0.24);
+    background:
+      linear-gradient(90deg, rgba(0,0,0,0.65) 0%, rgba(14,24,18,0.64) 16%, rgba(9,15,11,0.85) 50%, rgba(14,24,18,0.64) 84%, rgba(0,0,0,0.65) 100%),
+      repeating-linear-gradient(
+        180deg,
+        rgba(132,255,182,0.045) 0px,
+        rgba(132,255,182,0.045) 3px,
+        rgba(0,0,0,0) 3px,
+        rgba(0,0,0,0) 24px
+      );
+    box-shadow:
+      0 0 0 1px rgba(120,255,170,0.08),
+      inset 0 0 40px rgba(0,0,0,0.75),
+      0 0 55px rgba(14,255,120,0.14);
+    pointer-events: none;
   }
-  .ej-lane-glow {
+  .ej-road::before {
+    content: '';
     position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 0.8rem;
-    height: 34rem;
-    border-radius: 999px;
-    background: rgba(120,255,173,0.16);
-    filter: blur(1px);
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        180deg,
+        rgba(160,255,205,0.92) 0px,
+        rgba(160,255,205,0.92) 26px,
+        rgba(0,0,0,0) 26px,
+        rgba(0,0,0,0) 62px
+      );
+    background-size: 2px 62px;
+    background-repeat: repeat-y;
+    background-position: 50% var(--dash-offset);
+    opacity: 0.6;
+    mix-blend-mode: screen;
+  }
+  .ej-road::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 50% 35%, rgba(80,255,155,0.14), transparent 50%),
+      linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.55) 100%);
+    pointer-events: none;
   }
   .ej-character {
     position: absolute;
@@ -1227,11 +1257,123 @@
     color: rgba(187,247,208,0.86);
   }
   .ej-card .ej-dates {
-    margin-top: 0.36rem;
+    margin-top: 0;
     font-size: 0.66rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: rgba(187,247,208,0.48);
+  }
+  .ej-card .ej-copy {
+    margin: 0.86rem 0 0;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: rgba(236,253,245,0.9);
+    letter-spacing: 0.01em;
+  }
+  .ej-ticker {
+    --ticker-gap: clamp(130px, 13vw, 210px);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(calc(var(--ticker-gap)), -50%);
+    width: min(320px, 30vw);
+    z-index: 8;
+    display: grid;
+    grid-template-columns: 10px 1fr;
+    column-gap: 0.9rem;
+    pointer-events: auto;
+    opacity: 1;
+    filter: blur(0px);
+    transition: opacity 0.24s ease, filter 0.24s ease;
+  }
+  .ej-ticker-title {
+    grid-column: 1 / -1;
+    margin-bottom: 0.35rem;
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    font-size: 0.74rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(170,255,210,0.78);
+    text-shadow: 0 0 12px rgba(80,255,155,0.28);
+  }
+  .ej-ticker.is-fading {
+    opacity: 0;
+    filter: blur(8px);
+  }
+  .ej-ticker.is-left {
+    transform: translate(calc(-100% - var(--ticker-gap)), -50%);
+  }
+  .ej-ticker-rail {
+    position: relative;
+    width: 2px;
+    background: rgba(120,255,170,0.24);
+    border-radius: 999px;
+  }
+  .ej-ticker-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2px;
+    height: 0%;
+    background: linear-gradient(180deg, rgba(170,255,210,0.95), rgba(120,255,170,0.5));
+    box-shadow: 0 0 12px rgba(100,255,160,0.55);
+    border-radius: 999px;
+    transition: height 0.15s linear;
+  }
+  .ej-ticker-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.62rem;
+  }
+  .ej-ticker.is-left .ej-ticker-list {
+    text-align: right;
+  }
+  .ej-ticker.is-left .ej-tick {
+    transform: translateX(0);
+  }
+  .ej-ticker.is-left .ej-tick.is-active {
+    transform: translateX(4px);
+  }
+  .ej-tick {
+    border: 1px solid rgba(120,255,170,0.12);
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+    padding: 0.46rem 0.62rem;
+    opacity: 0.36;
+    transform: translateX(0);
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+  .ej-tick-year {
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(170,255,210,0.6);
+    font-weight: 800;
+  }
+  .ej-tick-role {
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    margin-top: 0.2rem;
+    font-size: 0.92rem;
+    line-height: 1.35;
+    color: rgba(225,255,238,0.72);
+    font-weight: 900;
+  }
+  .ej-tick.is-past {
+    opacity: 0.62;
+  }
+  .ej-tick.is-active {
+    opacity: 1;
+    transform: translateX(-4px);
+    border-color: rgba(150,255,198,0.42);
+    background: rgba(8,20,13,0.7);
+    box-shadow: 0 0 22px rgba(40,255,130,0.2);
+  }
+  .ej-tick.is-active .ej-tick-role {
+    color: rgba(240,255,247,0.98);
   }
   .ej-card ul {
     margin: 0.86rem 0 0;
@@ -1259,7 +1401,7 @@
   }
   @media (max-width: 900px) {
     #section-experience {
-      height: 620vh;
+      height: 780vh;
       margin-top: 6rem;
     }
     #section-experience .np-label {
@@ -1272,7 +1414,7 @@
       text-align: left;
     }
     .ej-sticky {
-      top: 5.2rem;
+      top: 0;
     }
     .ej-card.left,
     .ej-card.right {
@@ -1286,6 +1428,43 @@
     }
     .ej-card.left ul li::before {
       content: '';
+    }
+    .ej-ticker {
+      left: 50%;
+      right: auto;
+      top: auto;
+      bottom: 1.6rem;
+      transform: translateX(-50%);
+      width: min(92vw, 32rem);
+      grid-template-columns: 1fr;
+      row-gap: 0.55rem;
+    }
+    .ej-ticker-title {
+      margin-bottom: 0.1rem;
+      text-align: center;
+    }
+    .ej-ticker.is-left {
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+    }
+    .ej-ticker-rail {
+      height: 2px;
+      width: 100%;
+    }
+    .ej-ticker-fill {
+      top: 0;
+      bottom: auto;
+      height: 2px !important;
+      width: 0%;
+      transition: width 0.15s linear;
+    }
+    .ej-ticker-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.45rem;
+    }
+    .ej-tick {
+      padding: 0.38rem 0.48rem;
     }
   }
 </style>
@@ -1302,7 +1481,7 @@
     <a href="#" class="active" id="nav-home">HOME</a>
     <a href="#section-intro" id="nav-intro">INTRO</a>
     <a href="#section-work" id="nav-work">WORK</a>
-    <a href="#">RESUME</a>
+    <a href="#section-experience" id="nav-resume">RESUME</a>
     <a href="#">MORE</a>
   </div>
 </nav>
@@ -1519,8 +1698,7 @@
     <div class="np-label">//&nbsp;&nbsp;03 &mdash; Experience Journey</div>
     <div class="ej-sticky">
       <div class="ej-bg-stars"></div>
-      <div class="ej-lane"></div>
-      <div class="ej-lane-glow"></div>
+      <div class="ej-road" data-ej-road></div>
 
       <div class="ej-character" data-ej-character>
         <div class="ej-character-core">
@@ -1535,52 +1713,97 @@
       </div>
 
       <article class="ej-card left" data-ej-card data-side="left">
-        <div class="ej-chapter">Chapter 01</div>
-        <h3 class="ej-role">Frontend Engineer</h3>
-        <div class="ej-company">Aurora Labs</div>
-        <div class="ej-dates">2024 &mdash; Present</div>
-        <ul>
-          <li>Built high-fidelity UI systems for immersive marketing pages.</li>
-          <li>Reduced interaction latency by 31% through animation budgeting.</li>
-          <li>Shipped reusable motion primitives with design partners.</li>
-        </ul>
+        <div class="ej-dates">2026 &mdash; Present</div>
+        <h3 class="ej-role">Co-Founder &amp; Product Engineer</h3>
+        <p class="ej-copy">
+          Co-founder of Bloggo, where I design and build a local-first travel blogging platform that converts photo metadata into structured blog narratives. Working across product architecture, mobile design, and backend systems to deliver a seamless storytelling experience for travelers.
+        </p>
       </article>
 
       <article class="ej-card right" data-ej-card data-side="right">
-        <div class="ej-chapter">Chapter 02</div>
-        <h3 class="ej-role">Product Designer + Developer</h3>
-        <div class="ej-company">Nebula Studio</div>
-        <div class="ej-dates">2022 &mdash; 2024</div>
-        <ul>
-          <li>Designed and built portfolio platforms for creative founders.</li>
-          <li>Introduced a component kit that cut delivery time by 40%.</li>
-          <li>Led storytelling scroll launches across multiple brands.</li>
-        </ul>
+        <div class="ej-dates">2022 &mdash; Present</div>
+        <h3 class="ej-role">UI/UX Designer</h3>
+        <p class="ej-copy">
+          Working with a startup, agility and adaptability are paramount, fostering close collaboration within our team to make well-informed decisions aligned with our current engineering capabilities.
+        </p>
       </article>
 
       <article class="ej-card left" data-ej-card data-side="left">
-        <div class="ej-chapter">Chapter 03</div>
-        <h3 class="ej-role">UI Engineer</h3>
-        <div class="ej-company">Greenframe Collective</div>
-        <div class="ej-dates">2020 &mdash; 2022</div>
-        <ul>
-          <li>Created an accessible design system with dark-first direction.</li>
-          <li>Implemented responsive animation patterns for all breakpoints.</li>
-          <li>Raised Core Web Vitals from low 70s to mid 90s.</li>
-        </ul>
+        <div class="ej-dates">2022 &mdash; Present</div>
+        <h3 class="ej-role">Product Manager</h3>
+        <p class="ej-copy">
+          As a product manager, I am responsible for overseeing the development of the travel-centric social media mobile application. Working closely with the development team and stakeholders to ensure the application meets the needs of the business and its users.
+        </p>
       </article>
 
       <article class="ej-card right" data-ej-card data-side="right">
-        <div class="ej-chapter">Chapter 04</div>
-        <h3 class="ej-role">Interactive Intern</h3>
-        <div class="ej-company">Pixel Harbor</div>
-        <div class="ej-dates">2019 &mdash; 2020</div>
-        <ul>
-          <li>Prototyped scroll storytelling concepts for campaign microsites.</li>
-          <li>Built modular React-style sections for multi-brand delivery.</li>
-          <li>Documented handoff patterns that reduced QA loops.</li>
-        </ul>
+        <div class="ej-dates">2023 &mdash; 2023</div>
+        <h3 class="ej-role">SEO Marketer</h3>
+        <p class="ej-copy">
+          Conducted comprehensive keyword research, optimizing website and social media content, and scrutinizing website traffic and engagement metrics. My responsibilities encompass market trend analysis, competitor research, audience segmentation, and the formulation of impactful marketing strategies. Committed to facilitating businesses in reaching their objectives, I employed effective digital marketing techniques tailored to individual needs.
+        </p>
       </article>
+
+      <article class="ej-card left" data-ej-card data-side="left">
+        <div class="ej-dates">2020 &mdash; 2022</div>
+        <h3 class="ej-role">Q&amp;A</h3>
+        <p class="ej-copy">
+          I was responsible for testing the travel-centric social media mobile application to ensure it met the business and user requirements. I worked closely with the development team to identify and resolve bugs and other issues.
+        </p>
+      </article>
+
+      <article class="ej-card right" data-ej-card data-side="right">
+        <div class="ej-dates">2019 &mdash; 2021</div>
+        <h3 class="ej-role">Bookkeeper</h3>
+        <p class="ej-copy">
+          Responsible for managing the financial records for a startup company. I ensured all financial transactions were recorded accurately and provided financial reports to the management team.
+        </p>
+      </article>
+
+      <article class="ej-card left" data-ej-card data-side="left">
+        <div class="ej-dates">2013 &mdash; 2018</div>
+        <h3 class="ej-role">Content Creator &amp; Live Streamer</h3>
+        <p class="ej-copy">
+          Stoobin has empowered me to create content on my terms, fostering a thriving community. With 18,000 subscribers, I've transformed content creation into my full-time career, generating revenue through video monetization, virtual products, and donations. Moreover, Stoobin has facilitated my growth by honing skills in video editing, graphic design, and trend research, ensuring audience engagement and relevance. I'm thankful for the journey and the chance to pursue my passion professionally.
+        </p>
+      </article>
+
+      <aside class="ej-ticker" aria-label="Experience timeline ticker">
+        <div class="ej-ticker-title">Time Travel Menu</div>
+        <div class="ej-ticker-rail">
+          <div class="ej-ticker-fill" data-ej-ticker-fill></div>
+        </div>
+        <ol class="ej-ticker-list">
+          <li class="ej-tick" data-ej-tick>
+            <div class="ej-tick-year">2026 &mdash; Present</div>
+            <div class="ej-tick-role">Co-Founder &amp; Product Engineer</div>
+          </li>
+          <li class="ej-tick" data-ej-tick>
+            <div class="ej-tick-year">2022 &mdash; Present</div>
+            <div class="ej-tick-role">UI/UX Designer</div>
+          </li>
+          <li class="ej-tick" data-ej-tick>
+            <div class="ej-tick-year">2022 &mdash; Present</div>
+            <div class="ej-tick-role">Product Manager</div>
+          </li>
+          <li class="ej-tick" data-ej-tick>
+            <div class="ej-tick-year">2023 &mdash; 2023</div>
+            <div class="ej-tick-role">SEO Marketer</div>
+          </li>
+          <li class="ej-tick" data-ej-tick>
+            <div class="ej-tick-year">2020 &mdash; 2022</div>
+            <div class="ej-tick-role">Q&amp;A</div>
+          </li>
+          <li class="ej-tick" data-ej-tick>
+            <div class="ej-tick-year">2019 &mdash; 2021</div>
+            <div class="ej-tick-role">Bookkeeper</div>
+          </li>
+          <li class="ej-tick" data-ej-tick>
+            <div class="ej-tick-year">2013 &mdash; 2018</div>
+            <div class="ej-tick-role">Content Creator</div>
+          </li>
+        </ol>
+      </aside>
 
       <div class="ej-vignette"></div>
     </div>
@@ -2215,6 +2438,7 @@
 
   const navIntro = document.getElementById('nav-intro');
   const navWork = document.getElementById('nav-work');
+  const navResume = document.getElementById('nav-resume');
   const navHome = document.getElementById('nav-home');
   const topNav = document.getElementById('top-nav');
   const navToggle = document.getElementById('nav-toggle');
@@ -2222,7 +2446,10 @@
   const sectionIntro = document.getElementById('section-intro');
   const sectionWork = document.getElementById('section-work');
   const sectionExperience = document.getElementById('section-experience');
-  const journeyLane = sectionExperience?.querySelector('.ej-lane');
+  const journeyRoad = sectionExperience?.querySelector('[data-ej-road]');
+  const journeyTicker = sectionExperience?.querySelector('.ej-ticker');
+  const journeyTickerFill = sectionExperience?.querySelector('[data-ej-ticker-fill]');
+  const journeyTickerItems = sectionExperience ? Array.from(sectionExperience.querySelectorAll('[data-ej-tick]')) : [];
   const journeyCharacter = sectionExperience?.querySelector('[data-ej-character]');
   const journeyArmLeft = sectionExperience?.querySelector('[data-ej-arm-left]');
   const journeyArmRight = sectionExperience?.querySelector('[data-ej-arm-right]');
@@ -2234,6 +2461,8 @@
   let introCardAnchor = null;
   let directWorkMode = false;
   let mobileCardAutoFlipped = false;
+  let tickerOnLeft = false;
+  let tickerSwitchTimer = null;
 
   function isMobileViewport() {
     return window.matchMedia('(max-width: 900px)').matches;
@@ -2275,7 +2504,7 @@
   });
 
   function setActiveNav(activeId) {
-    [navHome, navIntro, navWork].forEach((link) => {
+    [navHome, navIntro, navWork, navResume].forEach((link) => {
       if (!link) return;
       link.classList.toggle('active', link.id === activeId);
     });
@@ -2293,51 +2522,122 @@
     const scrollRange = Math.max(1, sectionHeight - window.innerHeight);
     const progress = clamp((nextPage.scrollTop - sectionTop) / scrollRange, 0, 1);
 
-    if (journeyLane) {
-      journeyLane.style.transform = 'translate3d(-50%, ' + (-160 * progress).toFixed(2) + 'px, 0)';
+    if (journeyRoad) {
+      journeyRoad.style.setProperty('--dash-offset', ((-progress * 760).toFixed(2) + 'px'));
+    }
+    if (journeyTickerFill) {
+      if (window.matchMedia('(max-width: 900px)').matches) {
+        journeyTickerFill.style.width = ((progress * 100).toFixed(2) + '%');
+      } else {
+        journeyTickerFill.style.height = ((progress * 100).toFixed(2) + '%');
+      }
     }
 
     const stride = Math.sin(progress * Math.PI * 20);
+    const sideSway = Math.sin(progress * Math.PI * 10) * 2.2;
+    const leftStepLift = Math.max(0, stride) * 7.5;
+    const rightStepLift = Math.max(0, -stride) * 7.5;
     if (journeyCharacter) {
-      journeyCharacter.style.transform = 'translate3d(-50%, calc(-50% + ' + (stride * 4).toFixed(2) + 'px), 0)';
+      journeyCharacter.style.transform =
+        'translate3d(calc(-50% + ' + sideSway.toFixed(2) + 'px), calc(-50% + ' + (stride * 4).toFixed(2) + 'px), 0) scale(1)';
+      journeyCharacter.style.opacity = '1';
     }
     if (journeyArmLeft) {
-      journeyArmLeft.style.transform = 'rotate(' + (-stride * 12).toFixed(2) + 'deg)';
+      journeyArmLeft.style.transform = 'translate3d(0,' + (Math.max(0, -stride) * -3.5).toFixed(2) + 'px,0) rotate(' + (-stride * 18).toFixed(2) + 'deg)';
     }
     if (journeyArmRight) {
-      journeyArmRight.style.transform = 'rotate(' + (stride * 12).toFixed(2) + 'deg)';
+      journeyArmRight.style.transform = 'translate3d(0,' + (Math.max(0, stride) * -3.5).toFixed(2) + 'px,0) rotate(' + (stride * 18).toFixed(2) + 'deg)';
     }
     if (journeyLegLeft) {
-      journeyLegLeft.style.transform = 'rotate(' + (stride * 16).toFixed(2) + 'deg)';
+      journeyLegLeft.style.transform = 'translate3d(0,' + (-leftStepLift).toFixed(2) + 'px,0) rotate(' + (stride * 24).toFixed(2) + 'deg)';
     }
     if (journeyLegRight) {
-      journeyLegRight.style.transform = 'rotate(' + (-stride * 16).toFixed(2) + 'deg)';
+      journeyLegRight.style.transform = 'translate3d(0,' + (-rightStepLift).toFixed(2) + 'px,0) rotate(' + (-stride * 24).toFixed(2) + 'deg)';
     }
 
     const total = journeyCards.length || 1;
+    const activeIndex = Math.min(total - 1, Math.max(0, Math.floor(progress * total)));
+    if (journeyTicker && !window.matchMedia('(max-width: 900px)').matches) {
+      const shouldBeLeft = activeIndex % 2 === 1;
+      if (shouldBeLeft !== tickerOnLeft && !tickerSwitchTimer) {
+        journeyTicker.classList.add('is-fading');
+        tickerSwitchTimer = setTimeout(() => {
+          journeyTicker.classList.toggle('is-left', shouldBeLeft);
+          tickerOnLeft = shouldBeLeft;
+          journeyTicker.classList.remove('is-fading');
+          tickerSwitchTimer = null;
+        }, 140);
+      }
+    } else if (journeyTicker) {
+      if (tickerSwitchTimer) {
+        clearTimeout(tickerSwitchTimer);
+        tickerSwitchTimer = null;
+      }
+      tickerOnLeft = false;
+      journeyTicker.classList.remove('is-left');
+      journeyTicker.classList.remove('is-fading');
+    }
+    journeyTickerItems.forEach((tick, index) => {
+      tick.classList.toggle('is-active', index === activeIndex);
+      tick.classList.toggle('is-past', index < activeIndex);
+    });
+
     journeyCards.forEach((card, index) => {
       const start = index / total;
       const end = (index + 1) / total;
       const chapterProgress = clamp((progress - start) / (end - start), 0, 1);
-      const reveal = chapterProgress < 0.35 ? chapterProgress / 0.35 : 1;
-      const settle = chapterProgress > 0.78 ? (chapterProgress - 0.78) / 0.22 : 0;
-      const side = card.getAttribute('data-side') === 'left' ? -1 : 1;
+      let opacity = 0;
+      let y = 70;
+      let scale = 0.97;
+      let blur = 14;
 
-      const opacity = clamp(0.08 + reveal * 0.92 - settle * 0.5, 0.08, 1);
-      const x = (1 - reveal) * 56 * side;
-      const scale = 0.97 + reveal * 0.03 - settle * 0.02;
-      const blur = (1 - reveal) * 10 + settle * 2;
+      if (chapterProgress <= 0.30) {
+        const t = chapterProgress / 0.30;
+        opacity = t;
+        y = 70 - (70 * t);
+        scale = 0.97 + (0.03 * t);
+        blur = 14 - (14 * t);
+      } else if (chapterProgress <= 0.72) {
+        opacity = 1;
+        y = 0;
+        scale = 1;
+        blur = 0;
+      } else {
+        const t = (chapterProgress - 0.72) / 0.28;
+        opacity = 1 - t;
+        y = -110 * t;
+        scale = 1 - (0.04 * t);
+        blur = 14 * t;
+      }
 
-      card.style.opacity = opacity.toFixed(3);
-      card.style.transform = 'translate3d(' + x.toFixed(2) + 'px, -50%, 0) scale(' + scale.toFixed(4) + ')';
+      card.style.opacity = clamp(opacity, 0, 1).toFixed(3);
+      card.style.transform = 'translate3d(0px, calc(-50% + ' + y.toFixed(2) + 'px), 0) scale(' + scale.toFixed(4) + ')';
       card.style.filter = 'blur(' + blur.toFixed(2) + 'px)';
     });
   }
 
+  function scrollToExperienceChapter(index) {
+    if (!sectionExperience) return;
+    const sectionTop = sectionExperience.offsetTop;
+    const sectionHeight = sectionExperience.offsetHeight;
+    const scrollRange = Math.max(1, sectionHeight - window.innerHeight);
+    const total = Math.max(1, journeyCards.length);
+    const targetProgress = (index + 0.5) / total;
+    const targetTop = sectionTop + (scrollRange * targetProgress);
+    nextPage.scrollTo({ top: targetTop, behavior: 'smooth' });
+  }
+
   function updateNavByScroll() {
-    if (!sectionIntro || !sectionWork) return;
+    if (!sectionIntro || !sectionWork || !sectionExperience) return;
     if (!nextPage.classList.contains('visible')) {
       setActiveNav('nav-home');
+      return;
+    }
+
+    const expRect = sectionExperience.getBoundingClientRect();
+    const activateExpAt = window.innerHeight * 0.62;
+    if (expRect.top <= activateExpAt) {
+      setActiveNav('nav-resume');
       return;
     }
 
@@ -2498,6 +2798,27 @@
       closeMobileNav();
     });
   }
+
+  if (navResume) {
+    navResume.addEventListener('click', (e) => {
+      e.preventDefault();
+      handleNavToSection('#section-experience');
+      setActiveNav('nav-resume');
+      closeMobileNav();
+    });
+  }
+
+  journeyTickerItems.forEach((tick, index) => {
+    tick.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (!nextPage.classList.contains('visible')) {
+        enterNextPage();
+        setTimeout(() => scrollToExperienceChapter(index), 320);
+      } else {
+        scrollToExperienceChapter(index);
+      }
+    });
+  });
   
   if (navHome) {
     navHome.addEventListener('click', (e) => {
