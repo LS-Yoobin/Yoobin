@@ -2340,6 +2340,12 @@
     flex-shrink: 0;
     filter: drop-shadow(0 0 4px rgba(120,255,170,0.22));
   }
+  @media (max-width: 600px) {
+    .hud-meta.bl .bright,
+    .hud-meta.br .bright {
+      font-size: 0.75em;
+    }
+  }
   @media (max-width: 900px) {
     .ej-ticker {
       left: 50%;
@@ -3117,10 +3123,6 @@ TIME TRAVEL</span>
   function onBgMusicActivation(event) {
     const eventType = event && event.type ? event.type : 'unknown';
     const eventTarget = event && event.target && event.target.id ? `#${event.target.id}` : 'no-id';
-    if ((eventType === 'wheel' || eventType === 'touchmove') && revealPrimedBgMusic()) {
-      updateBgMusicDebug('interaction', `${eventType} on ${eventTarget} (started from prime)`);
-      return;
-    }
     const activationByType = ['touchstart', 'touchend', 'pointerdown', 'mousedown', 'click', 'keydown'].includes(eventType);
     const hasUserActivation =
       typeof navigator !== 'undefined' &&
@@ -3204,11 +3206,30 @@ TIME TRAVEL</span>
   }
   function revealPrimedBgMusic() {
     if (!bgMusic || bgMusicStarted || !bgMusicPrimedMuted) return false;
+    bgMusic.muted = false;
+    bgMusic.volume = 0;
+    const revealPromise = bgMusic.play();
+    if (revealPromise && typeof revealPromise.then === 'function') {
+      revealPromise
+        .then(() => {
+          bgMusicStarted = true;
+          bgMusicPendingGesture = false;
+          removeBgMusicActivationListeners();
+          updateBgMusicDebug('playing', 'revealed from muted-prime');
+          fadeInBgMusic();
+        })
+        .catch((err) => {
+          bgMusicLastError = (err && err.message) ? err.message : String(err || 'unknown');
+          bgMusicPendingGesture = true;
+          bgMusic.muted = true;
+          updateBgMusicDebug('reveal-failed', 'unmute blocked, waiting for next interaction');
+        });
+      return true;
+    }
     bgMusicStarted = true;
     bgMusicPendingGesture = false;
-    bgMusic.muted = false;
     removeBgMusicActivationListeners();
-    updateBgMusicDebug('playing', 'unmuted from muted-prime');
+    updateBgMusicDebug('playing', 'revealed from muted-prime (no promise)');
     fadeInBgMusic();
     return true;
   }

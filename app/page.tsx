@@ -222,6 +222,7 @@ export default function HomePage() {
       <iframe
         title="Legacy Hero Experience"
         srcDoc={trackedLegacyHeroHtml}
+        allow="autoplay"
         className="h-full w-full border-0"
       />
     </main>
