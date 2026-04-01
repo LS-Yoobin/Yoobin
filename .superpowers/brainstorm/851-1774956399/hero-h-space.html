@@ -6,6 +6,9 @@
 <title>Hero H — Space Refinement</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --hero-green: #22c55e;
+  }
 
   body {
     background: #000;
@@ -306,7 +309,7 @@
     text-shadow: 0 0 60px rgba(34,197,94,0.1);
     animation: fade-in 1s ease 0.2s both;
   }
-  .name .green { color: #22c55e; text-shadow: 0 0 30px rgba(34,197,94,0.4); }
+  .name .green { color: var(--hero-green); text-shadow: 0 0 30px rgba(34,197,94,0.4); }
 
   .role {
     font-size: 1.4rem;
@@ -622,6 +625,7 @@
     justify-self: end;
     width: min(430px, 100%);
     border: 1px solid rgba(34,197,94,0.35);
+    border-radius: 14px;
     background: linear-gradient(180deg, rgba(8,24,15,0.8) 0%, rgba(2,9,6,0.9) 100%);
     box-shadow: 0 0 24px rgba(34,197,94,0.18), inset 0 0 0 1px rgba(34,197,94,0.15);
     padding: 0.95rem;
@@ -649,6 +653,7 @@
     inset: 0;
     transform: rotateY(180deg);
     border: 1px solid rgba(34,197,94,0.45);
+    border-radius: 10px;
     background: rgba(2, 10, 6, 0.98);
     padding: 1rem 1.05rem;
     overflow: hidden;
@@ -683,8 +688,10 @@
   }
   #section-intro .player-frame {
     border: 1px solid rgba(34,197,94,0.45);
+    border-radius: 10px;
     background: rgba(2,8,4,0.95);
     padding: 0.5rem;
+    overflow: hidden;
   }
   #section-intro .player-frame img {
     display: block;
@@ -784,6 +791,7 @@
   }
   .work-card {
     border: 1px solid rgba(34,197,94,0.15);
+    border-radius: 14px;
     background: rgba(34,197,94,0.03);
     padding: 2rem;
     position: relative;
@@ -802,15 +810,16 @@
   .work-card:hover { border-color: rgba(34,197,94,0.4); background: rgba(34,197,94,0.06); }
   .work-card:hover::before { opacity: 1; }
   .work-card .wc-tag {
-    font-size: 0.55rem;
+    font-size: 0.63rem;
     letter-spacing: 0.35em;
-    color: rgba(34,197,94,0.5);
+    color: var(--hero-green) !important;
+    font-weight: 900;
     text-transform: uppercase;
     margin-bottom: 0.8rem;
   }
   .work-card .wc-title {
     font-family: 'Arial Black', Arial, sans-serif;
-    font-size: 1.1rem;
+    font-size: 1.27rem;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: -0.01em;
@@ -828,8 +837,12 @@
     margin-top: 1.2rem;
     font-size: 0.6rem;
     letter-spacing: 0.25em;
-    color: rgba(34,197,94,0.5);
+    color: var(--hero-green) !important;
     text-transform: uppercase;
+  }
+  .work-card:hover .wc-tag,
+  .work-card:hover .wc-arrow {
+    color: var(--hero-green) !important;
   }
   /* Back button */
   .np-back {
@@ -857,6 +870,47 @@
   .np-back .chevron {
     font-size: 1.4rem;
     animation: bounce-up 1.6s ease-in-out infinite;
+  }
+  .np-next {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.1rem;
+    font-weight: 900;
+    letter-spacing: 0.3em;
+    color: rgba(34,197,94,0.55);
+    text-transform: uppercase;
+    cursor: pointer;
+    z-index: 300;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    transition: opacity 0.3s ease, color 0.2s;
+  }
+  .np-next.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .np-next.np-reveal.is-hidden {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  .np-next:hover { color: rgba(34,197,94,0.9); }
+  .np-next .chevron {
+    font-size: 1.4rem;
+    animation: bounce-down-intro 1.6s ease-in-out infinite;
+  }
+  .np-next.np-reveal {
+    transform: translateX(-50%) translateY(24px);
+  }
+  .np-next.np-reveal.revealed {
+    transform: translateX(-50%) translateY(0);
+  }
+  @keyframes bounce-down-intro {
+    0%, 100% { transform: translateY(0); opacity: 0.55; }
+    50% { transform: translateY(6px); opacity: 1; }
   }
   @keyframes bounce-up {
     0%, 100% { transform: translateY(0); opacity: 0.55; }
@@ -1023,7 +1077,7 @@
 
     #section-intro {
       padding-top: 10rem;
-      margin-bottom: 35vh;
+      margin-bottom: 0 !important;
     }
     #section-intro .intro-layout {
       margin-top: 1.2rem;
@@ -1035,10 +1089,14 @@
       align-items: center;
       justify-content: center;
     }
+    #section-intro .np-next {
+      bottom: 1.25rem;
+      display: none;
+    }
 
     #section-work {
       min-height: auto;
-      padding-top: 6rem !important;
+      padding-top: 1rem !important;
       padding-bottom: 1.6rem;
     }
 
@@ -1261,7 +1319,7 @@
     font-size: 0.66rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: rgba(187,247,208,0.48);
+    color: rgba(170,255,210,0.6);
   }
   .ej-card .ej-copy {
     margin: 0.86rem 0 0;
@@ -1274,13 +1332,15 @@
     --ticker-gap: clamp(130px, 13vw, 210px);
     position: absolute;
     left: 50%;
-    top: 50%;
-    transform: translate(calc(var(--ticker-gap)), -50%);
-    width: min(320px, 30vw);
+    right: auto;
+    top: auto;
+    bottom: 1.6rem;
+    transform: translateX(-50%);
+    width: min(92vw, 32rem);
     z-index: 8;
     display: grid;
-    grid-template-columns: 10px 1fr;
-    column-gap: 0.9rem;
+    grid-template-columns: 1fr;
+    row-gap: 0.55rem;
     pointer-events: auto;
     opacity: 1;
     filter: blur(0px);
@@ -1288,24 +1348,28 @@
   }
   .ej-ticker-title {
     grid-column: 1 / -1;
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.1rem;
     font-family: 'Arial Black', 'Arial', sans-serif;
     font-size: 0.74rem;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: rgba(170,255,210,0.78);
     text-shadow: 0 0 12px rgba(80,255,155,0.28);
+    text-align: center;
   }
   .ej-ticker.is-fading {
     opacity: 0;
     filter: blur(8px);
   }
   .ej-ticker.is-left {
-    transform: translate(calc(-100% - var(--ticker-gap)), -50%);
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
   }
   .ej-ticker-rail {
     position: relative;
-    width: 2px;
+    height: 2px;
+    width: 100%;
     background: rgba(120,255,170,0.24);
     border-radius: 999px;
   }
@@ -1313,19 +1377,21 @@
     position: absolute;
     left: 0;
     top: 0;
-    width: 2px;
-    height: 0%;
+    bottom: auto;
+    height: 2px !important;
+    width: 0%;
     background: linear-gradient(180deg, rgba(170,255,210,0.95), rgba(120,255,170,0.5));
     box-shadow: 0 0 12px rgba(100,255,160,0.55);
     border-radius: 999px;
-    transition: height 0.15s linear;
+    transition: width 0.15s linear;
   }
   .ej-ticker-list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 0.62rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem;
   }
   .ej-ticker.is-left .ej-ticker-list {
     text-align: right;
@@ -1340,7 +1406,7 @@
     border: 1px solid rgba(120,255,170,0.12);
     background: rgba(0,0,0,0.3);
     border-radius: 10px;
-    padding: 0.46rem 0.62rem;
+    padding: 0.38rem 0.48rem;
     opacity: 0.36;
     transform: translateX(0);
     cursor: pointer;
@@ -1410,8 +1476,58 @@
     }
     .ej-card {
       width: min(84vw, 26rem);
-      top: 58%;
-      text-align: left;
+      top: 31%;
+      text-align: center;
+      max-height: 34vh;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      touch-action: pan-y;
+      -webkit-overflow-scrolling: touch;
+      pointer-events: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(120,255,170,0.9) rgba(8,20,13,0.7);
+      padding-right: 0.8rem;
+      --ej-scroll-track-opacity: 0.28;
+      --ej-scroll-thumb-top: 4px;
+      --ej-scroll-thumb-height: 34px;
+    }
+    .ej-card::after {
+      content: '';
+      position: absolute;
+      right: 3px;
+      top: 4px;
+      bottom: 4px;
+      width: 3px;
+      border-radius: 999px;
+      background: rgba(80,255,150,0.2);
+      box-shadow: 0 0 8px rgba(60,255,140,0.22);
+      opacity: var(--ej-scroll-track-opacity);
+      pointer-events: none;
+    }
+    .ej-card::before {
+      content: '';
+      position: absolute;
+      right: 3px;
+      top: var(--ej-scroll-thumb-top);
+      width: 3px;
+      height: var(--ej-scroll-thumb-height);
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(190,255,220,0.98), rgba(85,255,150,0.78));
+      box-shadow: 0 0 10px rgba(120,255,170,0.5);
+      pointer-events: none;
+      z-index: 2;
+    }
+    .ej-card::-webkit-scrollbar {
+      width: 8px;
+    }
+    .ej-card::-webkit-scrollbar-track {
+      background: rgba(8,20,13,0.7);
+      border-radius: 999px;
+    }
+    .ej-card::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, rgba(170,255,210,0.95), rgba(90,255,150,0.72));
+      border-radius: 999px;
+      border: 1px solid rgba(150,255,198,0.3);
     }
     .ej-sticky {
       top: 0;
@@ -1429,42 +1545,10 @@
     .ej-card.left ul li::before {
       content: '';
     }
-    .ej-ticker {
-      left: 50%;
-      right: auto;
-      top: auto;
-      bottom: 1.6rem;
-      transform: translateX(-50%);
-      width: min(92vw, 32rem);
-      grid-template-columns: 1fr;
-      row-gap: 0.55rem;
-    }
-    .ej-ticker-title {
-      margin-bottom: 0.1rem;
-      text-align: center;
-    }
-    .ej-ticker.is-left {
-      left: 50%;
-      right: auto;
-      transform: translateX(-50%);
-    }
-    .ej-ticker-rail {
-      height: 2px;
-      width: 100%;
-    }
-    .ej-ticker-fill {
-      top: 0;
-      bottom: auto;
-      height: 2px !important;
-      width: 0%;
-      transition: width 0.15s linear;
-    }
-    .ej-ticker-list {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.45rem;
-    }
-    .ej-tick {
-      padding: 0.38rem 0.48rem;
+    .ej-card .ej-dates,
+    .ej-tick-year {
+      color: #22c55e !important;
+      text-shadow: 0 0 8px rgba(34,197,94,0.25);
     }
   }
 </style>
@@ -1597,7 +1681,7 @@
   </div>
 
   <div class="center">
-    <div class="id-tag">Portfolio — 2026</div>
+    <div class="id-tag">Click to Shoot</div>
     <div class="name">YOOBIN<br><span class="green">SEO.</span></div>
     <div class="role">
       <span class="role-desktop">UI/UX Designer · Co-Founder · Product Builder</span>
@@ -1657,6 +1741,10 @@
           </div>
         </div>
       </aside>
+    </div>
+    <div class="np-next np-reveal" id="np-next" style="transition-delay:0.45s" aria-label="Scroll to continue">
+      <span>Scroll to Continue</span>
+      <span class="chevron">&#8964;</span>
     </div>
   </section>
 
@@ -2333,6 +2421,7 @@
   const heroLayer   = document.getElementById('hero-layer');
   const nextPage    = document.getElementById('next-page');
   const npBack      = document.getElementById('np-back');
+  const npNext      = document.getElementById('np-next');
   const centerEl    = document.querySelector('.center');
 
   const GEO_SHAPES = [
@@ -2405,6 +2494,7 @@
       npBack.classList.add('visible');
       revealVisibleItems();
       updateIntroCardMotion();
+      updateIntroNextCtaVisibility();
       updateNavByScroll();
     }, 260);
   }
@@ -2463,6 +2553,12 @@
   let mobileCardAutoFlipped = false;
   let tickerOnLeft = false;
   let tickerSwitchTimer = null;
+
+  if (npNext && sectionWork) {
+    npNext.addEventListener('click', () => {
+      nextPage.scrollTo({ top: sectionWork.offsetTop, behavior: 'smooth' });
+    });
+  }
 
   function isMobileViewport() {
     return window.matchMedia('(max-width: 900px)').matches;
@@ -2526,11 +2622,8 @@
       journeyRoad.style.setProperty('--dash-offset', ((-progress * 760).toFixed(2) + 'px'));
     }
     if (journeyTickerFill) {
-      if (window.matchMedia('(max-width: 900px)').matches) {
-        journeyTickerFill.style.width = ((progress * 100).toFixed(2) + '%');
-      } else {
-        journeyTickerFill.style.height = ((progress * 100).toFixed(2) + '%');
-      }
+      journeyTickerFill.style.width = ((progress * 100).toFixed(2) + '%');
+      journeyTickerFill.style.height = '';
     }
 
     const stride = Math.sin(progress * Math.PI * 20);
@@ -2557,18 +2650,7 @@
 
     const total = journeyCards.length || 1;
     const activeIndex = Math.min(total - 1, Math.max(0, Math.floor(progress * total)));
-    if (journeyTicker && !window.matchMedia('(max-width: 900px)').matches) {
-      const shouldBeLeft = activeIndex % 2 === 1;
-      if (shouldBeLeft !== tickerOnLeft && !tickerSwitchTimer) {
-        journeyTicker.classList.add('is-fading');
-        tickerSwitchTimer = setTimeout(() => {
-          journeyTicker.classList.toggle('is-left', shouldBeLeft);
-          tickerOnLeft = shouldBeLeft;
-          journeyTicker.classList.remove('is-fading');
-          tickerSwitchTimer = null;
-        }, 140);
-      }
-    } else if (journeyTicker) {
+    if (journeyTicker) {
       if (tickerSwitchTimer) {
         clearTimeout(tickerSwitchTimer);
         tickerSwitchTimer = null;
@@ -2593,10 +2675,11 @@
 
       if (chapterProgress <= 0.30) {
         const t = chapterProgress / 0.30;
-        opacity = t;
-        y = 70 - (70 * t);
-        scale = 0.97 + (0.03 * t);
-        blur = 14 - (14 * t);
+        const revealEase = 1 - Math.pow(1 - t, 2.2);
+        opacity = revealEase;
+        y = 70 - (70 * revealEase);
+        scale = 0.97 + (0.03 * revealEase);
+        blur = 14 - (14 * revealEase);
       } else if (chapterProgress <= 0.72) {
         opacity = 1;
         y = 0;
@@ -2610,9 +2693,30 @@
         blur = 14 * t;
       }
 
+      const isMobileCard = window.matchMedia('(max-width: 900px)').matches;
+      const cardOffsetX = isMobileCard ? '-50%' : '0px';
+      const mobileLift = isMobileCard ? -48 : 0;
       card.style.opacity = clamp(opacity, 0, 1).toFixed(3);
-      card.style.transform = 'translate3d(0px, calc(-50% + ' + y.toFixed(2) + 'px), 0) scale(' + scale.toFixed(4) + ')';
+      card.style.transform = 'translate3d(' + cardOffsetX + ', calc(-50% + ' + mobileLift + 'px + ' + y.toFixed(2) + 'px), 0) scale(' + scale.toFixed(4) + ')';
       card.style.filter = 'blur(' + blur.toFixed(2) + 'px)';
+
+      const maxScroll = Math.max(0, card.scrollHeight - card.clientHeight);
+      if (isMobileCard && index === activeIndex && maxScroll > 1) {
+        const autoScrollProgress = clamp((chapterProgress - 0.22) / 0.58, 0, 1);
+        card.scrollTop = maxScroll * autoScrollProgress;
+      }
+      if (maxScroll > 1) {
+        const trackHeight = Math.max(1, card.clientHeight - 8);
+        const thumbHeight = Math.max(24, (card.clientHeight / card.scrollHeight) * trackHeight);
+        const thumbTop = 4 + ((card.scrollTop / maxScroll) * Math.max(1, trackHeight - thumbHeight));
+        card.style.setProperty('--ej-scroll-track-opacity', '0.75');
+        card.style.setProperty('--ej-scroll-thumb-height', thumbHeight.toFixed(2) + 'px');
+        card.style.setProperty('--ej-scroll-thumb-top', thumbTop.toFixed(2) + 'px');
+      } else {
+        card.style.setProperty('--ej-scroll-track-opacity', '0.32');
+        card.style.setProperty('--ej-scroll-thumb-height', '0px');
+        card.style.setProperty('--ej-scroll-thumb-top', '4px');
+      }
     });
   }
 
@@ -2654,6 +2758,12 @@
     directWorkMode = false;
     nextPage.classList.remove('work-direct-mode');
     nextPage.classList.remove('work-direct-visible');
+  }
+
+  function updateIntroNextCtaVisibility() {
+    if (!npNext || !sectionIntro || !nextPage.classList.contains('visible')) return;
+    const hasScrolledFromIntroTop = nextPage.scrollTop > sectionIntro.offsetTop + 12;
+    npNext.classList.toggle('is-hidden', hasScrolledFromIntroTop);
   }
 
   function resetIntroCardMotion() {
@@ -2724,7 +2834,7 @@
 
     const scaleMax = 1.32;
     const targetLeft = (window.innerWidth / 2) - (introCardAnchor.width / 2);
-    const targetTop = (window.innerHeight / 2) - (introCardAnchor.height / 2) + 44;
+    const targetTop = (window.innerHeight / 2) - (introCardAnchor.height / 2) + 180;
     const lockAt = Math.max(
       170,
       Math.min(sectionIntro.offsetHeight * 0.48, window.innerHeight * 0.68),
@@ -2766,15 +2876,26 @@
     nextPage.classList.remove('work-direct-mode');
     nextPage.classList.remove('work-direct-visible');
 
+    const getScrollTargetTop = () => {
+      const target = document.querySelector(selector);
+      if (!target) return null;
+      let top = target.offsetTop;
+      if (selector === '#section-experience' && isMobileViewport()) {
+        // Nudge further down so the sticky experience scene fills the viewport cleanly.
+        top += 72;
+      }
+      return top;
+    };
+
     if (!nextPage.classList.contains('visible')) {
       enterNextPage();
       setTimeout(() => {
-        const target = document.querySelector(selector);
-        if (target) nextPage.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
+        const top = getScrollTargetTop();
+        if (top != null) nextPage.scrollTo({ top, behavior: 'smooth' });
       }, 320);
     } else {
-      const target = document.querySelector(selector);
-      if (target) nextPage.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
+      const top = getScrollTargetTop();
+      if (top != null) nextPage.scrollTo({ top, behavior: 'smooth' });
     }
   }
 
@@ -2802,7 +2923,16 @@
   if (navResume) {
     navResume.addEventListener('click', (e) => {
       e.preventDefault();
-      handleNavToSection('#section-experience');
+      if (isMobileViewport() && sectionExperience) {
+        if (!nextPage.classList.contains('visible')) {
+          enterNextPage();
+          setTimeout(() => scrollToExperienceChapter(0), 320);
+        } else {
+          scrollToExperienceChapter(0);
+        }
+      } else {
+        handleNavToSection('#section-experience');
+      }
       setActiveNav('nav-resume');
       closeMobileNav();
     });
@@ -2818,6 +2948,37 @@
         scrollToExperienceChapter(index);
       }
     });
+  });
+
+  // Keep mobile timeline card scrolling smooth without trapping page scroll.
+  journeyCards.forEach((card) => {
+    let lastTouchY = null;
+    card.addEventListener('touchstart', (e) => {
+      if (!isMobileViewport() || !e.touches || e.touches.length === 0) return;
+      lastTouchY = e.touches[0].clientY;
+    }, { passive: true });
+    card.addEventListener('touchmove', (e) => {
+      if (!isMobileViewport() || !e.touches || e.touches.length === 0 || lastTouchY == null) return;
+      const currentY = e.touches[0].clientY;
+      const deltaY = currentY - lastTouchY;
+      lastTouchY = currentY;
+
+      const maxScroll = Math.max(0, card.scrollHeight - card.clientHeight);
+      if (maxScroll <= 1) return;
+
+      const canScrollUp = card.scrollTop > 0;
+      const canScrollDown = card.scrollTop < maxScroll - 1;
+      const swipingDown = deltaY > 0;
+      const swipingUp = deltaY < 0;
+
+      // Only keep gesture in card when card can scroll in that direction.
+      if ((swipingDown && canScrollUp) || (swipingUp && canScrollDown)) {
+        e.stopPropagation();
+      }
+    }, { passive: true });
+    card.addEventListener('touchend', () => {
+      lastTouchY = null;
+    }, { passive: true });
   });
   
   if (navHome) {
@@ -2927,6 +3088,7 @@
     }
     revealVisibleItems();
     updateIntroCardMotion();
+    updateIntroNextCtaVisibility();
     updateExperienceJourney();
     updateNavByScroll();
   });
