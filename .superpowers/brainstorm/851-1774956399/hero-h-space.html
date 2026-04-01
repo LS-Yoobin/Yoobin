@@ -699,6 +699,11 @@
     #section-intro .player-card {
       justify-self: start;
       width: min(460px, 100%);
+      position: relative !important;
+      left: auto !important;
+      top: auto !important;
+      transform: none !important;
+      z-index: 2 !important;
     }
   }
 
@@ -1722,6 +1727,10 @@
   let introCardAnchor = null;
   let directWorkMode = false;
 
+  function isMobileViewport() {
+    return window.matchMedia('(max-width: 900px)').matches;
+  }
+
   function setActiveNav(activeId) {
     [navHome, navIntro, navWork].forEach((link) => {
       if (!link) return;
@@ -1767,6 +1776,10 @@
 
   function updateIntroCardMotion() {
     if (!sectionIntro || !introPlayerCard || !sectionWork) return;
+    if (isMobileViewport()) {
+      resetIntroCardMotion();
+      return;
+    }
     if (directWorkMode) {
       introCardAnchor = null;
       introPlayerCard.style.position = '';
@@ -1933,6 +1946,35 @@
       exitNextPage();
       setTimeout(() => { exitCooldown = false; }, 1200);
     }
+  }, { passive: true });
+
+  // Mobile: swipe down from top of intro returns to hero
+  let nextTouchStartY = null;
+  let nextTouchHandled = false;
+  nextPage.addEventListener('touchstart', (e) => {
+    if (!e.touches || e.touches.length === 0) return;
+    nextTouchStartY = e.touches[0].clientY;
+    nextTouchHandled = false;
+  }, { passive: true });
+
+  nextPage.addEventListener('touchmove', (e) => {
+    if (exitCooldown || nextTouchHandled || nextTouchStartY == null) return;
+    if (!e.touches || e.touches.length === 0) return;
+    if (nextPage.scrollTop !== 0) return;
+
+    const currentY = e.touches[0].clientY;
+    const swipeDown = currentY - nextTouchStartY;
+    if (swipeDown > 40) {
+      nextTouchHandled = true;
+      exitCooldown = true;
+      exitNextPage();
+      setTimeout(() => { exitCooldown = false; }, 1200);
+    }
+  }, { passive: true });
+
+  nextPage.addEventListener('touchend', () => {
+    nextTouchStartY = null;
+    nextTouchHandled = false;
   }, { passive: true });
 
   // Scroll-based reveal inside next page
