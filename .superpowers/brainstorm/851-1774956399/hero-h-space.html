@@ -293,7 +293,8 @@
   .id-tag {
     font-size: 0.6rem;
     letter-spacing: 0.3em;
-    color: var(--hero-green);
+    color: #fff;
+    font-weight: 800;
     text-transform: uppercase;
     margin-bottom: 1.2rem;
     animation: fade-in 1s ease 0.5s both;
@@ -334,22 +335,73 @@
     animation: fade-in 1s ease 1s both;
   }
 
-  .scroll-hint {
-    font-size: 1.1rem;
-    font-weight: 900;
-    letter-spacing: 0.3em;
-    color: rgba(34,197,94,0.55);
-    text-transform: uppercase;
-    animation: fade-in 1s ease 1.2s both;
+  .scroll-hint-wrap {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.4rem;
-    cursor: pointer;
+    justify-content: center;
+    gap: 0.32rem;
+    margin: 0 auto;
+    width: fit-content;
+    padding: 0.3rem 0.75rem 0.45rem;
+    animation: fade-in 1s ease 1.2s both;
   }
-  .scroll-hint .chevron {
-    font-size: 1.4rem;
+  .scroll-hint {
+    appearance: none;
+    -webkit-appearance: none;
+    font-family: inherit;
+    font-size: 1.08rem;
+    font-weight: 900;
+    letter-spacing: 0.22em;
+    color: rgba(120,255,176,0.95);
+    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    cursor: pointer;
+    width: min(92vw, 19.5rem);
+    text-align: center;
+    line-height: 1;
+    padding: 0.78rem 1.5rem;
+    border: 1px solid rgba(34,197,94,0.56);
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgba(2,14,9,0.66), rgba(1,10,7,0.5));
+    box-shadow: 0 0 20px rgba(34,197,94,0.18), inset 0 0 18px rgba(34,197,94,0.1);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  }
+  .scroll-hint .hint-desktop,
+  .scroll-hint .hint-mobile {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+  }
+  .scroll-hint:hover,
+  .scroll-hint:focus-visible {
+    color: rgba(178,255,212,0.99);
+    border-color: rgba(120,255,170,0.9);
+    box-shadow: 0 0 28px rgba(34,197,94,0.34), inset 0 0 22px rgba(34,197,94,0.16);
+    transform: translateY(-2px);
+  }
+  .scroll-hint .hint-mobile {
+    display: none;
+  }
+  .scroll-hint-chevron {
+    font-size: 1.2rem;
+    line-height: 1;
+    opacity: 0.86;
+    color: rgba(120,255,176,0.95);
+    cursor: pointer;
+    pointer-events: none;
     animation: bounce-down 1.6s ease-in-out infinite;
+    transition: color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+  }
+  .scroll-hint-wrap:hover .scroll-hint-chevron,
+  .scroll-hint:hover + .scroll-hint-chevron,
+  .scroll-hint:focus-visible + .scroll-hint-chevron {
+    color: rgba(178,255,212,0.99);
+    opacity: 1;
   }
   @keyframes bounce-down {
     0%, 100% { transform: translateY(0); opacity: 0.55; }
@@ -979,11 +1031,15 @@
     color: rgba(34,197,94,0.6);
     text-decoration: none;
     text-transform: uppercase;
+    font-weight: 500;
     transition: color 0.2s, text-shadow 0.2s;
   }
   .top-nav-menu a:hover, .top-nav-menu a.active {
     color: #22c55e;
     text-shadow: 0 0 8px rgba(34,197,94,0.5);
+  }
+  .top-nav-menu a.active {
+    font-weight: 800;
   }
   .hero-beta-link {
     position: fixed;
@@ -1017,8 +1073,48 @@
     transform: translateX(-50%) translateY(-1px);
     outline: none;
   }
+  body.is-next-page .hero-beta-link {
+    top: calc(env(safe-area-inset-top) + 14px);
+    left: 12px;
+    transform: none;
+    z-index: 705;
+  }
+  body.is-next-page .hero-beta-link:hover,
+  body.is-next-page .hero-beta-link:focus-visible {
+    transform: translateY(-1px);
+  }
 
   @media (max-width: 900px) {
+    .scroll-hint-wrap {
+      gap: 0.2rem;
+      padding: 0.15rem 0.35rem 0.25rem;
+    }
+    .scroll-hint {
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      color: rgba(34,197,94,0.55);
+      transform: none;
+      font-size: 0.95rem;
+    }
+    .scroll-hint:hover,
+    .scroll-hint:focus-visible {
+      color: rgba(34,197,94,0.55);
+      border-color: transparent;
+      box-shadow: none;
+      transform: none;
+    }
+    .scroll-hint .hint-desktop {
+      display: none;
+    }
+    .scroll-hint .hint-mobile {
+      display: inline;
+    }
+    .scroll-hint-chevron {
+      color: rgba(34,197,94,0.62);
+    }
     .top-nav {
       top: calc(env(safe-area-inset-top) + 12px);
       left: auto;
@@ -2327,7 +2423,7 @@
 
   <div class="center">
     <div class="id-tag" id="hud-kill-counter">Click to Shoot</div>
-    <div class="name">YOOBIN<br><span class="green">SEO.</span></div>
+    <div class="name">YOOBIN<br><span class="green">SEO</span></div>
     <div class="role">
       <span class="role-desktop">UI/UX Designer · Co-Founder · Product Builder</span>
       <span class="role-mobile">UI/UX DESIGNER</span>
@@ -2335,7 +2431,10 @@
       <span class="role-mobile">PRODUCT BUILDER</span>
     </div>
     <div class="divider"></div>
-    <div class="scroll-hint"><span>Scroll to Explore</span><span class="chevron">&#8964;</span></div>
+    <div class="scroll-hint-wrap">
+      <button class="scroll-hint" type="button" aria-label="Explore content"><span class="hint-desktop">Click to Explore</span><span class="hint-mobile">Scroll to Explore</span></button>
+      <span class="scroll-hint-chevron">&darr;</span>
+    </div>
   </div>
 </div>
 
@@ -2762,7 +2861,234 @@
   <div>2026.03.31</div>
 </div>
 
+<audio
+  id="bg-music"
+  src="/2026-04-01_05-05-53.mp3"
+  preload="auto"
+  autoplay
+  muted
+  playsinline
+></audio>
+
 <script>
+  const bgMusic = document.getElementById('bg-music');
+  const BG_MUSIC_TARGET_VOLUME = 0.38;
+  const BG_MUSIC_FADE_MS = 500;
+  const BG_MUSIC_END_FADE_LEAD_SECONDS = 0.5;
+  let bgMusicStarted = false;
+  let bgMusicPlayAttempts = 0;
+  let bgMusicLastError = '';
+  let bgMusicPendingGesture = false;
+  let bgMusicPrimedMuted = false;
+  let bgMusicFadeRaf = null;
+  let bgMusicEndingFadeArmed = false;
+  let bgMusicRestartAfterFade = false;
+  const bgMusicActivationTargets = [];
+  const bgMusicActivationEvents = ['wheel', 'touchmove', 'touchstart', 'touchend', 'pointerdown', 'mousedown', 'click', 'keydown'];
+  let bgMusicActivationBound = false;
+  function updateBgMusicDebug(status, detail = '') {
+    // Audio debug panel intentionally disabled in production markup.
+    void status;
+    void detail;
+  }
+  function onBgMusicActivation(event) {
+    const eventType = event && event.type ? event.type : 'unknown';
+    const eventTarget = event && event.target && event.target.id ? `#${event.target.id}` : 'no-id';
+    if ((eventType === 'wheel' || eventType === 'touchmove') && revealPrimedBgMusic()) {
+      updateBgMusicDebug('interaction', `${eventType} on ${eventTarget} (started from prime)`);
+      return;
+    }
+    const activationByType = ['touchstart', 'touchend', 'pointerdown', 'mousedown', 'click', 'keydown'].includes(eventType);
+    const hasUserActivation =
+      typeof navigator !== 'undefined' &&
+      navigator.userActivation &&
+      navigator.userActivation.isActive;
+    if (!activationByType && !hasUserActivation) {
+      bgMusicPendingGesture = true;
+      updateBgMusicDebug('interaction-blocked', `${eventType} on ${eventTarget} (awaiting tap/click)`);
+      return;
+    }
+    updateBgMusicDebug('interaction', `${eventType} on ${eventTarget}`);
+    startBgMusicFromHeroInteraction();
+  }
+  function removeBgMusicActivationListeners() {
+    if (!bgMusicActivationBound) return;
+    bgMusicActivationTargets.forEach((target) => {
+      bgMusicActivationEvents.forEach((eventName) => {
+        target.removeEventListener(eventName, onBgMusicActivation, true);
+      });
+    });
+    bgMusicActivationTargets.length = 0;
+    bgMusicActivationBound = false;
+    updateBgMusicDebug('listeners-removed', 'activation listeners detached');
+  }
+  function runBgMusicFade(fromVolume, toVolume, durationMs, onComplete) {
+    if (!bgMusic) return;
+    if (bgMusicFadeRaf) {
+      cancelAnimationFrame(bgMusicFadeRaf);
+      bgMusicFadeRaf = null;
+    }
+    const startTime = performance.now();
+    const step = (now) => {
+      const progress = Math.min(1, (now - startTime) / durationMs);
+      bgMusic.volume = fromVolume + ((toVolume - fromVolume) * progress);
+      if (progress < 1) {
+        bgMusicFadeRaf = requestAnimationFrame(step);
+        return;
+      }
+      bgMusicFadeRaf = null;
+      if (typeof onComplete === 'function') onComplete();
+    };
+    bgMusicFadeRaf = requestAnimationFrame(step);
+  }
+  function fadeInBgMusic(durationMs = BG_MUSIC_FADE_MS) {
+    if (!bgMusic) return;
+    runBgMusicFade(bgMusic.volume, BG_MUSIC_TARGET_VOLUME, durationMs);
+  }
+  function fadeOutBgMusic(durationMs = BG_MUSIC_FADE_MS, onComplete) {
+    if (!bgMusic) return;
+    runBgMusicFade(bgMusic.volume, 0, durationMs, onComplete);
+  }
+  function startBgMusicFromHeroInteraction() {
+    if (!bgMusic || bgMusicStarted) return;
+    bgMusicPlayAttempts += 1;
+    bgMusicPendingGesture = false;
+    updateBgMusicDebug('play-attempt', `attempt #${bgMusicPlayAttempts}`);
+    bgMusic.muted = false;
+    bgMusic.volume = 0;
+    const playPromise = bgMusic.play();
+    if (playPromise && typeof playPromise.then === 'function') {
+      playPromise
+        .then(() => {
+          bgMusicStarted = true;
+          bgMusicLastError = '';
+          removeBgMusicActivationListeners();
+          updateBgMusicDebug('playing', 'play() resolved');
+          fadeInBgMusic();
+        })
+        .catch((err) => {
+          bgMusicLastError = (err && err.message) ? err.message : String(err || 'unknown');
+          bgMusicPendingGesture = true;
+          updateBgMusicDebug('play-failed', 'waiting for next interaction');
+        });
+      return;
+    }
+    bgMusicStarted = true;
+    bgMusicLastError = '';
+    removeBgMusicActivationListeners();
+    updateBgMusicDebug('playing', 'play() returned without promise');
+    fadeInBgMusic();
+  }
+  function revealPrimedBgMusic() {
+    if (!bgMusic || bgMusicStarted || !bgMusicPrimedMuted) return false;
+    bgMusicStarted = true;
+    bgMusicPendingGesture = false;
+    bgMusic.muted = false;
+    removeBgMusicActivationListeners();
+    updateBgMusicDebug('playing', 'unmuted from muted-prime');
+    fadeInBgMusic();
+    return true;
+  }
+  function primeBgMusicMutedAutoplay() {
+    if (!bgMusic || bgMusicPrimedMuted || !bgMusic.paused) return;
+    bgMusic.muted = true;
+    bgMusic.volume = 0;
+    const primePromise = bgMusic.play();
+    if (primePromise && typeof primePromise.then === 'function') {
+      primePromise
+        .then(() => {
+          bgMusicPrimedMuted = true;
+          updateBgMusicDebug('primed-muted', 'autoplay muted is running');
+        })
+        .catch(() => {
+          updateBgMusicDebug('prime-failed', 'muted autoplay blocked');
+        });
+      return;
+    }
+    bgMusicPrimedMuted = true;
+    updateBgMusicDebug('primed-muted', 'autoplay muted started (no promise)');
+  }
+  if (bgMusic) {
+    // Start when users interact with hero or next-page content.
+    // Keep retry listeners active until playback actually succeeds.
+    bgMusic.volume = 0;
+    const heroLayerForAudio = document.getElementById('hero-layer');
+    const nextPageForAudio = document.getElementById('next-page');
+    if (heroLayerForAudio) bgMusicActivationTargets.push(heroLayerForAudio);
+    if (nextPageForAudio) bgMusicActivationTargets.push(nextPageForAudio);
+    bgMusicActivationTargets.push(document);
+    bgMusicActivationTargets.forEach((target) => {
+      bgMusicActivationEvents.forEach((eventName) => {
+        target.addEventListener(eventName, onBgMusicActivation, {
+          passive: eventName !== 'keydown',
+          capture: true,
+        });
+      });
+    });
+    bgMusicActivationBound = true;
+    updateBgMusicDebug('armed', 'waiting for user interaction');
+    if (!bgMusic.paused) {
+      bgMusicPrimedMuted = true;
+      bgMusic.muted = true;
+      bgMusic.volume = 0;
+      updateBgMusicDebug('primed-muted', 'markup autoplay already running');
+    }
+    primeBgMusicMutedAutoplay();
+    bgMusic.loop = false;
+    bgMusic.addEventListener('playing', () => {
+      bgMusicEndingFadeArmed = false;
+      updateBgMusicDebug('playing-event', 'native "playing" event');
+    });
+    bgMusic.addEventListener('timeupdate', () => {
+      if (!bgMusic || bgMusic.paused || bgMusicEndingFadeArmed) return;
+      if (!Number.isFinite(bgMusic.duration) || bgMusic.duration <= 0) return;
+      const remaining = bgMusic.duration - bgMusic.currentTime;
+      if (remaining <= BG_MUSIC_END_FADE_LEAD_SECONDS) {
+        bgMusicEndingFadeArmed = true;
+        bgMusicRestartAfterFade = true;
+        updateBgMusicDebug('fading-out', 'track end reached, fading out');
+        fadeOutBgMusic(BG_MUSIC_FADE_MS, () => {
+          if (!bgMusic || !bgMusicRestartAfterFade) return;
+          bgMusicRestartAfterFade = false;
+          bgMusic.currentTime = 0;
+          const replayPromise = bgMusic.play();
+          if (replayPromise && typeof replayPromise.then === 'function') {
+            replayPromise
+              .then(() => {
+                fadeInBgMusic(BG_MUSIC_FADE_MS);
+                updateBgMusicDebug('playing', 'restarted with fade-in');
+              })
+              .catch((err) => {
+                bgMusicLastError = (err && err.message) ? err.message : String(err || 'unknown');
+                bgMusicPendingGesture = true;
+                updateBgMusicDebug('play-failed', 'restart blocked, awaiting interaction');
+              });
+            return;
+          }
+          fadeInBgMusic(BG_MUSIC_FADE_MS);
+          updateBgMusicDebug('playing', 'restarted without promise');
+        });
+      }
+    });
+    bgMusic.addEventListener('pause', () => updateBgMusicDebug('paused-event', 'native "pause" event'));
+    bgMusic.addEventListener('error', () => {
+      const mediaError = bgMusic.error;
+      bgMusicLastError = mediaError ? `code ${mediaError.code}` : 'unknown media error';
+      updateBgMusicDebug('error-event', 'native audio error');
+    });
+  }
+
+  const FIRE_SFX_SRC = '/ray%20gun%20sound.mp4';
+  const FIRE_SFX_VOLUME = 0.5;
+  const fireSfx = new Audio(FIRE_SFX_SRC);
+  fireSfx.preload = 'auto';
+
+  function playFireSfx() {
+    const sfx = fireSfx.cloneNode(true);
+    sfx.volume = FIRE_SFX_VOLUME;
+    sfx.play().catch(() => {});
+  }
+
   // Live coordinates — drift around Bay Area baseline with mouse position
   const hudCoords = document.getElementById('hud-coords');
   const BASE_LAT = 37.7749, BASE_LNG = 122.4194;
@@ -2783,13 +3109,32 @@
   const crossV   = document.querySelector('.cross-v');
   const rings     = document.querySelectorAll('.ring');
   const lockDot   = document.querySelector('.lock-dot');
+  const crosshairPauseZone = document.querySelector('.scroll-hint-wrap');
 
   let targetX = window.innerWidth  / 2;
   let targetY = window.innerHeight / 2;
   let currentX = targetX;
   let currentY = targetY;
+  let isCrosshairTrackingPaused = false;
+
+  function setCrosshairTrackingPaused(paused) {
+    isCrosshairTrackingPaused = paused;
+    if (paused) {
+      // Freeze immediately so hover does not keep drifting.
+      targetX = currentX;
+      targetY = currentY;
+    }
+  }
+
+  if (crosshairPauseZone) {
+    crosshairPauseZone.addEventListener('mouseenter', () => setCrosshairTrackingPaused(true));
+    crosshairPauseZone.addEventListener('mouseleave', () => setCrosshairTrackingPaused(false));
+    crosshairPauseZone.addEventListener('focusin', () => setCrosshairTrackingPaused(true));
+    crosshairPauseZone.addEventListener('focusout', () => setCrosshairTrackingPaused(false));
+  }
 
   document.addEventListener('mousemove', (e) => {
+    if (isCrosshairTrackingPaused) return;
     targetX = e.clientX;
     targetY = e.clientY;
   });
@@ -3017,6 +3362,7 @@
   }
 
   document.addEventListener('click', () => {
+    playFireSfx();
     fireMissile(currentX, currentY);
     // Rapid fire: shoot 3 in a slight spread
     setTimeout(() => fireMissile(currentX, currentY), 60);
@@ -3292,12 +3638,14 @@
   // ============================================================
   // CLICK-TO-CONTINUE TRANSITION & SHATTER FX
   // ============================================================
-  const scrollHint  = document.querySelector('.scroll-hint');
+  const scrollHint = document.querySelector('.scroll-hint');
+  const scrollHintWrap = document.querySelector('.scroll-hint-wrap');
   const heroLayer   = document.getElementById('hero-layer');
   const nextPage    = document.getElementById('next-page');
   const npBack      = document.getElementById('np-back');
   const npNext      = document.getElementById('np-next');
   const centerEl    = document.querySelector('.center');
+  const pageBody    = document.body;
 
   const GEO_SHAPES = [
     // Triangle
@@ -3360,10 +3708,13 @@
 
   function enterNextPage() {
     if (heroLayer.classList.contains('fading')) return;
+    startBgMusicFromHeroInteraction();
+    nextPage.scrollTop = 0;
     centerEl.classList.add('shatter');
     spawnGeoShards(false);
 
     heroLayer.classList.add('fading');
+    if (pageBody) pageBody.classList.add('is-next-page');
     setTimeout(() => {
       nextPage.classList.add('visible');
       npBack.classList.add('visible');
@@ -3377,6 +3728,7 @@
   function exitNextPage() {
     nextPage.classList.remove('visible');
     npBack.classList.remove('visible');
+    if (pageBody) pageBody.classList.remove('is-next-page');
     setActiveNav('nav-home');
     
     // Reverse shatter: trigger earlier so the hero layer fades in 
@@ -3401,6 +3753,7 @@
   }
 
   if (scrollHint) scrollHint.addEventListener('click', enterNextPage);
+  if (scrollHintWrap) scrollHintWrap.addEventListener('click', enterNextPage);
   if (npBack)     npBack.addEventListener('click', exitNextPage);
 
   const navIntro = document.getElementById('nav-intro');
@@ -3628,8 +3981,8 @@
   function updateForwardNavLabel(activeIndex) {
     if (!journeyForward) return;
     const lastIndex = Math.max(0, journeyCards.length - 1);
-    const shouldContinue = isMobileViewport() && activeIndex >= lastIndex;
-    journeyForward.textContent = shouldContinue ? 'Continue' : 'Forward';
+    const shouldContinue = activeIndex >= lastIndex;
+    journeyForward.textContent = shouldContinue ? 'CONTINUE' : 'Forward';
     journeyForward.setAttribute('aria-label', shouldContinue ? 'Continue to Ready to Build section' : 'Forward');
   }
 
@@ -3908,8 +4261,8 @@
       e.preventDefault();
       const currentIndex = getActiveExperienceIndex();
       const lastIndex = Math.max(0, journeyCards.length - 1);
-      const isLastChapterOnMobile = isMobileViewport() && currentIndex >= lastIndex;
-      if (isLastChapterOnMobile && sectionExpertise) {
+      const isLastChapter = currentIndex >= lastIndex;
+      if (isLastChapter && sectionExpertise) {
         nextPage.scrollTo({ top: sectionExpertise.offsetTop, behavior: 'smooth' });
         setActiveNav('nav-more');
         return;
@@ -3972,6 +4325,7 @@
   function onHeroWheel(e) {
     if (heroScrolled) return;
     if (e.deltaY > 0) {
+      startBgMusicFromHeroInteraction();
       heroScrolled = true;
       enterNextPage();
     }
@@ -3988,6 +4342,7 @@
     const swipeDelta = currentY - heroTouchStartY;
     e.preventDefault();
     if (swipeDelta < -35) {
+      startBgMusicFromHeroInteraction();
       heroScrolled = true;
       enterNextPage();
     }
