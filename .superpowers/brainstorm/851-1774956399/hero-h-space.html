@@ -8,6 +8,7 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --hero-green: #22c55e;
+    --body-copy-font: "Trebuchet MS", "Segoe UI", Arial, sans-serif;
   }
 
   body {
@@ -292,7 +293,7 @@
   .id-tag {
     font-size: 0.6rem;
     letter-spacing: 0.3em;
-    color: rgba(34,197,94,0.55);
+    color: var(--hero-green);
     text-transform: uppercase;
     margin-bottom: 1.2rem;
     animation: fade-in 1s ease 0.5s both;
@@ -598,7 +599,7 @@
     text-shadow: 0 0 24px rgba(34,197,94,0.35);
   }
   #section-intro .intro-body {
-    font-family: 'Courier New', monospace;
+    font-family: var(--body-copy-font);
     font-size: clamp(0.85rem, 1.4vw, 1.05rem);
     font-weight: 700;
     line-height: 2;
@@ -669,6 +670,7 @@
     font-weight: 900;
   }
   #section-intro .about-body {
+    font-family: var(--body-copy-font);
     font-size: 0.86rem;
     font-weight: 700;
     line-height: 1.75;
@@ -726,14 +728,18 @@
       z-index: 2 !important;
     }
     #section-intro .player-card.is-flipped {
-      min-height: 700px;
+      min-height: 560px;
     }
     #section-intro .player-card.is-flipped .player-card-inner {
-      min-height: 700px;
+      min-height: 560px;
     }
     #section-intro .player-card.is-flipped .player-face.back {
       overflow: hidden;
-      padding-bottom: 1.35rem;
+      padding-bottom: 0.7rem;
+    }
+    #section-intro .about-body {
+      line-height: 1.62;
+      margin-bottom: 0.62rem;
     }
   }
 
@@ -827,6 +833,7 @@
     margin-bottom: 0.6rem;
   }
   .work-card .wc-desc {
+    font-family: var(--body-copy-font);
     font-size: 0.82rem;
     font-weight: 700;
     line-height: 1.8;
@@ -954,6 +961,19 @@
     display: flex;
     align-items: center;
     gap: 2rem;
+    position: relative;
+    padding: 0.38rem 1rem;
+    border-radius: 999px;
+    isolation: isolate;
+  }
+  .top-nav-menu::before {
+    content: "";
+    position: absolute;
+    inset: -0.32rem -0.7rem;
+    border-radius: inherit;
+    background: linear-gradient(180deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.55) 100%);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.45);
+    z-index: -1;
   }
   .top-nav-menu a {
     color: rgba(34,197,94,0.6);
@@ -964,6 +984,38 @@
   .top-nav-menu a:hover, .top-nav-menu a.active {
     color: #22c55e;
     text-shadow: 0 0 8px rgba(34,197,94,0.5);
+  }
+  .hero-beta-link {
+    position: fixed;
+    top: calc(env(safe-area-inset-top) + 72px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 520;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.15rem;
+    padding: 0.42rem 0.86rem;
+    border: 1px solid rgba(34,197,94,0.8);
+    border-radius: 999px;
+    background: transparent;
+    color: #22c55e;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    font-size: 0.66rem;
+    box-shadow: inset 0 0 0 1px rgba(34,197,94,0.18), 0 0 16px rgba(34,197,94,0.18);
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .hero-beta-link:hover,
+  .hero-beta-link:focus-visible {
+    color: #d6ffe8;
+    border-color: rgba(150,255,198,0.95);
+    background: rgba(34,197,94,0.12);
+    box-shadow: inset 0 0 0 1px rgba(150,255,198,0.26), 0 0 22px rgba(34,197,94,0.28);
+    transform: translateX(-50%) translateY(-1px);
+    outline: none;
   }
 
   @media (max-width: 900px) {
@@ -1021,6 +1073,9 @@
       align-items: stretch;
       gap: 0.2rem;
     }
+    .top-nav-menu::before {
+      content: none;
+    }
     .top-nav.is-open .top-nav-menu {
       display: flex;
     }
@@ -1036,6 +1091,20 @@
     }
     .top-nav-menu a:last-child {
       border-bottom: 0;
+    }
+    .hero-beta-link {
+      top: calc(env(safe-area-inset-top) + 14px);
+      left: 12px;
+      transform: none;
+      min-height: 2rem;
+      padding: 0.38rem 0.64rem;
+      font-size: 0.56rem;
+      letter-spacing: 0.12em;
+      z-index: 705;
+    }
+    .hero-beta-link:hover,
+    .hero-beta-link:focus-visible {
+      transform: translateY(-1px);
     }
 
     .bracket.tl,
@@ -1295,6 +1364,90 @@
     opacity: 0;
     will-change: transform, opacity, filter;
   }
+  .ej-card > *:not(.ej-card-art) {
+    position: relative;
+    z-index: 1;
+  }
+  .ej-card-art {
+    position: absolute;
+    inset: -20px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .ej-card-art-glyph {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 52px;
+    height: 24px;
+    padding: 0 0.52rem;
+    border-radius: 999px;
+    border: 1px solid rgba(166, 255, 206, 0.28);
+    background: linear-gradient(180deg, rgba(2, 16, 8, 0.88), rgba(0, 0, 0, 0.72));
+    color: rgba(232, 255, 242, 0.92);
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    font-size: 0.56rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    box-shadow: 0 0 20px rgba(65, 255, 149, 0.16);
+    transform: translateY(0px);
+    animation: ejGlyphFloat 4.6s ease-in-out infinite;
+  }
+  .ej-card-art-glyph.a { top: 8%; left: -8px; animation-delay: 0s; }
+  .ej-card-art-glyph.b { top: 12%; right: -8px; animation-delay: 0.6s; }
+  .ej-card-art-glyph.c { bottom: 12%; left: -14px; animation-delay: 1.3s; }
+  .ej-card-art-glyph.d { bottom: 9%; right: -12px; animation-delay: 1.9s; }
+  .ej-card-art-glyph.e { top: 47%; right: -20px; animation-delay: 2.4s; }
+  .ej-card-art-glyph.f { top: 48%; left: -20px; animation-delay: 3.1s; }
+  .ej-card-art-ring {
+    position: absolute;
+    border-radius: 999px;
+    border: 1px dashed rgba(146, 255, 192, 0.3);
+    box-shadow: inset 0 0 18px rgba(46, 255, 130, 0.12), 0 0 16px rgba(46, 255, 130, 0.14);
+    animation: ejRingPulse 5.8s ease-in-out infinite;
+  }
+  .ej-card-art-ring.r1 {
+    width: 52px;
+    height: 52px;
+    top: -16px;
+    right: 8%;
+    animation-delay: 0.4s;
+  }
+  .ej-card-art-ring.r2 {
+    width: 42px;
+    height: 42px;
+    bottom: -12px;
+    left: 8%;
+    animation-delay: 1.4s;
+  }
+  .ej-card[data-ej-theme="cofounder"] .ej-card-art-glyph,
+  .ej-card[data-ej-theme="pm"] .ej-card-art-glyph {
+    border-color: rgba(250, 255, 180, 0.32);
+    box-shadow: 0 0 20px rgba(230, 255, 118, 0.18);
+  }
+  .ej-card[data-ej-theme="ux"] .ej-card-art-glyph,
+  .ej-card[data-ej-theme="creator"] .ej-card-art-glyph {
+    border-color: rgba(176, 233, 255, 0.34);
+    box-shadow: 0 0 20px rgba(112, 216, 255, 0.2);
+  }
+  .ej-card[data-ej-theme="seo"] .ej-card-art-glyph,
+  .ej-card[data-ej-theme="qa"] .ej-card-art-glyph {
+    border-color: rgba(176, 255, 198, 0.34);
+    box-shadow: 0 0 20px rgba(94, 255, 152, 0.2);
+  }
+  .ej-card[data-ej-theme="finance"] .ej-card-art-glyph {
+    border-color: rgba(204, 255, 170, 0.34);
+    box-shadow: 0 0 20px rgba(168, 255, 94, 0.2);
+  }
+  @keyframes ejGlyphFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-4px); }
+  }
+  @keyframes ejRingPulse {
+    0%, 100% { opacity: 0.42; transform: scale(1); }
+    50% { opacity: 0.95; transform: scale(1.08); }
+  }
   .ej-card.left  { right: calc(50% + 2.35rem); text-align: right; }
   .ej-card.right { left: calc(50% + 2.35rem);  text-align: left; }
   .ej-card .ej-chapter {
@@ -1307,7 +1460,7 @@
     margin-top: 0.56rem;
     font-size: clamp(1.05rem, 1.65vw, 1.28rem);
     font-weight: 800;
-    color: rgba(236,253,245,0.96);
+    color: #fff;
   }
   .ej-card .ej-company {
     margin-top: 0.24rem;
@@ -1316,16 +1469,21 @@
   }
   .ej-card .ej-dates {
     margin-top: 0;
+    font-family: 'Arial Black', 'Arial', sans-serif;
     font-size: 0.66rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: rgba(170,255,210,0.6);
+    color: #00ff8c;
+    font-weight: 900;
+    text-shadow: 0 0 14px rgba(34, 197, 94, 0.45);
   }
   .ej-card .ej-copy {
+    font-family: var(--body-copy-font);
     margin: 0.86rem 0 0;
     font-size: 0.8rem;
+    font-weight: 700;
     line-height: 1.6;
-    color: rgba(236,253,245,0.9);
+    color: #fff;
     letter-spacing: 0.01em;
   }
   .ej-ticker {
@@ -1346,16 +1504,62 @@
     filter: blur(0px);
     transition: opacity 0.24s ease, filter 0.24s ease;
   }
-  .ej-ticker-title {
+  .ej-ticker-header {
     grid-column: 1 / -1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-bottom: 0.1rem;
+    min-height: 1.2rem;
+  }
+  .ej-ticker-title {
+    margin: 0;
     font-family: 'Arial Black', 'Arial', sans-serif;
     font-size: 0.74rem;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: rgba(170,255,210,0.78);
+    color: var(--hero-green);
     text-shadow: 0 0 12px rgba(80,255,155,0.28);
     text-align: center;
+  }
+  .ej-ticker-nav {
+    position: absolute;
+    top: 100%;
+    transform: translateY(-112%);
+    border: 1px solid rgba(120,255,170,0.38);
+    background: linear-gradient(180deg, rgba(6,26,15,0.72), rgba(2,9,5,0.88));
+    border-radius: 999px;
+    min-height: 2rem;
+    min-width: 5.9rem;
+    padding: 0.32rem 0.72rem;
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    font-size: 0.56rem;
+    letter-spacing: 0.14em;
+    line-height: 1;
+    text-transform: uppercase;
+    color: rgba(170,255,210,0.86);
+    text-shadow: 0 0 10px rgba(46,255,130,0.2);
+    box-shadow: 0 0 14px rgba(46,255,130,0.14), inset 0 0 0 1px rgba(170,255,210,0.08);
+    cursor: pointer;
+    transition: color 0.18s ease, text-shadow 0.18s ease, transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    white-space: nowrap;
+  }
+  .ej-ticker-nav.rewind {
+    right: calc(100% + 0.9rem);
+  }
+  .ej-ticker-nav.forward {
+    left: calc(100% + 0.9rem);
+  }
+  .ej-ticker-nav:hover,
+  .ej-ticker-nav:focus-visible {
+    color: rgba(220,255,238,0.98);
+    text-shadow: 0 0 14px rgba(46,255,130,0.34);
+    border-color: rgba(170,255,210,0.78);
+    background: linear-gradient(180deg, rgba(12,40,22,0.84), rgba(4,14,8,0.94));
+    box-shadow: 0 0 20px rgba(46,255,130,0.24), inset 0 0 0 1px rgba(170,255,210,0.14);
+    transform: translateY(-112%) scale(1.02);
+    outline: none;
   }
   .ej-ticker.is-fading {
     opacity: 0;
@@ -1403,21 +1607,34 @@
     transform: translateX(4px);
   }
   .ej-tick {
+    position: relative;
     border: 1px solid rgba(120,255,170,0.12);
     background: rgba(0,0,0,0.3);
     border-radius: 10px;
-    padding: 0.38rem 0.48rem;
+    padding: 0.38rem 1.15rem 0.38rem 0.48rem;
     opacity: 0.36;
     transform: translateX(0);
     cursor: pointer;
     transition: opacity 0.2s ease, transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+  .ej-tick::after {
+    content: ">";
+    position: absolute;
+    right: 0.46rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    font-size: 0.78rem;
+    color: rgba(185,255,219,0.8);
+    text-shadow: 0 0 8px rgba(46,255,130,0.2);
+    pointer-events: none;
   }
   .ej-tick-year {
     font-family: 'Arial Black', 'Arial', sans-serif;
     font-size: 0.68rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: rgba(170,255,210,0.6);
+    color: var(--hero-green);
     font-weight: 800;
   }
   .ej-tick-role {
@@ -1438,18 +1655,24 @@
     background: rgba(8,20,13,0.7);
     box-shadow: 0 0 22px rgba(40,255,130,0.2);
   }
+  .ej-tick.is-active::after {
+    color: rgba(220,255,238,0.98);
+    text-shadow: 0 0 12px rgba(46,255,130,0.34);
+  }
   .ej-tick.is-active .ej-tick-role {
     color: rgba(240,255,247,0.98);
   }
   .ej-card ul {
+    font-family: var(--body-copy-font);
     margin: 0.86rem 0 0;
     padding: 0;
     list-style: none;
     display: grid;
     gap: 0.44rem;
     font-size: 0.8rem;
+    font-weight: 700;
     line-height: 1.55;
-    color: rgba(236,253,245,0.9);
+    color: #fff;
   }
   .ej-card.right ul {
     list-style: disc;
@@ -1465,7 +1688,391 @@
     background: radial-gradient(circle at 50% 50%, transparent 33%, rgba(0,0,0,0.74) 100%);
     pointer-events: none;
   }
+
+  /* ---- End expertise section ---- */
+  #section-expertise {
+    min-height: 100vh;
+    padding-top: 5.5rem;
+    padding-bottom: 5rem;
+    background:
+      radial-gradient(circle at 12% 24%, rgba(134,255,176,0.13), transparent 18%),
+      radial-gradient(circle at 82% 36%, rgba(56,255,162,0.1), transparent 20%),
+      radial-gradient(circle at 44% 84%, rgba(80,255,143,0.08), transparent 22%),
+      radial-gradient(circle at 16% 20%, rgba(34,197,94,0.14), transparent 32%),
+      radial-gradient(circle at 82% 28%, rgba(16,185,129,0.11), transparent 30%),
+      linear-gradient(to bottom, #020704 0%, #000 78%, #010402 100%);
+  }
+  #section-expertise::before {
+    top: 2.8rem;
+  }
+  .xp-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.3rem;
+    justify-items: center;
+    width: 100%;
+  }
+  .xp-left {
+    display: grid;
+    gap: 1rem;
+    max-width: 980px;
+    width: min(100%, 980px);
+    justify-items: center;
+    text-align: center;
+  }
+  .oi-block {
+    width: 100%;
+    margin-top: 0.95rem;
+    border: 1px solid rgba(120,255,170,0.2);
+    border-radius: 16px;
+    background: linear-gradient(180deg, rgba(8,24,14,0.56), rgba(2,7,4,0.72));
+    box-shadow: 0 14px 38px rgba(0,0,0,0.42), inset 0 0 0 1px rgba(120,255,170,0.07);
+    padding: 1rem;
+    text-align: left;
+  }
+  .oi-title {
+    margin: 0;
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(170,255,210,0.9);
+  }
+  .oi-copy {
+    font-family: var(--body-copy-font);
+    margin-top: 0.68rem;
+    font-size: 1.06rem;
+    line-height: 1.58;
+    text-align: center;
+    color: rgba(236,253,245,0.88);
+  }
+  .oi-gallery {
+    margin-top: 0.92rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.68rem;
+  }
+  .oi-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(140,255,188,0.3);
+    border-radius: 12px;
+    background: rgba(0,0,0,0.35);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.46), 0 0 22px rgba(34,197,94,0.12);
+    transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
+  }
+  .oi-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(170,255,210,0.58);
+    box-shadow: 0 14px 36px rgba(0,0,0,0.5), 0 0 28px rgba(46,255,140,0.22);
+  }
+  .oi-media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    min-height: 220px;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(120,255,170,0.14);
+  }
+  .oi-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: saturate(1.04) contrast(1.02);
+  }
+  .oi-card video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: saturate(1.04) contrast(1.02);
+  }
+  .oi-media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.58) 0%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0) 100%);
+    pointer-events: none;
+  }
+  .oi-meta {
+    padding: 0.82rem 0.8rem 0.92rem;
+  }
+  .oi-item-title {
+    margin: 0 0 0.52rem;
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--hero-green);
+    text-shadow: 0 0 12px rgba(34,197,94,0.34);
+  }
+  .oi-item-copy {
+    font-family: var(--body-copy-font);
+    margin: 0;
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.55;
+    color: rgba(231,249,239,0.9);
+  }
+  .contact-block {
+    margin-top: 0;
+    border: 1px solid rgba(120,255,170,0.24);
+    border-radius: 16px;
+    background: linear-gradient(180deg, rgba(8,24,14,0.58), rgba(2,7,4,0.74));
+    box-shadow: 0 14px 36px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(120,255,170,0.05);
+    padding: 1rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .contact-copy {
+    margin: 0 0 0.85rem;
+    font-family: var(--body-copy-font);
+    font-size: 0.68rem;
+    line-height: 1.55;
+    color: rgba(232,252,241,0.9);
+  }
+  .contact-business-email {
+    display: inline-block;
+    margin-bottom: 0.92rem;
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    font-size: 0.64rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #79f2a8;
+    text-decoration: none;
+    text-shadow: 0 0 12px rgba(46,255,140,0.28);
+  }
+  .contact-business-email:hover {
+    color: #bfffd8;
+  }
+  .contact-beta-row {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.82rem;
+    align-items: stretch;
+  }
+  .contact-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.68rem;
+    text-align: left;
+  }
+  .contact-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.34rem;
+  }
+  .contact-field label {
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    font-size: 0.64rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(187,255,220,0.92);
+    text-align: left;
+  }
+  .contact-field input {
+    width: 100%;
+    border: 1px solid rgba(120,255,170,0.34);
+    border-radius: 10px;
+    background: rgba(0,0,0,0.42);
+    color: rgba(235,255,244,0.96);
+    padding: 0.62rem 0.66rem;
+    font-family: var(--body-copy-font);
+    font-size: 0.74rem;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .contact-field input:focus {
+    border-color: rgba(170,255,210,0.7);
+    box-shadow: 0 0 0 2px rgba(34,197,94,0.25);
+  }
+  .bloggo-block {
+    margin-top: 0;
+    border: 1px solid rgba(120,255,170,0.28);
+    border-radius: 16px;
+    background: linear-gradient(160deg, rgba(6,26,15,0.85), rgba(4,12,9,0.92));
+    box-shadow: 0 16px 40px rgba(0,0,0,0.48), inset 0 0 0 1px rgba(120,255,170,0.08);
+    padding: 1rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .bloggo-kicker {
+    margin: 0;
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    font-size: 0.66rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(170,255,210,0.92);
+  }
+  .bloggo-subtitle {
+    margin: 0.3rem 0 0.65rem;
+    font-family: var(--body-copy-font);
+    font-size: 0.95rem;
+    font-weight: 800;
+    line-height: 1.28;
+    color: rgba(242,255,248,0.98);
+  }
+  .bloggo-copy {
+    margin: 0;
+    font-family: var(--body-copy-font);
+    font-size: 0.77rem;
+    line-height: 1.58;
+    color: rgba(228,252,238,0.9);
+    max-width: 70ch;
+  }
+  .bloggo-actions {
+    margin-top: 0.9rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.52rem;
+    margin-top: auto;
+    padding-top: 0.9rem;
+    justify-content: center;
+  }
+  .bloggo-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1px solid rgba(120,255,170,0.34);
+    padding: 0.55rem 0.78rem;
+    text-decoration: none;
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+  }
+  .bloggo-link.primary {
+    background: #22c55e;
+    color: #dffff0;
+    box-shadow: 0 0 16px rgba(34,197,94,0.24);
+  }
+  .bloggo-link.secondary {
+    background: rgba(0,0,0,0.34);
+    color: rgba(221,255,236,0.96);
+  }
+  .bloggo-link:hover {
+    transform: translateY(-2px);
+    border-color: rgba(170,255,210,0.72);
+    box-shadow: 0 0 22px rgba(34,197,94,0.25);
+  }
+  .xp-heading {
+    margin: 0;
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    font-size: clamp(2.1rem, 4.3vw, 3.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: rgba(241,255,247,0.96);
+    text-shadow: 0 0 22px rgba(42,255,128,0.22);
+  }
+  .xp-heading .green {
+    color: #22c55e;
+  }
+  .oi-heading {
+    margin: 0.4rem 0 0.2rem;
+    text-align: center;
+    position: relative;
+    top: 0.9rem;
+  }
+  .xp-panels {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.8rem;
+    width: 100%;
+  }
+  .xp-panel {
+    border: 1px solid rgba(120,255,170,0.24);
+    border-radius: 14px;
+    background: linear-gradient(180deg, rgba(8,24,14,0.72), rgba(2,7,4,0.88));
+    box-shadow: 0 10px 30px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(120,255,170,0.1);
+    padding: 0.9rem 0.95rem;
+  }
+  .xp-panel-title {
+    margin: 0 0 0.7rem;
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    color: rgba(170,255,210,0.88);
+    text-transform: uppercase;
+  }
+  .xp-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.38rem;
+  }
+  .xp-list li {
+    font-family: var(--body-copy-font);
+    font-size: 0.76rem;
+    font-weight: 700;
+    line-height: 1.45;
+    color: rgba(238,255,244,0.9);
+    padding: 0.34rem 0.46rem;
+    border-radius: 8px;
+    border: 1px solid rgba(120,255,170,0.14);
+    background: rgba(0,0,0,0.24);
+  }
+  .xp-list--stack li {
+    display: flex;
+    align-items: center;
+    gap: 0.48rem;
+  }
+  .xp-list--stack .stack-icon {
+    width: 15px;
+    height: 15px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 4px rgba(120,255,170,0.22));
+  }
   @media (max-width: 900px) {
+    .ej-ticker {
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+      width: min(92vw, 32rem);
+      padding: 0;
+    }
+    .ej-ticker-header {
+      position: relative;
+      left: auto;
+      top: auto;
+      transform: none;
+      width: auto;
+      z-index: auto;
+      margin-bottom: 0.24rem;
+      min-height: 1.28rem;
+      pointer-events: auto;
+    }
+    .ej-ticker-nav {
+      font-size: 0.52rem;
+      letter-spacing: 0.12em;
+      min-height: 1.95rem;
+      min-width: 5.4rem;
+      padding: 0.3rem 0.62rem;
+      color: rgba(190,255,224,0.92);
+      top: 100%;
+      transform: translateY(-112%);
+    }
+    .ej-ticker-nav.rewind {
+      left: 0;
+      right: auto;
+    }
+    .ej-ticker-nav.forward {
+      right: 0;
+      left: auto;
+      transform: translateY(-112%);
+    }
+    .ej-ticker-nav:hover,
+    .ej-ticker-nav:focus-visible {
+      transform: translateY(-112%) scale(1.02);
+    }
     #section-experience {
       height: 780vh;
       margin-top: 6rem;
@@ -1490,6 +2097,9 @@
       --ej-scroll-track-opacity: 0.28;
       --ej-scroll-thumb-top: 4px;
       --ej-scroll-thumb-height: 34px;
+    }
+    .ej-card-art {
+      display: none;
     }
     .ej-card::after {
       content: '';
@@ -1550,6 +2160,37 @@
       color: #22c55e !important;
       text-shadow: 0 0 8px rgba(34,197,94,0.25);
     }
+    #section-expertise {
+      padding-top: 4.6rem;
+      padding-bottom: 3.2rem;
+    }
+    .xp-layout {
+      grid-template-columns: 1fr;
+      gap: 1.3rem;
+    }
+    .xp-panels {
+      grid-template-columns: 1fr;
+      gap: 0.65rem;
+    }
+    .oi-gallery {
+      grid-template-columns: 1fr;
+      gap: 0.58rem;
+    }
+    .oi-media {
+      min-height: 260px;
+    }
+    .contact-form {
+      grid-template-columns: 1fr;
+    }
+    .contact-beta-row {
+      grid-template-columns: 1fr;
+    }
+    .bloggo-subtitle {
+      font-size: 0.88rem;
+    }
+    .bloggo-copy {
+      font-size: 0.74rem;
+    }
   }
 </style>
 </head>
@@ -1566,9 +2207,13 @@
     <a href="#section-intro" id="nav-intro">INTRO</a>
     <a href="#section-work" id="nav-work">WORK</a>
     <a href="#section-experience" id="nav-resume">RESUME</a>
-    <a href="#">MORE</a>
+    <a href="#section-expertise" id="nav-more">MORE</a>
   </div>
 </nav>
+
+<a class="hero-beta-link" href="https://testflight.apple.com/join/RMzfPzCf" target="_blank" rel="noopener noreferrer">
+  Bloggo Beta Link
+</a>
 
 <!-- Hero layer (all existing content wrapped) -->
 <div id="hero-layer">
@@ -1681,7 +2326,7 @@
   </div>
 
   <div class="center">
-    <div class="id-tag">Click to Shoot</div>
+    <div class="id-tag" id="hud-kill-counter">Click to Shoot</div>
     <div class="name">YOOBIN<br><span class="green">SEO.</span></div>
     <div class="role">
       <span class="role-desktop">UI/UX Designer · Co-Founder · Product Builder</span>
@@ -1800,64 +2445,124 @@
         <div class="ej-shadow"></div>
       </div>
 
-      <article class="ej-card left" data-ej-card data-side="left">
+      <article class="ej-card left" data-ej-card data-side="left" data-ej-theme="cofounder">
         <div class="ej-dates">2026 &mdash; Present</div>
         <h3 class="ej-role">Co-Founder &amp; Product Engineer</h3>
         <p class="ej-copy">
           Co-founder of Bloggo, where I design and build a local-first travel blogging platform that converts photo metadata into structured blog narratives. Working across product architecture, mobile design, and backend systems to deliver a seamless storytelling experience for travelers.
         </p>
+        <div class="ej-card-art" aria-hidden="true">
+          <span class="ej-card-art-glyph a">Build</span>
+          <span class="ej-card-art-glyph b">Code</span>
+          <span class="ej-card-art-glyph c">Launch</span>
+          <span class="ej-card-art-glyph d">Product</span>
+          <span class="ej-card-art-ring r1"></span>
+          <span class="ej-card-art-ring r2"></span>
+        </div>
       </article>
 
-      <article class="ej-card right" data-ej-card data-side="right">
+      <article class="ej-card right" data-ej-card data-side="right" data-ej-theme="ux">
         <div class="ej-dates">2022 &mdash; Present</div>
         <h3 class="ej-role">UI/UX Designer</h3>
         <p class="ej-copy">
           Working with a startup, agility and adaptability are paramount, fostering close collaboration within our team to make well-informed decisions aligned with our current engineering capabilities.
         </p>
+        <div class="ej-card-art" aria-hidden="true">
+          <span class="ej-card-art-glyph a">UX</span>
+          <span class="ej-card-art-glyph b">UI</span>
+          <span class="ej-card-art-glyph c">Flow</span>
+          <span class="ej-card-art-glyph d">Design</span>
+          <span class="ej-card-art-ring r1"></span>
+          <span class="ej-card-art-ring r2"></span>
+        </div>
       </article>
 
-      <article class="ej-card left" data-ej-card data-side="left">
+      <article class="ej-card left" data-ej-card data-side="left" data-ej-theme="pm">
         <div class="ej-dates">2022 &mdash; Present</div>
         <h3 class="ej-role">Product Manager</h3>
         <p class="ej-copy">
           As a product manager, I am responsible for overseeing the development of the travel-centric social media mobile application. Working closely with the development team and stakeholders to ensure the application meets the needs of the business and its users.
         </p>
+        <div class="ej-card-art" aria-hidden="true">
+          <span class="ej-card-art-glyph a">Roadmap</span>
+          <span class="ej-card-art-glyph b">Scope</span>
+          <span class="ej-card-art-glyph c">Sprint</span>
+          <span class="ej-card-art-glyph d">Ship</span>
+          <span class="ej-card-art-ring r1"></span>
+          <span class="ej-card-art-ring r2"></span>
+        </div>
       </article>
 
-      <article class="ej-card right" data-ej-card data-side="right">
+      <article class="ej-card right" data-ej-card data-side="right" data-ej-theme="seo">
         <div class="ej-dates">2023 &mdash; 2023</div>
         <h3 class="ej-role">SEO Marketer</h3>
         <p class="ej-copy">
           Conducted comprehensive keyword research, optimizing website and social media content, and scrutinizing website traffic and engagement metrics. My responsibilities encompass market trend analysis, competitor research, audience segmentation, and the formulation of impactful marketing strategies. Committed to facilitating businesses in reaching their objectives, I employed effective digital marketing techniques tailored to individual needs.
         </p>
+        <div class="ej-card-art" aria-hidden="true">
+          <span class="ej-card-art-glyph a">SEO</span>
+          <span class="ej-card-art-glyph b">Rank</span>
+          <span class="ej-card-art-glyph c">CTR</span>
+          <span class="ej-card-art-glyph d">Traffic</span>
+          <span class="ej-card-art-ring r1"></span>
+          <span class="ej-card-art-ring r2"></span>
+        </div>
       </article>
 
-      <article class="ej-card left" data-ej-card data-side="left">
+      <article class="ej-card left" data-ej-card data-side="left" data-ej-theme="qa">
         <div class="ej-dates">2020 &mdash; 2022</div>
         <h3 class="ej-role">Q&amp;A</h3>
         <p class="ej-copy">
           I was responsible for testing the travel-centric social media mobile application to ensure it met the business and user requirements. I worked closely with the development team to identify and resolve bugs and other issues.
         </p>
+        <div class="ej-card-art" aria-hidden="true">
+          <span class="ej-card-art-glyph a">Test</span>
+          <span class="ej-card-art-glyph b">Check</span>
+          <span class="ej-card-art-glyph c">Debug</span>
+          <span class="ej-card-art-glyph d">Pass</span>
+          <span class="ej-card-art-ring r1"></span>
+          <span class="ej-card-art-ring r2"></span>
+        </div>
       </article>
 
-      <article class="ej-card right" data-ej-card data-side="right">
+      <article class="ej-card right" data-ej-card data-side="right" data-ej-theme="finance">
         <div class="ej-dates">2019 &mdash; 2021</div>
         <h3 class="ej-role">Bookkeeper</h3>
         <p class="ej-copy">
           Responsible for managing the financial records for a startup company. I ensured all financial transactions were recorded accurately and provided financial reports to the management team.
         </p>
+        <div class="ej-card-art" aria-hidden="true">
+          <span class="ej-card-art-glyph a">Ledger</span>
+          <span class="ej-card-art-glyph b">Budget</span>
+          <span class="ej-card-art-glyph c">Cashflow</span>
+          <span class="ej-card-art-glyph d">Audit</span>
+          <span class="ej-card-art-ring r1"></span>
+          <span class="ej-card-art-ring r2"></span>
+        </div>
       </article>
 
-      <article class="ej-card left" data-ej-card data-side="left">
+      <article class="ej-card left" data-ej-card data-side="left" data-ej-theme="creator">
         <div class="ej-dates">2013 &mdash; 2018</div>
         <h3 class="ej-role">Content Creator &amp; Live Streamer</h3>
         <p class="ej-copy">
           Stoobin has empowered me to create content on my terms, fostering a thriving community. With 18,000 subscribers, I've transformed content creation into my full-time career, generating revenue through video monetization, virtual products, and donations. Moreover, Stoobin has facilitated my growth by honing skills in video editing, graphic design, and trend research, ensuring audience engagement and relevance. I'm thankful for the journey and the chance to pursue my passion professionally.
         </p>
+        <div class="ej-card-art" aria-hidden="true">
+          <span class="ej-card-art-glyph a">Live</span>
+          <span class="ej-card-art-glyph b">Video</span>
+          <span class="ej-card-art-glyph c">Edit</span>
+          <span class="ej-card-art-glyph d">Creator</span>
+          <span class="ej-card-art-ring r1"></span>
+          <span class="ej-card-art-ring r2"></span>
+        </div>
       </article>
 
       <aside class="ej-ticker" aria-label="Experience timeline ticker">
-        <div class="ej-ticker-title">Time Travel Menu</div>
+        <div class="ej-ticker-header">
+          <button class="ej-ticker-nav rewind" type="button" data-ej-rewind>Rewind</button>
+          <div class="ej-ticker-title">Time Travel Menu</div>
+          <button class="ej-ticker-nav forward" type="button" data-ej-forward>Forward</button>
+        </div>
         <div class="ej-ticker-rail">
           <div class="ej-ticker-fill" data-ej-ticker-fill></div>
         </div>
@@ -1894,6 +2599,154 @@
       </aside>
 
       <div class="ej-vignette"></div>
+    </div>
+  </section>
+
+  <section class="np-section" id="section-expertise">
+    <div class="np-label np-reveal">//&nbsp;&nbsp;04 &mdash; Expertise Loadout</div>
+    <div class="xp-layout">
+      <div class="xp-left">
+        <h2 class="xp-heading np-reveal" style="transition-delay:0.1s">
+          Ready to Build<br><span class="green">HOW I BUILD PRODUCTS</span>
+        </h2>
+        <div class="xp-panels">
+          <article class="xp-panel np-reveal" style="transition-delay:0.2s">
+            <h3 class="xp-panel-title">Product Expertise</h3>
+            <ul class="xp-list xp-list--expertise">
+              <li>Startup Product Development</li>
+              <li>UX UI Design</li>
+              <li>Product Strategy</li>
+              <li>AI Assisted Development</li>
+              <li>App Store Launch Strategy</li>
+              <li>Growth Driven Product Thinking</li>
+              <li>Content Driven Product Marketing</li>
+            </ul>
+          </article>
+          <article class="xp-panel np-reveal" style="transition-delay:0.28s">
+            <h3 class="xp-panel-title">Building Stack</h3>
+            <ul class="xp-list xp-list--stack">
+              <li><img class="stack-icon" src="https://www.google.com/s2/favicons?domain=figma.com&sz=64" alt="" aria-hidden="true">Figma</li>
+              <li><img class="stack-icon" src="https://www.google.com/s2/favicons?domain=cursor.com&sz=64" alt="" aria-hidden="true">Cursor AI Development</li>
+              <li><img class="stack-icon" src="https://www.google.com/s2/favicons?domain=claude.ai&sz=64" alt="" aria-hidden="true">Claude Code</li>
+              <li><img class="stack-icon" src="https://www.google.com/s2/favicons?domain=nextjs.org&sz=64" alt="" aria-hidden="true">React / Next.js</li>
+              <li><img class="stack-icon" src="https://www.google.com/s2/favicons?domain=vercel.com&sz=64" alt="" aria-hidden="true">Vercel</li>
+              <li><img class="stack-icon" src="https://www.google.com/s2/favicons?domain=github.com&sz=64" alt="" aria-hidden="true">GitHub</li>
+              <li><img class="stack-icon" src="https://www.google.com/s2/favicons?domain=swift.org&sz=64" alt="" aria-hidden="true">Swift Code</li>
+              <li><img class="stack-icon" src="https://www.google.com/s2/favicons?domain=jira.com&sz=64" alt="" aria-hidden="true">Jira</li>
+              <li><img class="stack-icon" src="https://www.google.com/s2/favicons?domain=slack.com&sz=64" alt="" aria-hidden="true">Slack</li>
+              <li><img class="stack-icon" src="https://www.google.com/s2/favicons?domain=adobe.com&sz=64" alt="" aria-hidden="true">Adobe Creative Suite</li>
+              <li><img class="stack-icon" src="https://www.google.com/s2/favicons?domain=premiere.adobe.com&sz=64" alt="" aria-hidden="true">Premiere Pro</li>
+              <li><img class="stack-icon" src="https://www.google.com/s2/favicons?domain=higgsfield.ai&sz=64" alt="" aria-hidden="true">Higgsfield AI Video Tools</li>
+            </ul>
+          </article>
+          <article class="xp-panel np-reveal" style="transition-delay:0.36s" data-mobile-force-reveal>
+            <h3 class="xp-panel-title">Product Skillset</h3>
+            <ul class="xp-list xp-list--skillset">
+              <li>Rapid Prototyping</li>
+              <li>User Research</li>
+              <li>Product Iteration</li>
+              <li>App Store Optimization (ASO)</li>
+              <li>Cross Functional Collaboration</li>
+              <li>Design Systems</li>
+              <li>Product Storytelling</li>
+            </ul>
+          </article>
+        </div>
+        <h2 class="xp-heading oi-heading np-reveal" style="transition-delay:0.44s">Other Interests</h2>
+        <section class="oi-block np-reveal" style="transition-delay:0.48s" aria-label="Other interests" data-mobile-force-reveal>
+          <p class="oi-copy">
+            Beyond my professional life, I believe in the importance of self-care and personal development.
+            These activities help me recharge and bring a positive, fresh perspective to everything I do.
+            I believe in a well-rounded lifestyle and am always seeking new ways to broaden my horizons and enrich my life.
+          </p>
+          <div class="oi-gallery">
+            <figure class="oi-card">
+              <div class="oi-media">
+                <video src="/other-interest-golf.mov" autoplay muted loop playsinline preload="auto" aria-label="Golf swing action video"></video>
+              </div>
+              <figcaption class="oi-meta">
+                <h4 class="oi-item-title">Golf</h4>
+                <p class="oi-item-copy">I have been golfing for as long as I can remember! I was initially introduced to this sport when I was 8 years old by my father. When I was younger I despised the concept of Golf and was eager to play basketball or football instead. I asked myself, "What is so fun hitting a ball with a stick". It was only when I grew older to appreciate the game and realized how hard it is to play. I have to thank my parents for pushing me to challenge myself in a sport that now brings me joy and purpose.</p>
+              </figcaption>
+            </figure>
+            <figure class="oi-card">
+              <div class="oi-media">
+                <img src="/other-interest-construction.png" alt="Construction interior renovation photo">
+              </div>
+              <figcaption class="oi-meta">
+                <h4 class="oi-item-title">DIY</h4>
+                <p class="oi-item-copy">From home construction to car performance &amp; maintenance and more! I have always enjoyed projects I can handle with my own two hands. If I have a sliver of hope I'd tackle the problem myself. The most challenging DIY so far had to have been when I was changing out my valve covers from a VQ35DE engine. The factory bolts have been brittle and I was facing issues with stripped bolts that held onto the valve covers. It truly tested my patience and creativity.</p>
+              </figcaption>
+            </figure>
+            <figure class="oi-card">
+              <div class="oi-media">
+                <video src="/other-interest-bmx.mp4" autoplay muted loop playsinline preload="auto" aria-label="BMX trick video"></video>
+              </div>
+              <figcaption class="oi-meta">
+                <h4 class="oi-item-title">BMX</h4>
+                <p class="oi-item-copy">New found passion from the moment I seized the opportunity to borrow my friends BMX! During the start of Covid-19 I found myself with more free time at my disposal. That is when I picked up BMX and learned about its culture and people's journeys coming into this extreme sports scene. BMX will always be therapeutic and a great reflection of how life goes. You fail and get hurt, but all those hours invested will not be in vain if you keep trying!</p>
+              </figcaption>
+            </figure>
+            <figure class="oi-card">
+              <div class="oi-media">
+                <video src="/other-interest-snowboarding.mov" autoplay muted loop playsinline preload="auto" aria-label="Snowboarding ride in the mountains"></video>
+              </div>
+              <figcaption class="oi-meta">
+                <h4 class="oi-item-title">Snowboarding</h4>
+                <p class="oi-item-copy">I have been riding for 15+ seasons, and the mountains are where my mind feels the clearest. When I drop in, it feels like I become one with the mountain - the speed, the tree runs, and the deep powder lock me in. The satisfaction is unreal, and the reward of putting in years to make skiing and snowboarding skills feel second nature is something hard to explain. Chasing new terrain, testing my limits, and riding with family and friends are moments I will always hold onto.</p>
+              </figcaption>
+            </figure>
+            <figure class="oi-card">
+              <div class="oi-media">
+                <img src="/other-interest-fashion.png" alt="Street fashion photo in Korea at night">
+              </div>
+              <figcaption class="oi-meta">
+                <h4 class="oi-item-title">Fashion</h4>
+                <p class="oi-item-copy">Fashion has always been one of my favorite forms of self-expression. It never had to be expensive or trend-driven; if it matched my standards and felt authentic, I wore it confidently, even for something as simple as a grocery run. This photo was taken during my first trip back to Korea in over 15 years. My last visit was when I was nine, and I left with a serious knee injury, so the memory was complicated. Returning as an adult felt meaningful, and that old injury left me with a scar that looks like a Nike swoosh, which I can finally laugh about now.</p>
+              </figcaption>
+            </figure>
+            <figure class="oi-card">
+              <div class="oi-media">
+                <video src="/other-interest-backpacking.mov" autoplay muted loop playsinline preload="auto" aria-label="Backpacking trip in the Sierra Nevada mountains"></video>
+              </div>
+              <figcaption class="oi-meta">
+                <h4 class="oi-item-title">Backpacking</h4>
+                <p class="oi-item-copy">My first backpacking trip was in the Sierra Nevada mountains, and it completely changed how I see the outdoors. We covered 26 total miles and spent two nights in the wilderness. One of my close friends brought me out there and helped me learn the ropes, which made the whole experience way less intimidating and a lot more rewarding. Backpacking quickly became a real test of patience and endurance for me, and I learned a lot about my mindset on those long miles. Funny enough, I actually prefer the inclines over the descents - climbing feels better on my knees. Nothing beats pushing through tough terrain, finding your rhythm, and sharing those moments with people you care about.</p>
+              </figcaption>
+            </figure>
+          </div>
+        </section>
+        <div class="contact-beta-row">
+          <section class="contact-block np-reveal" style="transition-delay:0.54s" id="section-contact" aria-label="Contact form" data-reveal-with-oi>
+            <h2 class="xp-heading oi-heading" style="margin-top:0; top:0;">Contact</h2>
+            <p class="contact-copy">
+              Feel free to reach out for collaborations, product work, or business inquiries.
+            </p>
+            <a class="contact-business-email" href="mailto:bloggo@linkedspaces.com">Business: bloggo@linkedspaces.com</a>
+            <form class="contact-form" action="mailto:bloggo@linkedspaces.com" method="post" enctype="text/plain">
+              <div class="contact-field">
+                <label for="contact-name">Name</label>
+                <input id="contact-name" name="name" type="text" autocomplete="name" placeholder="Your name" required>
+              </div>
+              <div class="contact-field">
+                <label for="contact-email">Email</label>
+                <input id="contact-email" name="email" type="email" autocomplete="email" placeholder="your@email.com" required>
+              </div>
+            </form>
+          </section>
+          <section class="bloggo-block np-reveal" style="transition-delay:0.6s" aria-label="Bloggo beta promotion" data-reveal-with-oi>
+            <h2 class="xp-heading oi-heading" style="margin-top:0; top:0;">Bloggo Beta Live Now</h2>
+            <h3 class="bloggo-subtitle">Turn Trip Photos into Blogs. Fast.</h3>
+            <p class="bloggo-copy">
+              Bloggo eliminates blank page anxiety. Turn your camera roll into a blog draft in seconds.
+            </p>
+            <div class="bloggo-actions">
+              <a class="bloggo-link primary" href="https://testflight.apple.com/join/RMzfPzCf" target="_blank" rel="noopener noreferrer">Try Beta Today</a>
+              <a class="bloggo-link secondary" href="https://bloggo.linkedspaces.com/" target="_blank" rel="noopener noreferrer">Visit Website</a>
+            </div>
+          </section>
+        </div>
+      </div>
     </div>
   </section>
 </div>
@@ -1977,21 +2830,17 @@
   const HIT_RADIUS = 52;
   let missiles = [];
   let hitShips = new Set();
+  let lastFreeFireAngle = -Math.PI / 2;
   let killCount = 0;
 
-  // Kill counter display
-  const killDisplay = document.createElement('div');
-  killDisplay.style.cssText = `
-    position: fixed; top: 50px; left: 50%; transform: translateX(-50%);
-    font-family: 'Courier New', monospace; font-size: 0.7rem; font-weight: 900;
-    color: rgba(34,197,94,0.5); letter-spacing: 0.3em; z-index: 100;
-    text-transform: uppercase; pointer-events: none; text-align: center;
-  `;
-  document.body.appendChild(killDisplay);
+  // Kill counter display (reuses hero center label)
+  const killDisplay = document.getElementById('hud-kill-counter');
 
   function updateKillDisplay() {
-    killDisplay.textContent = killCount > 0 ? `TARGETS DESTROYED: ${killCount}` : '';
+    if (!killDisplay) return;
+    killDisplay.textContent = killCount > 0 ? `TARGETS DESTROYED: ${killCount}` : 'Click to Shoot';
   }
+  updateKillDisplay();
 
   // Track ship velocity for predictive targeting
   const shipTrack = new Map(); // ship -> { cx, cy, vx, vy }
@@ -2137,9 +2986,18 @@
 
   function fireMissile(fromX, fromY) {
     const target = getNearestShip(fromX, fromY);
-    if (!target) return;
-
-    const angle = Math.atan2(target.cy - fromY, target.cx - fromX);
+    let angle;
+    let lockedTarget = null;
+    if (target) {
+      angle = Math.atan2(target.cy - fromY, target.cx - fromX);
+      lockedTarget = target.ship;
+      lastFreeFireAngle = angle;
+    } else {
+      const moveX = targetX - currentX;
+      const moveY = targetY - currentY;
+      // If no ships are available, fire in current aim direction.
+      angle = Math.hypot(moveX, moveY) > 0.5 ? Math.atan2(moveY, moveX) : lastFreeFireAngle;
+    }
     const missile = document.createElement('div');
     missile.className = 'missile';
     missile.style.left = fromX + 'px';
@@ -2152,7 +3010,7 @@
       x: fromX, y: fromY,
       dx: Math.cos(angle) * MISSILE_SPEED,
       dy: Math.sin(angle) * MISSILE_SPEED,
-      target: target.ship,
+      target: lockedTarget,
       angle,
       dead: false
     });
@@ -2167,43 +3025,60 @@
   function updateMissiles() {
     missiles = missiles.filter(m => !m.dead);
     missiles.forEach(m => {
-      // Home in on target if still alive
-      if (m.target && !hitShips.has(m.target)) {
+      // Reacquire nearest live ship if current target is no longer valid.
+      if (!m.target || hitShips.has(m.target) || !getShipRect(m.target)) {
+        const replacement = getNearestShip(m.x, m.y);
+        m.target = replacement ? replacement.ship : null;
+      }
+
+      // Home in on nearest valid target.
+      if (m.target) {
         const rect = getShipRect(m.target);
         if (rect) {
           const tx = rect.left + rect.width  / 2;
           const ty = rect.top  + rect.height / 2;
-          // Predictive lead targeting — aim where ship will be
+          // Predictive lead targeting — aim where ship will be.
           const track = shipTrack.get(m.target);
           const leadFrames = Math.hypot(tx - m.x, ty - m.y) / MISSILE_SPEED;
           const aimX = tx + (track ? track.vx * leadFrames * 0.8 : 0);
           const aimY = ty + (track ? track.vy * leadFrames * 0.8 : 0);
           const angle = Math.atan2(aimY - m.y, aimX - m.x);
-          // Hard steer toward intercept point, always full speed
           m.dx = lerp(m.dx, Math.cos(angle) * MISSILE_SPEED, 0.45);
           m.dy = lerp(m.dy, Math.sin(angle) * MISSILE_SPEED, 0.45);
-          // Renormalize so speed never drops
-          const spd = Math.hypot(m.dx, m.dy);
+          const spd = Math.hypot(m.dx, m.dy) || 1;
           m.dx = (m.dx / spd) * MISSILE_SPEED;
           m.dy = (m.dy / spd) * MISSILE_SPEED;
           const newAngle = Math.atan2(m.dy, m.dx);
           m.el.style.transform = `rotate(${newAngle}rad)`;
 
-          // Collision check
           const dist = Math.hypot(tx - m.x, ty - m.y);
           if (dist < HIT_RADIUS) {
-            // HIT
             spawnExplosion(tx, ty, m.target);
             hitShips.add(m.target);
-            m.target.style.opacity = '0';
-            m.target.style.transition = 'opacity 0.05s';
+            const deadShip = m.target;
+            const shipRect = deadShip.getBoundingClientRect();
+            const computed = window.getComputedStyle(deadShip);
+            deadShip.style.animation = 'none';
+            deadShip.style.position = 'fixed';
+            deadShip.style.left = shipRect.left + 'px';
+            deadShip.style.top = shipRect.top + 'px';
+            deadShip.style.right = 'auto';
+            deadShip.style.transform = computed.transform === 'none' ? '' : computed.transform;
+            deadShip.style.transition = 'opacity 0.35s ease-out';
+            requestAnimationFrame(() => {
+              deadShip.style.opacity = '0';
+            });
             killCount++;
             updateKillDisplay();
-            // Respawn ship after 4 seconds
-            const deadShip = m.target;
             setTimeout(() => {
               deadShip.style.opacity = '';
               deadShip.style.transition = '';
+              deadShip.style.animation = '';
+              deadShip.style.position = '';
+              deadShip.style.left = '';
+              deadShip.style.top = '';
+              deadShip.style.right = '';
+              deadShip.style.transform = '';
               hitShips.delete(deadShip);
             }, 4000);
             m.dead = true;
@@ -2514,10 +3389,12 @@
       // right as the shapes hit the center
       setTimeout(() => centerEl.classList.remove('shatter'), 320);
       
+      // Keep current section visible during fade-out, then reset scroll once hidden
+      // so Intro does not flash before the hero returns.
       setTimeout(() => {
         nextPage.scrollTop = 0;
         resetIntroCardMotion();
-      }, 260);
+      }, 1500);
       setTimeout(() => clearDirectWorkMode(), 520);
       heroScrolled = false;
     }, 220); // shorter delay for snappier nav transitions
@@ -2530,16 +3407,20 @@
   const navWork = document.getElementById('nav-work');
   const navResume = document.getElementById('nav-resume');
   const navHome = document.getElementById('nav-home');
+  const navMore = document.getElementById('nav-more');
   const topNav = document.getElementById('top-nav');
   const navToggle = document.getElementById('nav-toggle');
   const navMenu = document.getElementById('nav-menu');
   const sectionIntro = document.getElementById('section-intro');
   const sectionWork = document.getElementById('section-work');
   const sectionExperience = document.getElementById('section-experience');
+  const sectionExpertise = document.getElementById('section-expertise');
   const journeyRoad = sectionExperience?.querySelector('[data-ej-road]');
   const journeyTicker = sectionExperience?.querySelector('.ej-ticker');
   const journeyTickerFill = sectionExperience?.querySelector('[data-ej-ticker-fill]');
   const journeyTickerItems = sectionExperience ? Array.from(sectionExperience.querySelectorAll('[data-ej-tick]')) : [];
+  const journeyRewind = sectionExperience?.querySelector('[data-ej-rewind]');
+  const journeyForward = sectionExperience?.querySelector('[data-ej-forward]');
   const journeyCharacter = sectionExperience?.querySelector('[data-ej-character]');
   const journeyArmLeft = sectionExperience?.querySelector('[data-ej-arm-left]');
   const journeyArmRight = sectionExperience?.querySelector('[data-ej-arm-right]');
@@ -2553,6 +3434,7 @@
   let mobileCardAutoFlipped = false;
   let tickerOnLeft = false;
   let tickerSwitchTimer = null;
+  let experienceSnapLock = false;
 
   if (npNext && sectionWork) {
     npNext.addEventListener('click', () => {
@@ -2600,7 +3482,7 @@
   });
 
   function setActiveNav(activeId) {
-    [navHome, navIntro, navWork, navResume].forEach((link) => {
+    [navHome, navIntro, navWork, navResume, navMore].forEach((link) => {
       if (!link) return;
       link.classList.toggle('active', link.id === activeId);
     });
@@ -2663,6 +3545,7 @@
       tick.classList.toggle('is-active', index === activeIndex);
       tick.classList.toggle('is-past', index < activeIndex);
     });
+    updateForwardNavLabel(activeIndex);
 
     journeyCards.forEach((card, index) => {
       const start = index / total;
@@ -2731,11 +3614,39 @@
     nextPage.scrollTo({ top: targetTop, behavior: 'smooth' });
   }
 
+  function getActiveExperienceIndex() {
+    const activeTickIndex = journeyTickerItems.findIndex((tick) => tick.classList.contains('is-active'));
+    if (activeTickIndex >= 0) return activeTickIndex;
+    if (!sectionExperience || journeyCards.length === 0) return 0;
+    const sectionTop = sectionExperience.offsetTop;
+    const sectionHeight = sectionExperience.offsetHeight;
+    const scrollRange = Math.max(1, sectionHeight - window.innerHeight);
+    const progress = clamp((nextPage.scrollTop - sectionTop) / scrollRange, 0, 1);
+    return clamp(Math.floor(progress * journeyCards.length), 0, journeyCards.length - 1);
+  }
+
+  function updateForwardNavLabel(activeIndex) {
+    if (!journeyForward) return;
+    const lastIndex = Math.max(0, journeyCards.length - 1);
+    const shouldContinue = isMobileViewport() && activeIndex >= lastIndex;
+    journeyForward.textContent = shouldContinue ? 'Continue' : 'Forward';
+    journeyForward.setAttribute('aria-label', shouldContinue ? 'Continue to Ready to Build section' : 'Forward');
+  }
+
   function updateNavByScroll() {
     if (!sectionIntro || !sectionWork || !sectionExperience) return;
     if (!nextPage.classList.contains('visible')) {
       setActiveNav('nav-home');
       return;
+    }
+
+    if (sectionExpertise) {
+      const expertiseRect = sectionExpertise.getBoundingClientRect();
+      const activateExpertiseAt = window.innerHeight * 0.62;
+      if (expertiseRect.top <= activateExpertiseAt) {
+        setActiveNav('nav-more');
+        return;
+      }
     }
 
     const expRect = sectionExperience.getBoundingClientRect();
@@ -2758,6 +3669,31 @@
     directWorkMode = false;
     nextPage.classList.remove('work-direct-mode');
     nextPage.classList.remove('work-direct-visible');
+  }
+
+  function maybeSnapExperienceToMore(deltaY) {
+    if (
+      experienceSnapLock ||
+      deltaY <= 0 ||
+      !sectionExperience ||
+      !sectionExpertise ||
+      !nextPage.classList.contains('visible')
+    ) {
+      return false;
+    }
+
+    const viewportHeight = nextPage.clientHeight || window.innerHeight;
+    const experienceEndTop = sectionExperience.offsetTop + Math.max(0, sectionExperience.offsetHeight - viewportHeight);
+    const nearExperienceEnd = nextPage.scrollTop >= experienceEndTop - 28;
+    const notAlreadyInMore = nextPage.scrollTop < sectionExpertise.offsetTop - 10;
+
+    if (!nearExperienceEnd || !notAlreadyInMore) return false;
+
+    experienceSnapLock = true;
+    nextPage.scrollTo({ top: sectionExpertise.offsetTop, behavior: 'smooth' });
+    setActiveNav('nav-more');
+    setTimeout(() => { experienceSnapLock = false; }, 700);
+    return true;
   }
 
   function updateIntroNextCtaVisibility() {
@@ -2923,7 +3859,7 @@
   if (navResume) {
     navResume.addEventListener('click', (e) => {
       e.preventDefault();
-      if (isMobileViewport() && sectionExperience) {
+      if (sectionExperience) {
         if (!nextPage.classList.contains('visible')) {
           enterNextPage();
           setTimeout(() => scrollToExperienceChapter(0), 320);
@@ -2934,6 +3870,15 @@
         handleNavToSection('#section-experience');
       }
       setActiveNav('nav-resume');
+      closeMobileNav();
+    });
+  }
+
+  if (navMore) {
+    navMore.addEventListener('click', (e) => {
+      e.preventDefault();
+      handleNavToSection('#section-expertise');
+      setActiveNav('nav-more');
       closeMobileNav();
     });
   }
@@ -2949,6 +3894,30 @@
       }
     });
   });
+
+  if (journeyRewind) {
+    journeyRewind.addEventListener('click', (e) => {
+      e.preventDefault();
+      const currentIndex = getActiveExperienceIndex();
+      const targetIndex = clamp(currentIndex - 1, 0, Math.max(0, journeyCards.length - 1));
+      scrollToExperienceChapter(targetIndex);
+    });
+  }
+  if (journeyForward) {
+    journeyForward.addEventListener('click', (e) => {
+      e.preventDefault();
+      const currentIndex = getActiveExperienceIndex();
+      const lastIndex = Math.max(0, journeyCards.length - 1);
+      const isLastChapterOnMobile = isMobileViewport() && currentIndex >= lastIndex;
+      if (isLastChapterOnMobile && sectionExpertise) {
+        nextPage.scrollTo({ top: sectionExpertise.offsetTop, behavior: 'smooth' });
+        setActiveNav('nav-more');
+        return;
+      }
+      const targetIndex = clamp(currentIndex + 1, 0, lastIndex);
+      scrollToExperienceChapter(targetIndex);
+    });
+  }
 
   // Keep mobile timeline card scrolling smooth without trapping page scroll.
   journeyCards.forEach((card) => {
@@ -3031,12 +4000,17 @@
   let exitCooldown = false;
   nextPage.addEventListener('wheel', (e) => {
     if (exitCooldown) return;
+    if (maybeSnapExperienceToMore(e.deltaY)) {
+      e.preventDefault();
+      return;
+    }
     if (e.deltaY < 0 && nextPage.scrollTop === 0) {
+      e.preventDefault();
       exitCooldown = true;
       exitNextPage();
       setTimeout(() => { exitCooldown = false; }, 1200);
     }
-  }, { passive: true });
+  }, { passive: false });
 
   // Mobile: swipe down from top of intro returns to hero
   let nextTouchStartY = null;
@@ -3069,8 +4043,20 @@
 
   // Scroll-based reveal inside next page
   function revealVisibleItems() {
+    const oiBlock = nextPage.querySelector('.oi-block');
+    const oiReady =
+      !!oiBlock &&
+      (oiBlock.classList.contains('revealed') || oiBlock.getBoundingClientRect().top < window.innerHeight * 0.92);
     const items = nextPage.querySelectorAll('.np-reveal:not(.revealed)');
     items.forEach(el => {
+      if (isMobileViewport() && el.matches('[data-mobile-force-reveal]')) {
+        el.classList.add('revealed');
+        return;
+      }
+      if (el.matches('[data-reveal-with-oi]') && oiReady) {
+        el.classList.add('revealed');
+        return;
+      }
       const rect = el.getBoundingClientRect();
       if (rect.top < window.innerHeight * 0.92) {
         el.classList.add('revealed');

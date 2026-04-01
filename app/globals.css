@@ -1,7 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 :root {
   color-scheme: dark;
+  --font-display: Inter, "Segoe UI", Arial, sans-serif;
+  --font-body: Manrope, "Segoe UI", Arial, sans-serif;
 }
 
 * {
@@ -17,5 +20,18 @@ body {
 }
 
 body {
-  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+nav,
+[class~="uppercase"],
+[style*="text-transform: uppercase"] {
+  font-family: var(--font-display);
 }
