@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Hero H — Space Refinement</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -12,8 +12,12 @@
     color: #fff;
     font-family: 'Courier New', monospace;
     overflow: hidden;
-    height: 100vh;
+    height: 100dvh;
     width: 100vw;
+    padding-top: env(safe-area-inset-top);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
   }
 
   /* ============================================================
@@ -314,6 +318,9 @@
     margin-top: 1.2rem;
     animation: fade-in 1s ease 0.8s both;
   }
+  .role .role-mobile {
+    display: none;
+  }
 
   .divider {
     width: 1px;
@@ -518,6 +525,8 @@
   ============================================================ */
   #hero-layer {
     transition: opacity 0.9s cubic-bezier(0.4,0,0.2,1);
+    overscroll-behavior: none;
+    touch-action: pan-x;
   }
   #hero-layer.fading {
     opacity: 0;
@@ -588,6 +597,7 @@
   #section-intro .intro-body {
     font-family: 'Courier New', monospace;
     font-size: clamp(0.85rem, 1.4vw, 1.05rem);
+    font-weight: 700;
     line-height: 2;
     color: rgba(255,255,255,0.65);
     max-width: 680px;
@@ -642,6 +652,8 @@
     background: rgba(2, 10, 6, 0.98);
     padding: 1rem 1.05rem;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
   #section-intro .about-title {
     font-size: 1.3rem;
@@ -653,6 +665,7 @@
   }
   #section-intro .about-body {
     font-size: 0.86rem;
+    font-weight: 700;
     line-height: 1.75;
     color: rgba(222,255,238,0.82);
     letter-spacing: 0.02em;
@@ -704,6 +717,16 @@
       top: auto !important;
       transform: none !important;
       z-index: 2 !important;
+    }
+    #section-intro .player-card.is-flipped {
+      min-height: 700px;
+    }
+    #section-intro .player-card.is-flipped .player-card-inner {
+      min-height: 700px;
+    }
+    #section-intro .player-card.is-flipped .player-face.back {
+      overflow: hidden;
+      padding-bottom: 1.35rem;
     }
   }
 
@@ -797,9 +820,10 @@
     margin-bottom: 0.6rem;
   }
   .work-card .wc-desc {
-    font-size: 0.7rem;
+    font-size: 0.82rem;
+    font-weight: 700;
     line-height: 1.8;
-    color: rgba(255,255,255,0.4);
+    color: #fff;
     letter-spacing: 0.04em;
   }
   .work-card .wc-arrow {
@@ -858,37 +882,210 @@
   ============================================================ */
   .top-nav {
     position: fixed;
-    top: 20px;
+    top: calc(env(safe-area-inset-top) + 20px);
     left: 50%;
     transform: translateX(-50%);
     display: flex;
+    align-items: center;
     gap: 2rem;
     font-family: 'Courier New', monospace;
     font-size: 1.4rem;
     font-weight: 900;
     letter-spacing: 0.25em;
     z-index: 500;
+    opacity: 1;
+    visibility: visible;
   }
-  .top-nav a {
+  .top-nav-toggle {
+    display: none;
+  }
+  .top-nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+  .top-nav-menu a {
     color: rgba(34,197,94,0.6);
     text-decoration: none;
     text-transform: uppercase;
     transition: color 0.2s, text-shadow 0.2s;
   }
-  .top-nav a:hover, .top-nav a.active {
+  .top-nav-menu a:hover, .top-nav-menu a.active {
     color: #22c55e;
     text-shadow: 0 0 8px rgba(34,197,94,0.5);
+  }
+
+  @media (max-width: 900px) {
+    .top-nav {
+      top: calc(env(safe-area-inset-top) + 12px);
+      left: auto;
+      right: 12px;
+      transform: none;
+      z-index: 700;
+    }
+    .top-nav-toggle {
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(34,197,94,0.5);
+      background: rgba(0,0,0,0.85);
+      color: #22c55e;
+      cursor: pointer;
+      border-radius: 6px;
+      box-shadow: 0 0 16px rgba(34,197,94,0.2);
+      backdrop-filter: blur(4px);
+    }
+    .top-nav-toggle .bar {
+      width: 18px;
+      height: 2px;
+      border-radius: 999px;
+      background: currentColor;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .top-nav.is-open .top-nav-toggle .bar:nth-child(1) {
+      transform: translateY(6px) rotate(45deg);
+    }
+    .top-nav.is-open .top-nav-toggle .bar:nth-child(2) {
+      opacity: 0;
+    }
+    .top-nav.is-open .top-nav-toggle .bar:nth-child(3) {
+      transform: translateY(-6px) rotate(-45deg);
+    }
+    .top-nav-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      min-width: 190px;
+      padding: 0.55rem 0.65rem;
+      border: 1px solid rgba(34,197,94,0.35);
+      border-radius: 8px;
+      background: rgba(0,0,0,0.92);
+      box-shadow: 0 8px 26px rgba(0,0,0,0.55), 0 0 18px rgba(34,197,94,0.12);
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.2rem;
+    }
+    .top-nav.is-open .top-nav-menu {
+      display: flex;
+    }
+    .top-nav-menu a {
+      display: block;
+      width: 100%;
+      padding: 0.5rem 0.35rem;
+      text-align: right;
+      font-size: 0.82rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      border-bottom: 1px solid rgba(34,197,94,0.18);
+    }
+    .top-nav-menu a:last-child {
+      border-bottom: 0;
+    }
+
+    .bracket.tl,
+    .bracket.tr {
+      top: 66px;
+    }
+    .bracket.bl,
+    .bracket.br {
+      bottom: 88px;
+    }
+    .hud-meta.tl,
+    .hud-meta.tr {
+      top: 78px;
+    }
+    .hud-meta.bl,
+    .hud-meta.br {
+      bottom: 100px;
+    }
+
+    .role {
+      margin-top: 0.9rem;
+      letter-spacing: 0.16em;
+      line-height: 1.35;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.15rem;
+    }
+    .role .role-desktop {
+      display: none;
+    }
+    .role .role-mobile {
+      display: block;
+      font-size: 1rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    #section-intro {
+      padding-top: 10rem;
+    }
+    #section-intro .intro-layout {
+      margin-top: 1.2rem;
+    }
+    #section-intro .np-back {
+      top: 4.4rem;
+      width: 100%;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #section-work {
+      padding-top: 4.8rem !important;
+    }
+
+    #next-page {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    #next-page::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+      display: none;
+    }
+  }
+
+  .np-divider {
+    display: none;
+  }
+  #next-page .np-divider {
+    display: none;
+  }
+  #next-page #section-work {
+    transform: translateY(var(--work-push));
+    will-change: transform;
+  }
+  #next-page.work-direct-mode #section-intro {
+    display: none;
+  }
+  #section-work {
+    padding-top: 4.6rem;
   }
 </style>
 </head>
 <body>
 
-<nav class="top-nav">
-  <a href="#" class="active" id="nav-home">HOME</a>
-  <a href="#section-intro" id="nav-intro">INTRO</a>
-  <a href="#section-work" id="nav-work">WORK</a>
-  <a href="#">RESUME</a>
-  <a href="#">MORE</a>
+<nav class="top-nav" id="top-nav">
+  <button class="top-nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-menu">
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+  </button>
+  <div class="top-nav-menu" id="nav-menu">
+    <a href="#" class="active" id="nav-home">HOME</a>
+    <a href="#section-intro" id="nav-intro">INTRO</a>
+    <a href="#section-work" id="nav-work">WORK</a>
+    <a href="#">RESUME</a>
+    <a href="#">MORE</a>
+  </div>
 </nav>
 
 <!-- Hero layer (all existing content wrapped) -->
@@ -988,7 +1185,7 @@
 
   <div class="hud-meta tl">
     <div class="bright">ID // YOOBINHERE</div>
-    <div>Bay Area, CA</div>
+    <div>BLOGGO BETA LIVE</div>
   </div>
   <div class="hud-meta tr">
     <div class="bright">BAY AREA</div>
@@ -1004,7 +1201,12 @@
   <div class="center">
     <div class="id-tag">Portfolio — 2026</div>
     <div class="name">YOOBIN<br><span class="green">SEO.</span></div>
-    <div class="role">UI/UX Designer · Co-Founder · Product Builder</div>
+    <div class="role">
+      <span class="role-desktop">UI/UX Designer · Co-Founder · Product Builder</span>
+      <span class="role-mobile">UI/UX DESIGNER</span>
+      <span class="role-mobile">CO-FOUNDER</span>
+      <span class="role-mobile">PRODUCT BUILDER</span>
+    </div>
     <div class="divider"></div>
     <div class="scroll-hint"><span>Scroll to Explore</span><span class="chevron">&#8964;</span></div>
   </div>
@@ -1019,7 +1221,7 @@
   <section class="np-section" id="section-intro">
     <div class="np-back" id="np-back" aria-label="Back to hero"><span class="chevron">&#8963;</span><span>Scroll Back Up</span></div>
     
-    <div class="np-label np-reveal">//&nbsp;&nbsp;01 &mdash; Intro</div>
+    <div class="np-label">//&nbsp;&nbsp;01 &mdash; Intro</div>
     <div class="intro-layout">
       <div class="intro-copy">
         <h2 class="intro-heading np-reveal" style="transition-delay:0.1s">
@@ -1060,8 +1262,6 @@
     </div>
   </section>
 
-  <div class="np-divider"></div>
-
   <!-- My Work -->
   <section class="np-section" id="section-work">
     <div class="np-label np-reveal">//&nbsp;&nbsp;02 &mdash; My Work</div>
@@ -1070,18 +1270,24 @@
     </h2>
     <div class="work-grid">
       <div class="work-card np-reveal" style="transition-delay:0.18s">
+        <div class="wc-tag">Product / Social Platform</div>
+        <div class="wc-title">BLOGGO</div>
+        <div class="wc-desc">Developing a beta social writing platform focused on lightweight publishing, creator identity, and community discovery.</div>
+        <div class="wc-arrow">View Project &#8594;</div>
+      </div>
+      <div class="work-card np-reveal" style="transition-delay:0.24s">
         <div class="wc-tag">UI / UX Design</div>
         <div class="wc-title">LinkedSpaces</div>
         <div class="wc-desc">End-to-end product design for a professional networking start-up connecting people through shared spaces.</div>
         <div class="wc-arrow">View Project &#8594;</div>
       </div>
-      <div class="work-card np-reveal" style="transition-delay:0.26s">
+      <div class="work-card np-reveal" style="transition-delay:0.32s">
         <div class="wc-tag">Brand + Visual</div>
         <div class="wc-title">Graphic Design</div>
         <div class="wc-desc">Identity, print, and digital graphics developed across campaigns, editorial, and social media.</div>
         <div class="wc-arrow">View Project &#8594;</div>
       </div>
-      <div class="work-card np-reveal" style="transition-delay:0.34s">
+      <div class="work-card np-reveal" style="transition-delay:0.40s">
         <div class="wc-tag">Content Creation</div>
         <div class="wc-title">Digital Media</div>
         <div class="wc-desc">Photo, video, and copywriting produced for brands and personal creative projects.</div>
@@ -1720,16 +1926,55 @@
   const navIntro = document.getElementById('nav-intro');
   const navWork = document.getElementById('nav-work');
   const navHome = document.getElementById('nav-home');
+  const topNav = document.getElementById('top-nav');
+  const navToggle = document.getElementById('nav-toggle');
+  const navMenu = document.getElementById('nav-menu');
   const sectionIntro = document.getElementById('section-intro');
   const sectionWork = document.getElementById('section-work');
   const introDivider = document.querySelector('.np-divider');
   const introPlayerCard = sectionIntro?.querySelector('.player-card');
   let introCardAnchor = null;
   let directWorkMode = false;
+  let mobileCardAutoFlipped = false;
 
   function isMobileViewport() {
     return window.matchMedia('(max-width: 900px)').matches;
   }
+
+  function closeMobileNav() {
+    if (!topNav || !navToggle) return;
+    topNav.classList.remove('is-open');
+    navToggle.setAttribute('aria-expanded', 'false');
+  }
+
+  function toggleMobileNav() {
+    if (!topNav || !navToggle) return;
+    const willOpen = !topNav.classList.contains('is-open');
+    topNav.classList.toggle('is-open', willOpen);
+    navToggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+  }
+
+  if (navToggle) {
+    navToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleMobileNav();
+    });
+  }
+  if (navMenu) {
+    navMenu.addEventListener('click', (e) => {
+      const link = e.target.closest('a');
+      if (!link) return;
+      closeMobileNav();
+    });
+  }
+  document.addEventListener('click', (e) => {
+    if (!isMobileViewport()) return;
+    if (!topNav) return;
+    if (!topNav.contains(e.target)) closeMobileNav();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMobileNav();
+  });
 
   function setActiveNav(activeId) {
     [navHome, navIntro, navWork].forEach((link) => {
@@ -1763,6 +2008,7 @@
   function resetIntroCardMotion() {
     if (!introPlayerCard) return;
     introCardAnchor = null;
+    mobileCardAutoFlipped = false;
     introPlayerCard.style.position = '';
     introPlayerCard.style.left = '';
     introPlayerCard.style.top = '';
@@ -1777,7 +2023,25 @@
   function updateIntroCardMotion() {
     if (!sectionIntro || !introPlayerCard || !sectionWork) return;
     if (isMobileViewport()) {
-      resetIntroCardMotion();
+      introCardAnchor = null;
+      introPlayerCard.style.position = '';
+      introPlayerCard.style.left = '';
+      introPlayerCard.style.top = '';
+      introPlayerCard.style.width = '';
+      introPlayerCard.style.margin = '';
+      introPlayerCard.style.zIndex = '';
+      introPlayerCard.style.transform = '';
+      nextPage.style.setProperty('--work-push', '0px');
+      const localScroll = Math.max(0, nextPage.scrollTop - sectionIntro.offsetTop);
+      const introRange = Math.max(1, sectionWork.offsetTop - sectionIntro.offsetTop);
+      const mobileFlipThreshold = Math.min(340, introRange * 0.45);
+      if (!mobileCardAutoFlipped && localScroll > mobileFlipThreshold) {
+        mobileCardAutoFlipped = true;
+        introPlayerCard.classList.add('is-flipped');
+      } else if (mobileCardAutoFlipped && localScroll <= mobileFlipThreshold) {
+        mobileCardAutoFlipped = false;
+        introPlayerCard.classList.remove('is-flipped');
+      }
       return;
     }
     if (directWorkMode) {
@@ -1898,6 +2162,7 @@
       nextPage.classList.remove('work-direct-visible');
       handleNavToSection('#section-intro');
       setActiveNav('nav-intro');
+      closeMobileNav();
     });
   }
   
@@ -1906,6 +2171,7 @@
       e.preventDefault();
       handleNavToSection('#section-work');
       setActiveNav('nav-work');
+      closeMobileNav();
     });
   }
   
@@ -1921,21 +2187,39 @@
         nextPage.classList.remove('work-direct-visible');
         setActiveNav('nav-home');
       }
+      closeMobileNav();
     });
   }
 
   // Scroll / swipe on hero also triggers the transition
   let heroScrolled = false;
-  function onHeroScroll(e) {
+  let heroTouchStartY = null;
+  function onHeroWheel(e) {
     if (heroScrolled) return;
-    const delta = e.deltaY ?? e.changedTouches?.[0]?.clientY;
-    if (typeof delta === 'number' && delta > 0) {
+    if (e.deltaY > 0) {
       heroScrolled = true;
       enterNextPage();
     }
   }
-  heroLayer.addEventListener('wheel', onHeroScroll, { passive: true });
-  heroLayer.addEventListener('touchmove', onHeroScroll, { passive: true });
+  heroLayer.addEventListener('wheel', onHeroWheel, { passive: true });
+  heroLayer.addEventListener('touchstart', (e) => {
+    if (!e.touches || e.touches.length === 0) return;
+    heroTouchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  heroLayer.addEventListener('touchmove', (e) => {
+    if (heroScrolled || heroTouchStartY == null) return;
+    if (!e.touches || e.touches.length === 0) return;
+    const currentY = e.touches[0].clientY;
+    const swipeDelta = currentY - heroTouchStartY;
+    e.preventDefault();
+    if (swipeDelta < -35) {
+      heroScrolled = true;
+      enterNextPage();
+    }
+  }, { passive: false });
+  heroLayer.addEventListener('touchend', () => {
+    heroTouchStartY = null;
+  }, { passive: true });
 
   // Scroll up from the top of the next page returns to hero
   let exitCooldown = false;
@@ -2002,6 +2286,7 @@
   });
   window.addEventListener('resize', () => {
     introCardAnchor = null;
+    if (!isMobileViewport()) closeMobileNav();
     updateIntroCardMotion();
     updateNavByScroll();
   });
