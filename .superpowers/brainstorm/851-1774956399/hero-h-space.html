@@ -2511,6 +2511,33 @@
       font-size: 0.74rem;
     }
   }
+  @media (max-width: 900px) and (hover: none) and (pointer: coarse) {
+    .ej-ticker-nav:hover {
+      color: rgba(170,255,210,0.86);
+      text-shadow: 0 0 10px rgba(46,255,130,0.2);
+      border-color: rgba(130,255,180,0.44);
+      background: linear-gradient(180deg, rgba(7,22,13,0.84), rgba(3,10,6,0.94));
+      box-shadow: 0 0 14px rgba(46,255,130,0.14), inset 0 0 0 1px rgba(170,255,210,0.08);
+      transform: translateY(-112%);
+    }
+    .ej-tick:not(.is-active):hover {
+      opacity: 0.36;
+      transform: translateX(0);
+      border-color: rgba(120,255,170,0.12);
+      background: rgba(0,0,0,0.3);
+      box-shadow: none;
+    }
+    .ej-ticker.is-left .ej-tick:not(.is-active):hover {
+      transform: translateX(0);
+    }
+    .ej-tick:not(.is-active):hover::after {
+      color: rgba(185,255,219,0.8);
+      text-shadow: 0 0 8px rgba(46,255,130,0.2);
+    }
+    .ej-tick:not(.is-active):hover .ej-tick-role {
+      color: rgba(225,255,238,0.72);
+    }
+  }
 </style>
 </head>
 <body>
@@ -3112,6 +3139,7 @@ TIME TRAVEL</span>
   let bgMusicFadeRaf = null;
   let bgMusicEndingFadeArmed = false;
   let bgMusicRestartAfterFade = false;
+  let bgMusicResumeOnReturn = false;
   const bgMusicActivationTargets = [];
   const bgMusicActivationEvents = ['wheel', 'touchmove', 'touchstart', 'touchend', 'pointerdown', 'mousedown', 'click', 'keydown'];
   let bgMusicActivationBound = false;
@@ -3252,8 +3280,45 @@ TIME TRAVEL</span>
     bgMusicPrimedMuted = true;
     updateBgMusicDebug('primed-muted', 'autoplay muted started (no promise)');
   }
-  function stopBgMusicForPageExit(reason = 'page-hidden') {
+  function attemptResumeBgMusicFromReturn(reason = 'visibility-visible') {
+    if (!bgMusic || !bgMusicResumeOnReturn || bgMusicStarted) return;
+    if (document.visibilityState !== 'visible') return;
+    bgMusicPlayAttempts += 1;
+    bgMusicPendingGesture = false;
+    updateBgMusicDebug('resume-attempt', `${reason} attempt #${bgMusicPlayAttempts}`);
+    bgMusic.muted = false;
+    bgMusic.volume = 0;
+    const resumePromise = bgMusic.play();
+    if (resumePromise && typeof resumePromise.then === 'function') {
+      resumePromise
+        .then(() => {
+          bgMusicStarted = true;
+          bgMusicPrimedMuted = false;
+          bgMusicResumeOnReturn = false;
+          bgMusicLastError = '';
+          updateBgMusicDebug('resumed', reason);
+          fadeInBgMusic();
+        })
+        .catch((err) => {
+          bgMusicLastError = (err && err.message) ? err.message : String(err || 'unknown');
+          bgMusicPendingGesture = true;
+          // Prime muted playback so next interaction can unmute quickly.
+          primeBgMusicMutedAutoplay();
+          updateBgMusicDebug('resume-blocked', `${reason} waiting for interaction`);
+        });
+      return;
+    }
+    bgMusicStarted = true;
+    bgMusicPrimedMuted = false;
+    bgMusicResumeOnReturn = false;
+    bgMusicLastError = '';
+    updateBgMusicDebug('resumed', `${reason} no promise`);
+    fadeInBgMusic();
+  }
+  function stopBgMusicForPageExit(reason = 'page-hidden', rememberResume = true) {
     if (!bgMusic) return;
+    const shouldResume = rememberResume && (bgMusicStarted || !bgMusic.paused);
+    bgMusicResumeOnReturn = shouldResume;
     if (bgMusicFadeRaf) {
       cancelAnimationFrame(bgMusicFadeRaf);
       bgMusicFadeRaf = null;
@@ -3339,11 +3404,14 @@ TIME TRAVEL</span>
     // Ensure background music does not continue when app/browser is exited/backgrounded.
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'hidden') {
-        stopBgMusicForPageExit('visibility-hidden');
+        stopBgMusicForPageExit('visibility-hidden', true);
+        return;
       }
+      attemptResumeBgMusicFromReturn('visibility-visible');
     });
-    window.addEventListener('pagehide', () => stopBgMusicForPageExit('pagehide'));
-    window.addEventListener('beforeunload', () => stopBgMusicForPageExit('beforeunload'));
+    window.addEventListener('pageshow', () => attemptResumeBgMusicFromReturn('pageshow'));
+    window.addEventListener('pagehide', () => stopBgMusicForPageExit('pagehide', false));
+    window.addEventListener('beforeunload', () => stopBgMusicForPageExit('beforeunload', false));
   }
 
   const FIRE_SFX_SRC = '/ray%20gun%20sound.mp4';
