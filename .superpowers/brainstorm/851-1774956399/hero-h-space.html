@@ -1348,6 +1348,17 @@
     justify-content: flex-start;
   }
 
+  :root {
+    --resume-section-base-bg:
+      radial-gradient(circle at 16% 20%, rgba(34,197,94,0.14), transparent 32%),
+      radial-gradient(circle at 82% 28%, rgba(16,185,129,0.11), transparent 30%),
+      linear-gradient(to bottom, #020704 0%, #000 78%, #010402 100%);
+    --resume-section-stars-bg:
+      radial-gradient(circle at 12% 24%, rgba(134,255,176,0.13), transparent 18%),
+      radial-gradient(circle at 82% 36%, rgba(56,255,162,0.1), transparent 20%),
+      radial-gradient(circle at 44% 84%, rgba(80,255,143,0.08), transparent 22%);
+  }
+
   /* ---- Experience Journey section ---- */
   #section-experience {
     position: relative;
@@ -1366,19 +1377,13 @@
     top: 0;
     height: 100vh;
     overflow: hidden;
-    background:
-      radial-gradient(circle at 16% 20%, rgba(34,197,94,0.14), transparent 32%),
-      radial-gradient(circle at 82% 28%, rgba(16,185,129,0.11), transparent 30%),
-      linear-gradient(to bottom, #020704 0%, #000 78%, #010402 100%);
+    background: var(--resume-section-base-bg);
   }
   .ej-bg-stars {
     position: absolute;
     inset: 0;
     opacity: 0.68;
-    background-image:
-      radial-gradient(circle at 12% 24%, rgba(134,255,176,0.13), transparent 18%),
-      radial-gradient(circle at 82% 36%, rgba(56,255,162,0.1), transparent 20%),
-      radial-gradient(circle at 44% 84%, rgba(80,255,143,0.08), transparent 22%);
+    background-image: var(--resume-section-stars-bg);
     pointer-events: none;
   }
   .ej-road {
@@ -1798,11 +1803,33 @@
     background: rgba(8,20,13,0.7);
     box-shadow: 0 0 22px rgba(40,255,130,0.2);
   }
+  .ej-tick:hover,
+  .ej-tick:focus-visible {
+    opacity: 1;
+    transform: translateX(-4px);
+    border-color: rgba(150,255,198,0.42);
+    background: rgba(8,20,13,0.7);
+    box-shadow: 0 0 22px rgba(40,255,130,0.2);
+    outline: none;
+  }
+  .ej-ticker.is-left .ej-tick:hover,
+  .ej-ticker.is-left .ej-tick:focus-visible {
+    transform: translateX(4px);
+  }
   .ej-tick.is-active::after {
     color: rgba(220,255,238,0.98);
     text-shadow: 0 0 12px rgba(46,255,130,0.34);
   }
+  .ej-tick:hover::after,
+  .ej-tick:focus-visible::after {
+    color: rgba(220,255,238,0.98);
+    text-shadow: 0 0 12px rgba(46,255,130,0.34);
+  }
   .ej-tick.is-active .ej-tick-role {
+    color: rgba(240,255,247,0.98);
+  }
+  .ej-tick:hover .ej-tick-role,
+  .ej-tick:focus-visible .ej-tick-role {
     color: rgba(240,255,247,0.98);
   }
   .ej-card ul {
@@ -1866,26 +1893,40 @@
 
   /* ---- End expertise section ---- */
   #section-expertise {
+    position: relative;
+    overflow: hidden;
     min-height: 100vh;
     padding-top: 5.5rem;
     padding-bottom: 5rem;
-    background:
-      radial-gradient(circle at 12% 24%, rgba(134,255,176,0.13), transparent 18%),
-      radial-gradient(circle at 82% 36%, rgba(56,255,162,0.1), transparent 20%),
-      radial-gradient(circle at 44% 84%, rgba(80,255,143,0.08), transparent 22%),
-      radial-gradient(circle at 16% 20%, rgba(34,197,94,0.14), transparent 32%),
-      radial-gradient(circle at 82% 28%, rgba(16,185,129,0.11), transparent 30%),
-      linear-gradient(to bottom, #020704 0%, #000 78%, #010402 100%);
+    margin-top: -1px;
+    background: var(--resume-section-base-bg);
+  }
+  #section-expertise::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.68;
+    background-image: var(--resume-section-stars-bg);
+    pointer-events: none;
   }
   #section-expertise::before {
     top: 2.8rem;
   }
   .xp-layout {
+    position: relative;
+    z-index: 1;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 1.3rem;
     justify-items: center;
     width: 100%;
+  }
+  .xp-vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, transparent 33%, rgba(0,0,0,0.74) 100%);
+    pointer-events: none;
+    z-index: 0;
   }
   .xp-left {
     display: grid;
@@ -1941,6 +1982,11 @@
     border-color: rgba(170,255,210,0.58);
     box-shadow: 0 14px 36px rgba(0,0,0,0.5), 0 0 28px rgba(46,255,140,0.22);
   }
+  @media (min-width: 768px) {
+    .oi-card {
+      cursor: pointer;
+    }
+  }
   .oi-media {
     position: relative;
     width: 100%;
@@ -1971,7 +2017,7 @@
     pointer-events: none;
   }
   .oi-meta {
-    padding: 0.82rem 0.8rem 0.92rem;
+    padding: 1rem 0.8rem 1.8rem;
   }
   .oi-item-title {
     margin: 0 0 0.52rem;
@@ -1985,10 +2031,98 @@
   .oi-item-copy {
     font-family: var(--body-copy-font);
     margin: 0;
+    padding-bottom: 0.35rem;
     font-size: 0.82rem;
     font-weight: 700;
     line-height: 1.55;
     color: rgba(231,249,239,0.9);
+  }
+  .oi-popup-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 220;
+    opacity: 0;
+    background: rgba(1,7,4,0.74);
+    backdrop-filter: blur(8px);
+    transition: opacity 260ms ease;
+  }
+  .oi-popup-overlay.is-open {
+    opacity: 1;
+  }
+  .oi-popup-card {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    z-index: 221;
+    width: min(92vw, 860px);
+    max-height: min(88vh, 860px);
+    display: grid;
+    grid-template-rows: minmax(220px, 52vh) auto;
+    overflow: hidden;
+    border: 1px solid rgba(170,255,210,0.48);
+    border-radius: 16px;
+    background: rgba(2,12,8,0.92);
+    box-shadow: 0 30px 86px rgba(0,0,0,0.62), 0 0 92px rgba(46,255,140,0.22);
+    opacity: 0.2;
+    transform-origin: center center;
+    transform: var(--oi-popup-start-transform, translate(-50%, -50%) scale(0.7));
+    transition: transform 360ms cubic-bezier(.2,.9,.2,1), opacity 220ms ease;
+  }
+  .oi-popup-card.is-open {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  .oi-popup-media {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(120,255,170,0.22);
+    background: #020805;
+  }
+  .oi-popup-media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(to top, rgba(0,0,0,0.36) 0%, rgba(0,0,0,0) 55%);
+  }
+  .oi-popup-media img,
+  .oi-popup-media video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .oi-popup-meta {
+    padding: 1rem 1.05rem 2.6rem;
+    overflow: auto;
+  }
+  .oi-popup-meta .oi-item-title {
+    font-size: 1.08rem;
+    margin-bottom: 0.72rem;
+  }
+  .oi-popup-meta .oi-item-copy {
+    font-size: 0.92rem;
+    line-height: 1.66;
+    margin: 0 0 0.9rem;
+  }
+  .oi-popup-close {
+    position: absolute;
+    right: 0.62rem;
+    top: 0.62rem;
+    z-index: 2;
+    border: 1px solid rgba(170,255,210,0.42);
+    border-radius: 999px;
+    background: rgba(1,9,5,0.65);
+    color: rgba(222,255,238,0.95);
+    font-size: 0.72rem;
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.36rem 0.6rem;
+    cursor: pointer;
+  }
+  .oi-popup-close:hover {
+    background: rgba(10,30,18,0.88);
   }
   .contact-block {
     margin-top: 0;
@@ -2838,7 +2972,7 @@ TIME TRAVEL</span>
             </ul>
           </article>
         </div>
-        <h2 class="xp-heading oi-heading np-reveal" style="transition-delay:0.44s">Other Interests</h2>
+        <h2 class="xp-heading oi-heading np-reveal" style="transition-delay:0.48s" data-mobile-force-reveal>Other Interests</h2>
         <section class="oi-block np-reveal" style="transition-delay:0.48s" aria-label="Other interests" data-mobile-force-reveal>
           <p class="oi-copy">
             Beyond my professional life, I believe in the importance of self-care and personal development.
@@ -2861,7 +2995,7 @@ TIME TRAVEL</span>
               </div>
               <figcaption class="oi-meta">
                 <h4 class="oi-item-title">DIY</h4>
-                <p class="oi-item-copy">From home construction to car performance &amp; maintenance and more! I have always enjoyed projects I can handle with my own two hands. If I have a sliver of hope I'd tackle the problem myself. The most challenging DIY so far had to have been when I was changing out my valve covers from a VQ35DE engine. The factory bolts have been brittle and I was facing issues with stripped bolts that held onto the valve covers. It truly tested my patience and creativity.</p>
+                <p class="oi-item-copy">From home construction to car performance &amp; maintenance and more! I have always enjoyed projects I can handle with my own two hands. If I have a sliver of hope I'd tackle the problem myself. This photo is also the room I built where I learned so much of what I know today about tech advancements and practical skills. The most challenging DIY so far had to have been when I was changing out my valve covers from a VQ35DE engine. The factory bolts have been brittle and I was facing issues with stripped bolts that held onto the valve covers. It truly tested my patience and creativity.</p>
               </figcaption>
             </figure>
             <figure class="oi-card">
@@ -2934,6 +3068,7 @@ TIME TRAVEL</span>
         </div>
       </div>
     </div>
+    <div class="xp-vignette"></div>
   </section>
 </div>
 
@@ -4605,6 +4740,128 @@ TIME TRAVEL</span>
   });
   updateExperienceJourney();
   updateNavByScroll();
+
+  const oiCards = Array.from(document.querySelectorAll('.oi-card'));
+  let oiPopupOpen = false;
+  let oiPopup = null;
+  let oiOverlay = null;
+  let oiLastOriginRect = null;
+
+  function isDesktopPopupViewport() {
+    return window.matchMedia('(min-width: 768px)').matches;
+  }
+
+  function buildPopupCardFromSource(card) {
+    const popupCard = document.createElement('article');
+    popupCard.className = 'oi-popup-card';
+    popupCard.setAttribute('role', 'dialog');
+    popupCard.setAttribute('aria-modal', 'true');
+    popupCard.setAttribute('aria-label', 'Other interest details');
+
+    const popupMediaWrap = document.createElement('div');
+    popupMediaWrap.className = 'oi-popup-media';
+    const sourceMedia = card.querySelector('.oi-media img, .oi-media video');
+    if (sourceMedia) {
+      const mediaClone = sourceMedia.cloneNode(true);
+      if (mediaClone.tagName === 'VIDEO') {
+        mediaClone.muted = true;
+        mediaClone.loop = true;
+        mediaClone.autoplay = true;
+        mediaClone.controls = false;
+        mediaClone.playsInline = true;
+      }
+      popupMediaWrap.appendChild(mediaClone);
+    }
+
+    const popupMeta = document.createElement('div');
+    popupMeta.className = 'oi-popup-meta';
+    const sourceMeta = card.querySelector('.oi-meta');
+    if (sourceMeta) popupMeta.innerHTML = sourceMeta.innerHTML;
+
+    const closeButton = document.createElement('button');
+    closeButton.type = 'button';
+    closeButton.className = 'oi-popup-close';
+    closeButton.textContent = 'Close';
+    closeButton.addEventListener('click', closeOiPopup);
+
+    popupCard.appendChild(closeButton);
+    popupCard.appendChild(popupMediaWrap);
+    popupCard.appendChild(popupMeta);
+    return popupCard;
+  }
+
+  function closeOiPopup() {
+    if (!oiPopupOpen || !oiPopup || !oiOverlay) return;
+    oiPopupOpen = false;
+    oiOverlay.classList.remove('is-open');
+    oiPopup.classList.remove('is-open');
+    if (oiLastOriginRect) {
+      const targetWidth = Math.min(window.innerWidth * 0.92, 860);
+      const targetHeight = Math.min(window.innerHeight * 0.88, 860);
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      const rectCenterX = oiLastOriginRect.left + oiLastOriginRect.width / 2;
+      const rectCenterY = oiLastOriginRect.top + oiLastOriginRect.height / 2;
+      const dx = rectCenterX - centerX;
+      const dy = rectCenterY - centerY;
+      const sx = Math.max(0.4, Math.min(1.02, oiLastOriginRect.width / targetWidth));
+      const sy = Math.max(0.4, Math.min(1.02, oiLastOriginRect.height / targetHeight));
+      oiPopup.style.setProperty('--oi-popup-start-transform', `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(${Math.min(sx, sy)})`);
+    }
+    setTimeout(() => {
+      if (oiPopup) oiPopup.remove();
+      if (oiOverlay) oiOverlay.remove();
+      oiPopup = null;
+      oiOverlay = null;
+      oiLastOriginRect = null;
+      document.body.style.overflow = '';
+    }, 380);
+  }
+
+  function openOiPopup(card) {
+    if (!isDesktopPopupViewport() || oiPopupOpen) return;
+    oiPopupOpen = true;
+    oiLastOriginRect = card.getBoundingClientRect();
+    const targetWidth = Math.min(window.innerWidth * 0.92, 860);
+    const targetHeight = Math.min(window.innerHeight * 0.88, 860);
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    const rectCenterX = oiLastOriginRect.left + oiLastOriginRect.width / 2;
+    const rectCenterY = oiLastOriginRect.top + oiLastOriginRect.height / 2;
+    const dx = rectCenterX - centerX;
+    const dy = rectCenterY - centerY;
+    const sx = Math.max(0.4, Math.min(1.02, oiLastOriginRect.width / targetWidth));
+    const sy = Math.max(0.4, Math.min(1.02, oiLastOriginRect.height / targetHeight));
+    const startTransform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(${Math.min(sx, sy)})`;
+
+    oiOverlay = document.createElement('div');
+    oiOverlay.className = 'oi-popup-overlay';
+    oiOverlay.addEventListener('click', closeOiPopup);
+
+    oiPopup = buildPopupCardFromSource(card);
+    oiPopup.style.setProperty('--oi-popup-start-transform', startTransform);
+    oiPopup.addEventListener('click', (e) => e.stopPropagation());
+
+    document.body.appendChild(oiOverlay);
+    document.body.appendChild(oiPopup);
+    document.body.style.overflow = 'hidden';
+
+    requestAnimationFrame(() => {
+      if (!oiOverlay || !oiPopup) return;
+      oiOverlay.classList.add('is-open');
+      oiPopup.classList.add('is-open');
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeOiPopup();
+  });
+
+  oiCards.forEach((card) => {
+    card.addEventListener('click', () => {
+      openOiPopup(card);
+    });
+  });
 
 </script>
 </body>
