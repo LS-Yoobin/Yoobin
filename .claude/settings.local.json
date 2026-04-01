@@ -3,7 +3,10 @@
     "allow": [
       "Bash(\"C:\\\\Users\\\\yoobi\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\5.0.5\\\\scripts\\\\start-server.sh\" --project-dir \"C:\\\\Users\\\\yoobi\\\\yoobinhere\")",
       "Bash(cat \"C:\\\\Users\\\\yoobi\\\\yoobinhere\\\\.superpowers\\\\brainstorm\"/*/.server-info)",
-      "Bash(\"C:/Users/yoobi/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.5/skills/brainstorming/scripts/start-server.sh\" --project-dir \"C:/Users/yoobi/yoobinhere\")"
+      "Bash(\"C:/Users/yoobi/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.5/skills/brainstorming/scripts/start-server.sh\" --project-dir \"C:/Users/yoobi/yoobinhere\")",
+      "Bash(bash \"C:/Users/yoobi/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.5/scripts/start-server.sh\" --project-dir \"C:/Users/yoobi/yoobinhere\")",
+      "Bash(cat \"C:/Users/yoobi/yoobinhere/.superpowers/brainstorm/\"*\"/.server-info\")",
+      "Bash(curl -s --max-time 2 http://localhost:54957)"
     ]
   }
 }

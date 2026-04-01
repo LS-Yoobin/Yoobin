@@ -1,0 +1,85 @@
+<h2>Three more explosion styles</h2>
+<p class="subtitle">Different approaches — pick the one that matches the vibe you're after</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="letterscatter" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#000;padding:28px 16px;min-height:200px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+      <div style="position:relative;width:100%;text-align:center;font-family:monospace;text-transform:uppercase;font-weight:900;letter-spacing:0.06em;">
+        <!-- Individual letters flying apart -->
+        <span style="position:absolute;color:#00ff8c;font-size:18px;opacity:0.55;transform:translate(-72px,-52px) rotate(-15deg);top:50%;left:50%;">Y</span>
+        <span style="position:absolute;color:#00ff8c;font-size:18px;opacity:0.4;transform:translate(-38px,-74px) rotate(8deg);top:50%;left:50%;">O</span>
+        <span style="position:absolute;color:#00ff8c;font-size:18px;opacity:0.6;transform:translate(-5px,-88px) rotate(-22deg);top:50%;left:50%;">O</span>
+        <span style="position:absolute;color:#00ff8c;font-size:18px;opacity:0.35;transform:translate(30px,-70px) rotate(18deg);top:50%;left:50%;">B</span>
+        <span style="position:absolute;color:#00ff8c;font-size:18px;opacity:0.5;transform:translate(60px,-50px) rotate(-6deg);top:50%;left:50%;">I</span>
+        <span style="position:absolute;color:#00ff8c;font-size:18px;opacity:0.3;transform:translate(82px,-30px) rotate(25deg);top:50%;left:50%;">N</span>
+        <!-- SEO letters drifting lower -->
+        <span style="position:absolute;color:#4fffb0;font-size:14px;opacity:0.38;transform:translate(-50px,-35px) rotate(-30deg);top:60%;left:45%;">S</span>
+        <span style="position:absolute;color:#4fffb0;font-size:14px;opacity:0.3;transform:translate(10px,-42px) rotate(12deg);top:62%;left:48%;">E</span>
+        <span style="position:absolute;color:#4fffb0;font-size:14px;opacity:0.42;transform:translate(55px,-28px) rotate(-8deg);top:58%;left:50%;">O</span>
+        <!-- Subtitle words drifting further -->
+        <div style="position:absolute;font-size:7px;letter-spacing:0.25em;color:#00ff8c;opacity:0.22;transform:translate(-85px,-20px) rotate(-5deg);top:70%;left:30%;">UI/UX</div>
+        <div style="position:absolute;font-size:7px;letter-spacing:0.25em;color:#00ff8c;opacity:0.18;transform:translate(60px,-15px) rotate(7deg);top:72%;right:15%;">DESIGNER</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Letter Scatter</h3>
+      <p>Each letter breaks off independently and drifts upward at its own angle and speed. The name, subtitle, and badge all scatter like typeface shrapnel. Very text-native.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="glitch" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#000;padding:28px 16px;min-height:200px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+      <div style="position:relative;width:100%;text-align:center;">
+        <!-- Glitch slices — horizontal strips offset horizontally -->
+        <div style="position:relative;overflow:hidden;height:130px;">
+          <div style="font-family:monospace;font-size:20px;font-weight:900;letter-spacing:0.06em;color:#00ff8c;text-transform:uppercase;position:absolute;top:18px;left:0;right:0;clip-path:inset(0 0 80% 0);transform:translateX(-12px);opacity:0.7;">YOOBIN SEO</div>
+          <div style="font-family:monospace;font-size:20px;font-weight:900;letter-spacing:0.06em;color:#00ff8c;text-transform:uppercase;position:absolute;top:18px;left:0;right:0;clip-path:inset(20% 0 60% 0);transform:translateX(18px);opacity:0.45;">YOOBIN SEO</div>
+          <div style="font-family:monospace;font-size:20px;font-weight:900;letter-spacing:0.06em;color:#4fffb0;text-transform:uppercase;position:absolute;top:18px;left:0;right:0;clip-path:inset(40% 0 40% 0);transform:translateX(-8px);opacity:0.3;">YOOBIN SEO</div>
+          <div style="font-family:monospace;font-size:20px;font-weight:900;letter-spacing:0.06em;color:#00ff8c;text-transform:uppercase;position:absolute;top:18px;left:0;right:0;clip-path:inset(60% 0 20% 0);transform:translateX(24px);opacity:0.2;">YOOBIN SEO</div>
+          <div style="font-family:monospace;font-size:20px;font-weight:900;letter-spacing:0.06em;color:#00ff8c;text-transform:uppercase;position:absolute;top:18px;left:0;right:0;clip-path:inset(80% 0 0 0);transform:translateX(-6px);opacity:0.1;">YOOBIN SEO</div>
+          <!-- Scan line artifacts -->
+          <div style="position:absolute;top:38px;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,#00ff8c44,transparent);"></div>
+          <div style="position:absolute;top:58px;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,#00ff8c22,transparent);"></div>
+          <div style="position:absolute;top:72px;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,#00ff8c33,transparent);"></div>
+          <!-- Pixel noise blocks -->
+          <div style="position:absolute;top:28px;left:22%;width:8px;height:4px;background:#00ff8c;opacity:0.6;"></div>
+          <div style="position:absolute;top:44px;right:18%;width:12px;height:3px;background:#4fffb0;opacity:0.45;"></div>
+          <div style="position:absolute;top:62px;left:35%;width:5px;height:5px;background:#00ff8c;opacity:0.5;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Signal Glitch</h3>
+      <p>The hero corrupts like a dying transmission — horizontal scan slices offset and drift, pixel artifacts appear, the signal degrades. Feels like a system going offline.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="implosion" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#000;padding:28px 16px;min-height:200px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+      <div style="position:relative;width:100%;text-align:center;">
+        <!-- Implosion: rings collapse inward, text compresses then vanishes -->
+        <!-- Outer ring collapsed inward -->
+        <div style="position:absolute;top:50%;left:50%;width:120px;height:120px;border:1px solid #00ff8c;border-radius:50%;opacity:0.12;transform:translate(-50%,-50%) scale(0.4);"></div>
+        <div style="position:absolute;top:50%;left:50%;width:80px;height:80px;border:1px solid #00ff8c;border-radius:50%;opacity:0.18;transform:translate(-50%,-50%) scale(0.5);"></div>
+        <!-- Compressed text center -->
+        <div style="font-family:monospace;font-size:20px;font-weight:900;letter-spacing:0.3em;color:#00ff8c;text-transform:uppercase;opacity:0.55;transform:scaleX(0.35) scaleY(1.4);display:inline-block;white-space:nowrap;">YOOBIN SEO</div>
+        <!-- Energy burst lines outward from center -->
+        <div style="position:absolute;top:50%;left:50%;width:1px;height:45px;background:linear-gradient(to top,#00ff8c,transparent);opacity:0.4;transform:translate(-50%,-100%) rotate(0deg);transform-origin:bottom center;"></div>
+        <div style="position:absolute;top:50%;left:50%;width:1px;height:35px;background:linear-gradient(to top,#00ff8c,transparent);opacity:0.3;transform:translate(-50%,-100%) rotate(30deg);transform-origin:bottom center;"></div>
+        <div style="position:absolute;top:50%;left:50%;width:1px;height:38px;background:linear-gradient(to top,#00ff8c,transparent);opacity:0.35;transform:translate(-50%,-100%) rotate(-28deg);transform-origin:bottom center;"></div>
+        <div style="position:absolute;top:50%;left:50%;width:1px;height:30px;background:linear-gradient(to top,#00ff8c,transparent);opacity:0.25;transform:translate(-50%,-100%) rotate(55deg);transform-origin:bottom center;"></div>
+        <div style="position:absolute;top:50%;left:50%;width:1px;height:32px;background:linear-gradient(to top,#00ff8c,transparent);opacity:0.28;transform:translate(-50%,-100%) rotate(-55deg);transform-origin:bottom center;"></div>
+        <!-- Bright center flash -->
+        <div style="position:absolute;top:50%;left:50%;width:6px;height:6px;background:#00ff8c;border-radius:50%;opacity:0.7;transform:translate(-50%,-50%);box-shadow:0 0 16px #00ff8c,0 0 32px #00ff8c44;"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Core Implosion</h3>
+      <p>Everything collapses inward to a single bright point — rings shrink, text compresses — then a burst of energy rays fires outward and fades. Like a star collapsing. Dramatic and slow.</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:20px;font-size:11px;opacity:0.7;">All scroll-driven and progressive. Can also combine elements — e.g. glitch leading into letter scatter.</p>

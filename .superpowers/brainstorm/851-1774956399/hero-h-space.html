@@ -324,16 +324,63 @@
   }
 
   .scroll-hint {
-    font-size: 0.7rem;
+    font-size: 1.1rem;
+    font-weight: 900;
     letter-spacing: 0.3em;
-    color: rgba(34,197,94,0.3);
+    color: rgba(34,197,94,0.55);
     text-transform: uppercase;
     animation: fade-in 1s ease 1.2s both;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+  }
+  .scroll-hint .chevron {
+    font-size: 1.4rem;
+    animation: bounce-down 1.6s ease-in-out infinite;
+  }
+  @keyframes bounce-down {
+    0%, 100% { transform: translateY(0); opacity: 0.55; }
+    50% { transform: translateY(6px); opacity: 1; }
   }
 
   @keyframes fade-in {
     from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ============================================================
+     SHATTER (GEOGRAPHICAL) EXPLOSION
+  ============================================================ */
+  .center > * {
+    transition: opacity 0.5s ease-in, transform 0.5s ease-in, filter 0.3s ease-in;
+  }
+  .center.shatter > * {
+    opacity: 0 !important;
+    transform: scale(0.5) translateY(-40px) rotate(5deg) !important;
+    filter: blur(8px) !important;
+  }
+
+  .geo-shard {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 200;
+  }
+  .geo-shard svg {
+    display: block;
+    width: 100%; height: 100%;
+    animation: geo-burst var(--dur, 0.8s) cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+    filter: drop-shadow(0 0 6px rgba(34,197,94,0.4));
+  }
+  .geo-shard.reverse svg {
+    animation-direction: reverse;
+  }
+  @keyframes geo-burst {
+    0%   { transform: translate(0,0) scale(0) rotate(0deg); opacity: 1; filter: blur(0); }
+    30%  { opacity: 1; filter: blur(0); }
+    100% { transform: translate(var(--tx, 100px), var(--ty, -100px)) scale(var(--s, 1)) rotate(var(--rot, 90deg)); opacity: 0; filter: blur(4px); }
   }
 
   /* ============================================================
@@ -465,12 +512,377 @@
     z-index: 100;
     font-family: 'Courier New', monospace;
   }
-  .note-overlay span { color: rgba(34,197,94,0.85); }
+
+  /* ============================================================
+     NEXT PAGE — INTRO + MY WORK
+  ============================================================ */
+  #hero-layer {
+    transition: opacity 0.9s cubic-bezier(0.4,0,0.2,1);
+  }
+  #hero-layer.fading {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  #next-page {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    color: #fff;
+    font-family: 'Courier New', monospace;
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.9s cubic-bezier(0.4,0,0.2,1) 0.5s;
+    z-index: 200;
+  }
+  #next-page.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* Shared section styling */
+  .np-section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6rem 10vw;
+    position: relative;
+    border-bottom: 1px solid rgba(34,197,94,0.08);
+  }
+
+  /* Subtle top-left bracket decoration */
+  .np-section::before {
+    content: '';
+    position: absolute;
+    top: 3rem; left: 8vw;
+    width: 24px; height: 24px;
+    border-top: 1px solid rgba(34,197,94,0.35);
+    border-left: 1px solid rgba(34,197,94,0.35);
+  }
+
+  .np-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.45em;
+    color: rgba(34,197,94,0.5);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+
+  /* ---- Intro section ---- */
+  #section-intro .intro-heading {
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    color: #fff;
+    margin-bottom: 2.4rem;
+    line-height: 1;
+  }
+  #section-intro .intro-heading .green {
+    color: #22c55e;
+    text-shadow: 0 0 24px rgba(34,197,94,0.35);
+  }
+  #section-intro .intro-body {
+    font-family: 'Courier New', monospace;
+    font-size: clamp(0.85rem, 1.4vw, 1.05rem);
+    line-height: 2;
+    color: rgba(255,255,255,0.65);
+    max-width: 680px;
+    letter-spacing: 0.02em;
+  }
+  #section-intro .intro-body em {
+    color: rgba(34,197,94,0.85);
+    font-style: normal;
+    font-weight: 700;
+  }
+  #section-intro .intro-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(260px, 0.7fr);
+    gap: 2.5rem;
+    align-items: center;
+    width: 100%;
+  }
+  #section-intro .intro-copy {
+    max-width: 680px;
+  }
+  #section-intro .player-card {
+    justify-self: end;
+    width: min(430px, 100%);
+    border: 1px solid rgba(34,197,94,0.35);
+    background: linear-gradient(180deg, rgba(8,24,15,0.8) 0%, rgba(2,9,6,0.9) 100%);
+    box-shadow: 0 0 24px rgba(34,197,94,0.18), inset 0 0 0 1px rgba(34,197,94,0.15);
+    padding: 0.95rem;
+    position: relative;
+    z-index: 2;
+    transform-origin: center;
+    perspective: 1400px;
+    overflow: hidden;
+    will-change: transform, top, left;
+  }
+  #section-intro .player-card-inner {
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  #section-intro .player-card.is-flipped .player-card-inner {
+    transform: rotateY(180deg);
+  }
+  #section-intro .player-face {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  #section-intro .player-face.back {
+    position: absolute;
+    inset: 0;
+    transform: rotateY(180deg);
+    border: 1px solid rgba(34,197,94,0.45);
+    background: rgba(2, 10, 6, 0.98);
+    padding: 1rem 1.05rem;
+    overflow: hidden;
+  }
+  #section-intro .about-title {
+    font-size: 1.3rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(34,197,94,0.9);
+    margin-bottom: 0.7rem;
+    font-weight: 900;
+  }
+  #section-intro .about-body {
+    font-size: 0.86rem;
+    line-height: 1.75;
+    color: rgba(222,255,238,0.82);
+    letter-spacing: 0.02em;
+    margin-bottom: 0.85rem;
+  }
+  #section-intro .player-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.7rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(34,197,94,0.72);
+  }
+  #section-intro .player-frame {
+    border: 1px solid rgba(34,197,94,0.45);
+    background: rgba(2,8,4,0.95);
+    padding: 0.5rem;
+  }
+  #section-intro .player-frame img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    filter: grayscale(100%) contrast(1.06);
+    border: 1px solid rgba(34,197,94,0.25);
+  }
+  #section-intro .player-stats {
+    margin-top: 0.7rem;
+    border-top: 1px solid rgba(34,197,94,0.2);
+    padding-top: 0.55rem;
+    font-size: 0.56rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(34,197,94,0.62);
+    line-height: 1.8;
+  }
+  @media (max-width: 900px) {
+    #section-intro .intro-layout {
+      grid-template-columns: 1fr;
+      gap: 1.8rem;
+    }
+    #section-intro .player-card {
+      justify-self: start;
+      width: min(460px, 100%);
+    }
+  }
+
+  /* Vertical line between sections */
+  .np-divider {
+    width: 1px;
+    height: 80px;
+    background: linear-gradient(180deg, rgba(34,197,94,0.5), transparent);
+    margin: 0 10vw;
+  }
+
+  #next-page {
+    --work-push: 0px;
+  }
+  #next-page .np-divider,
+  #next-page #section-work {
+    transform: translateY(var(--work-push));
+    will-change: transform;
+  }
+  #next-page.work-direct-mode #section-intro .player-card {
+    opacity: 0;
+    pointer-events: none;
+  }
+  #next-page.work-direct-mode #section-intro,
+  #next-page.work-direct-mode .np-divider {
+    display: none;
+  }
+  #next-page.work-direct-mode #section-work {
+    transform: none;
+    min-height: calc(100vh - 6.5rem);
+    padding-top: 6.5rem;
+  }
+
+  /* ---- My Work section ---- */
+  #section-work .work-heading {
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    color: #fff;
+    margin-bottom: 3rem;
+    line-height: 1;
+  }
+  #section-work .work-heading .green { color: #22c55e; text-shadow: 0 0 24px rgba(34,197,94,0.35); }
+
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .work-card {
+    border: 1px solid rgba(34,197,94,0.15);
+    background: rgba(34,197,94,0.03);
+    padding: 2rem;
+    position: relative;
+    cursor: pointer;
+    transition: border-color 0.25s, background 0.25s;
+  }
+  .work-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(34,197,94,0.5), transparent);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .work-card:hover { border-color: rgba(34,197,94,0.4); background: rgba(34,197,94,0.06); }
+  .work-card:hover::before { opacity: 1; }
+  .work-card .wc-tag {
+    font-size: 0.55rem;
+    letter-spacing: 0.35em;
+    color: rgba(34,197,94,0.5);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .work-card .wc-title {
+    font-family: 'Arial Black', Arial, sans-serif;
+    font-size: 1.1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    color: #fff;
+    margin-bottom: 0.6rem;
+  }
+  .work-card .wc-desc {
+    font-size: 0.7rem;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.04em;
+  }
+  .work-card .wc-arrow {
+    margin-top: 1.2rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    color: rgba(34,197,94,0.5);
+    text-transform: uppercase;
+  }
+
+  /* Back button */
+  .np-back {
+    position: absolute; /* Place inside intro section flow at top */
+    top: 5.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.1rem;
+    font-weight: 900;
+    letter-spacing: 0.3em;
+    color: rgba(34,197,94,0.55);
+    text-transform: uppercase;
+    cursor: pointer;
+    z-index: 300;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s 1s, color 0.2s;
+  }
+  .np-back.visible { opacity: 1; pointer-events: all; }
+  .np-back:hover { color: rgba(34,197,94,0.9); }
+  .np-back .chevron {
+    font-size: 1.4rem;
+    animation: bounce-up 1.6s ease-in-out infinite;
+  }
+  @keyframes bounce-up {
+    0%, 100% { transform: translateY(0); opacity: 0.55; }
+    50% { transform: translateY(-6px); opacity: 1; }
+  }
+
+  /* Section fade-in on scroll */
+  .np-reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .np-reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ============================================================
+     TOP NAVIGATION MENU
+  ============================================================ */
+  .top-nav {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 2rem;
+    font-family: 'Courier New', monospace;
+    font-size: 1.4rem;
+    font-weight: 900;
+    letter-spacing: 0.25em;
+    z-index: 500;
+  }
+  .top-nav a {
+    color: rgba(34,197,94,0.6);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s, text-shadow 0.2s;
+  }
+  .top-nav a:hover, .top-nav a.active {
+    color: #22c55e;
+    text-shadow: 0 0 8px rgba(34,197,94,0.5);
+  }
 </style>
 </head>
 <body>
 
-<!-- Stars -->
+<nav class="top-nav">
+  <a href="#" class="active" id="nav-home">HOME</a>
+  <a href="#section-intro" id="nav-intro">INTRO</a>
+  <a href="#section-work" id="nav-work">WORK</a>
+  <a href="#">RESUME</a>
+  <a href="#">MORE</a>
+</nav>
+
+<!-- Hero layer (all existing content wrapped) -->
+<div id="hero-layer">
+
 <div class="stars" id="stars"></div>
 
 <!-- Nebula / deep space glow -->
@@ -575,19 +987,101 @@
     <div class="bright">LOCKED IN</div>
   </div>
   <div class="hud-meta br">
-    <div class="bright">37.7749° N 122.4194° W</div>
+    <div class="bright" id="hud-coords">37.7749° N 122.4194° W</div>
   </div>
 
   <div class="center">
-    <div class="id-tag">// Portfolio — 2026</div>
+    <div class="id-tag">Portfolio — 2026</div>
     <div class="name">YOOBIN<br><span class="green">SEO.</span></div>
     <div class="role">UI/UX Designer · Co-Founder · Product Builder</div>
     <div class="divider"></div>
-    <div class="scroll-hint">Scroll to explore</div>
+    <div class="scroll-hint"><span>Scroll to Explore</span><span class="chevron">&#8964;</span></div>
   </div>
 </div>
 
-<!-- Status bar -->
+<!-- /Hero layer -->
+</div>
+
+<!-- Next page -->
+<div id="next-page">
+  <!-- Intro -->
+  <section class="np-section" id="section-intro">
+    <div class="np-back" id="np-back" aria-label="Back to hero"><span class="chevron">&#8963;</span><span>Scroll Back Up</span></div>
+    
+    <div class="np-label np-reveal">//&nbsp;&nbsp;01 &mdash; Intro</div>
+    <div class="intro-layout">
+      <div class="intro-copy">
+        <h2 class="intro-heading np-reveal" style="transition-delay:0.1s">
+          Hello,<br>I&#8217;m <span class="green">Yoobin.</span>
+        </h2>
+        <p class="intro-body np-reveal" style="transition-delay:0.2s">
+          I&#8217;m a <em>UI/UX designer</em> based in the Bay Area. I am currently working at a start-up called <em>LinkedSpaces</em>. With background in graphic designing and content creation, I have always found glory in creating, whether it is physical or digital. This passion is what motivated me on pursuing my journey into UI/UX designing. I help my teams turn their ideas into reality.
+        </p>
+      </div>
+
+      <aside class="player-card np-reveal" style="transition-delay:0.35s" aria-label="Character card">
+        <div class="player-card-inner">
+          <div class="player-face front">
+            <div class="player-meta">
+              <span>Character Select</span>
+              <span>YS-01</span>
+            </div>
+            <div class="player-frame">
+              <img src="/intro-headshot.png" alt="Yoobin headshot portrait" />
+            </div>
+            <div class="player-stats">
+              <div>Class: Product Builder</div>
+              <div>Role: UI/UX Designer</div>
+              <div>Status: Active</div>
+            </div>
+          </div>
+          <div class="player-face back">
+            <div class="about-title">About Me</div>
+            <p class="about-body">
+              Throughout my life, a strong inclination towards design and creativity has been evident. Post-college, I veered from the expected path, drawn by a deep-rooted interest in visual arts. Combining my fervor for creativity and hands-on approach with a commitment to crafting user-centric solutions, I've embraced the role of a UI/UX designer. I aim to develop solutions that seamlessly blend usability and aesthetics.
+            </p>
+            <p class="about-body">
+              I’m a self taught UI/UX designer based in the Bay Area. I am a co-founder of a start-up called LinkedSpaces. With background in graphic designing and content creation, I have always found glory in creating, whether it is physical or digital. This passion is what motivated me on pursing my journey into UI/UX designing. I help my teams turn their ideas into reality.
+            </p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <div class="np-divider"></div>
+
+  <!-- My Work -->
+  <section class="np-section" id="section-work">
+    <div class="np-label np-reveal">//&nbsp;&nbsp;02 &mdash; My Work</div>
+    <h2 class="work-heading np-reveal" style="transition-delay:0.1s">
+      My<br><span class="green">Work.</span>
+    </h2>
+    <div class="work-grid">
+      <div class="work-card np-reveal" style="transition-delay:0.18s">
+        <div class="wc-tag">UI / UX Design</div>
+        <div class="wc-title">LinkedSpaces</div>
+        <div class="wc-desc">End-to-end product design for a professional networking start-up connecting people through shared spaces.</div>
+        <div class="wc-arrow">View Project &#8594;</div>
+      </div>
+      <div class="work-card np-reveal" style="transition-delay:0.26s">
+        <div class="wc-tag">Brand + Visual</div>
+        <div class="wc-title">Graphic Design</div>
+        <div class="wc-desc">Identity, print, and digital graphics developed across campaigns, editorial, and social media.</div>
+        <div class="wc-arrow">View Project &#8594;</div>
+      </div>
+      <div class="work-card np-reveal" style="transition-delay:0.34s">
+        <div class="wc-tag">Content Creation</div>
+        <div class="wc-title">Digital Media</div>
+        <div class="wc-desc">Photo, video, and copywriting produced for brands and personal creative projects.</div>
+        <div class="wc-arrow">View Project &#8594;</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Status bar (keep outside hero-layer so it stays accessible) -->
+
 <div class="status-bar">
   <div class="live"><div class="live-dot"></div>LIVE</div>
   <div>YS_PORTFOLIO v1.0.0</div>
@@ -597,10 +1091,22 @@
   <div>2026.03.31</div>
 </div>
 
-<!-- Preview note -->
-<div class="note-overlay">MOCKUP PREVIEW — <span>Hero H · Space Refinement</span> · Ships fly every 5–7s · Meteorites streak continuously</div>
-
 <script>
+  // Live coordinates — drift around Bay Area baseline with mouse position
+  const hudCoords = document.getElementById('hud-coords');
+  const BASE_LAT = 37.7749, BASE_LNG = 122.4194;
+  const RANGE_LAT = 0.04, RANGE_LNG = 0.04;
+
+  document.addEventListener('mousemove', (e) => {
+    if (!hudCoords) return;
+    const xRatio = e.clientX / window.innerWidth;   // 0→1 left→right
+    const yRatio = e.clientY / window.innerHeight;  // 0→1 top→bottom
+    const lat = BASE_LAT + RANGE_LAT * (0.5 - yRatio);
+    const lng = BASE_LNG + RANGE_LNG * (xRatio - 0.5);
+    hudCoords.textContent =
+      lat.toFixed(4) + '° N ' + lng.toFixed(4) + '° W';
+  });
+
   // Mouse-tracking crosshair
   const crossH   = document.querySelector('.cross-h');
   const crossV   = document.querySelector('.cross-v');
@@ -1090,6 +1596,351 @@
     `;
     starsEl.appendChild(star);
   }
+  // ============================================================
+  // CLICK-TO-CONTINUE TRANSITION & SHATTER FX
+  // ============================================================
+  const scrollHint  = document.querySelector('.scroll-hint');
+  const heroLayer   = document.getElementById('hero-layer');
+  const nextPage    = document.getElementById('next-page');
+  const npBack      = document.getElementById('np-back');
+  const centerEl    = document.querySelector('.center');
+
+  const GEO_SHAPES = [
+    // Triangle
+    'M12,0 L24,24 L0,24 Z',
+    // Diamond
+    'M12,0 L24,12 L12,24 L0,12 Z',
+    // Abstract Polygon / Terrain Shard
+    'M6,0 L20,4 L24,18 L12,24 L0,14 Z',
+    // Map Location Pin
+    'M12,0 C5.4,0 0,5.4 0,12 C0,21 12,32 12,32 C12,32 24,21 24,12 C24,5.4 18.6,0 12,0 Z M12,16 C9.8,16 8,14.2 8,12 C8,9.8 9.8,8 12,8 C14.2,8 16,9.8 16,12 C16,14.2 14.2,16 12,16 Z',
+    // Hexagon
+    'M12,0 L22.4,6 L22.4,18 L12,24 L1.6,18 L1.6,6 Z'
+  ];
+
+  function spawnGeoShards(isReverse = false) {
+    const shardCount = 45;
+    const container = document.createElement('div');
+    container.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:200';
+    document.body.appendChild(container);
+
+    const rect = centerEl.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+
+    for (let i = 0; i < shardCount; i++) {
+        const el = document.createElement('div');
+        el.className = 'geo-shard';
+        if (isReverse) el.classList.add('reverse');
+        
+        // Spawn randomly across the text's area
+        el.style.left = cx + (Math.random()-0.5) * 350 + 'px';
+        el.style.top = cy + (Math.random()-0.5) * 180 + 'px';
+
+        const size = 6 + Math.random() * 26;
+        el.style.width = size + 'px';
+        el.style.height = size + 'px';
+
+        // Outward explosion math
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 60 + Math.random() * 380;
+        const tx = Math.cos(angle) * dist;
+        const ty = Math.sin(angle) * dist - 50; 
+        const rot = (Math.random() - 0.5) * 600;
+        const s = 0.5 + Math.random() * 1.5;
+        const dur = 0.9 + Math.random() * 0.6; 
+
+        const path = GEO_SHAPES[Math.floor(Math.random() * GEO_SHAPES.length)];
+        const isBright = Math.random() > 0.8;
+        const color = isBright ? '#fff' : 'rgba(34,197,94,0.85)';
+        const fill = Math.random() > 0.6 ? 'none' : color;
+        const strokeWt = fill === 'none' ? '1.5' : '0';
+        const vBox = path.includes('32') ? '0 0 24 32' : '0 0 24 24';
+
+        el.innerHTML = `<svg viewBox="${vBox}" style="--tx:${tx}px; --ty:${ty}px; --rot:${rot}deg; --s:${s}; --dur:${dur}s;"><path d="${path}" fill="${fill}" stroke="${color}" stroke-width="${strokeWt}"/></svg>`;
+        container.appendChild(el);
+    }
+    
+    setTimeout(() => container.remove(), 2000);
+  }
+
+  function enterNextPage() {
+    if (heroLayer.classList.contains('fading')) return;
+    centerEl.classList.add('shatter');
+    spawnGeoShards(false);
+
+    heroLayer.classList.add('fading');
+    setTimeout(() => {
+      nextPage.classList.add('visible');
+      npBack.classList.add('visible');
+      revealVisibleItems();
+      updateIntroCardMotion();
+      updateNavByScroll();
+    }, 600);
+  }
+
+  function exitNextPage() {
+    nextPage.classList.remove('visible');
+    npBack.classList.remove('visible');
+    setActiveNav('nav-home');
+    
+    // Reverse shatter: trigger earlier so the hero layer fades in 
+    // while the shapes are imploding 
+    setTimeout(() => {
+      heroLayer.classList.remove('fading');
+      spawnGeoShards(true);
+      
+      // Delay un-shattering the text slightly so it fades in
+      // right as the shapes hit the center
+      setTimeout(() => centerEl.classList.remove('shatter'), 600);
+      
+      setTimeout(() => {
+        nextPage.scrollTop = 0;
+        resetIntroCardMotion();
+      }, 500);
+      heroScrolled = false;
+    }, 400); // 400ms delay to let the intro page start fading out first
+  }
+
+  if (scrollHint) scrollHint.addEventListener('click', enterNextPage);
+  if (npBack)     npBack.addEventListener('click', exitNextPage);
+
+  const navIntro = document.getElementById('nav-intro');
+  const navWork = document.getElementById('nav-work');
+  const navHome = document.getElementById('nav-home');
+  const sectionIntro = document.getElementById('section-intro');
+  const sectionWork = document.getElementById('section-work');
+  const introDivider = document.querySelector('.np-divider');
+  const introPlayerCard = sectionIntro?.querySelector('.player-card');
+  let introCardAnchor = null;
+  let directWorkMode = false;
+
+  function setActiveNav(activeId) {
+    [navHome, navIntro, navWork].forEach((link) => {
+      if (!link) return;
+      link.classList.toggle('active', link.id === activeId);
+    });
+  }
+
+  function updateNavByScroll() {
+    if (!sectionIntro || !sectionWork) return;
+    if (!nextPage.classList.contains('visible')) {
+      setActiveNav('nav-home');
+      return;
+    }
+
+    const workRect = sectionWork.getBoundingClientRect();
+    const activateWorkAt = window.innerHeight * 0.55;
+    if (workRect.top <= activateWorkAt) {
+      setActiveNav('nav-work');
+    } else {
+      setActiveNav('nav-intro');
+    }
+  }
+
+  function resetIntroCardMotion() {
+    if (!introPlayerCard) return;
+    introCardAnchor = null;
+    introPlayerCard.style.position = '';
+    introPlayerCard.style.left = '';
+    introPlayerCard.style.top = '';
+    introPlayerCard.style.width = '';
+    introPlayerCard.style.margin = '';
+    introPlayerCard.style.zIndex = '';
+    introPlayerCard.style.transform = '';
+    introPlayerCard.classList.remove('is-flipped');
+    nextPage.style.setProperty('--work-push', '0px');
+    nextPage.classList.remove('work-direct-mode');
+    directWorkMode = false;
+  }
+
+  function updateIntroCardMotion() {
+    if (!sectionIntro || !introPlayerCard || !sectionWork) return;
+    if (directWorkMode) {
+      introCardAnchor = null;
+      introPlayerCard.style.position = '';
+      introPlayerCard.style.left = '';
+      introPlayerCard.style.top = '';
+      introPlayerCard.style.width = '';
+      introPlayerCard.style.margin = '';
+      introPlayerCard.style.zIndex = '';
+      introPlayerCard.style.transform = '';
+      introPlayerCard.classList.remove('is-flipped');
+      nextPage.style.setProperty('--work-push', '0px');
+      return;
+    }
+
+    const localScroll = Math.max(0, nextPage.scrollTop - sectionIntro.offsetTop);
+    if (localScroll <= 1) {
+      resetIntroCardMotion();
+      return;
+    }
+
+    if (!introCardAnchor) {
+      const rect = introPlayerCard.getBoundingClientRect();
+      introCardAnchor = {
+        left: rect.left,
+        top: rect.top,
+        width: introPlayerCard.offsetWidth,
+        height: introPlayerCard.offsetHeight,
+      };
+    }
+
+    const scaleMax = 1.32;
+    const targetLeft = (window.innerWidth / 2) - (introCardAnchor.width / 2);
+    const targetTop = (window.innerHeight / 2) - (introCardAnchor.height / 2);
+    const dividerY = introDivider
+      ? introDivider.offsetTop + (introDivider.offsetHeight / 2)
+      : sectionWork.offsetTop;
+    const lockAt = Math.max(90, dividerY - sectionIntro.offsetTop - targetTop);
+    const progress = Math.max(0, Math.min(1, localScroll / lockAt));
+
+    const left = introCardAnchor.left + ((targetLeft - introCardAnchor.left) * progress);
+    const top = introCardAnchor.top + ((targetTop - introCardAnchor.top) * progress);
+    const scale = 1 + ((scaleMax - 1) * progress);
+    const lockScrollTop = sectionIntro.offsetTop + lockAt;
+    const anchoredAbsoluteTop = lockScrollTop + targetTop;
+    const anchoredAbsoluteLeft = (nextPage.clientWidth / 2) - (introCardAnchor.width / 2);
+
+    const gap = 42;
+    const desiredWorkTopAtLock = anchoredAbsoluteTop + (introCardAnchor.height * scaleMax) + gap;
+    const workPush = Math.max(0, desiredWorkTopAtLock - sectionWork.offsetTop);
+    nextPage.style.setProperty('--work-push', `${(workPush * progress).toFixed(2)}px`);
+
+    const atCenter = progress >= 0.995;
+    introPlayerCard.classList.toggle('is-flipped', atCenter);
+
+    if (localScroll > lockAt + 20) {
+      introPlayerCard.style.position = 'absolute';
+      introPlayerCard.style.left = `${anchoredAbsoluteLeft.toFixed(2)}px`;
+      introPlayerCard.style.top = `${anchoredAbsoluteTop.toFixed(2)}px`;
+      introPlayerCard.style.width = `${introCardAnchor.width.toFixed(2)}px`;
+      introPlayerCard.style.margin = '0';
+      introPlayerCard.style.zIndex = '360';
+      introPlayerCard.style.transform = `scale(${scaleMax.toFixed(3)})`;
+      return;
+    }
+
+    introPlayerCard.style.position = 'fixed';
+    introPlayerCard.style.left = `${left.toFixed(2)}px`;
+    introPlayerCard.style.top = `${top.toFixed(2)}px`;
+    introPlayerCard.style.width = `${introCardAnchor.width.toFixed(2)}px`;
+    introPlayerCard.style.margin = '0';
+    introPlayerCard.style.zIndex = '450';
+    introPlayerCard.style.transform = `scale(${scale.toFixed(3)})`;
+  }
+
+  function handleNavToSection(selector) {
+    if (selector === '#section-work') {
+      directWorkMode = true;
+      nextPage.classList.add('work-direct-mode');
+      nextPage.style.setProperty('--work-push', '0px');
+    } else {
+      directWorkMode = false;
+      nextPage.classList.remove('work-direct-mode');
+    }
+
+    if (!nextPage.classList.contains('visible')) {
+      enterNextPage();
+      setTimeout(() => {
+        if (selector === '#section-work') {
+          nextPage.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          const target = document.querySelector(selector);
+          if (target) nextPage.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
+        }
+      }, 700);
+    } else {
+      if (selector === '#section-work') {
+        nextPage.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        const target = document.querySelector(selector);
+        if (target) nextPage.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
+      }
+    }
+  }
+
+  if (navIntro) {
+    navIntro.addEventListener('click', (e) => {
+      e.preventDefault();
+      directWorkMode = false;
+      nextPage.classList.remove('work-direct-mode');
+      handleNavToSection('#section-intro');
+      setActiveNav('nav-intro');
+    });
+  }
+  
+  if (navWork) {
+    navWork.addEventListener('click', (e) => {
+      e.preventDefault();
+      handleNavToSection('#section-work');
+      setActiveNav('nav-work');
+    });
+  }
+  
+  if (navHome) {
+    navHome.addEventListener('click', (e) => {
+      e.preventDefault();
+      directWorkMode = false;
+      nextPage.classList.remove('work-direct-mode');
+      if (nextPage.classList.contains('visible')) {
+        exitNextPage();
+      } else {
+        setActiveNav('nav-home');
+      }
+    });
+  }
+
+  // Scroll / swipe on hero also triggers the transition
+  let heroScrolled = false;
+  function onHeroScroll(e) {
+    if (heroScrolled) return;
+    const delta = e.deltaY ?? e.changedTouches?.[0]?.clientY;
+    if (typeof delta === 'number' && delta > 0) {
+      heroScrolled = true;
+      enterNextPage();
+    }
+  }
+  heroLayer.addEventListener('wheel', onHeroScroll, { passive: true });
+  heroLayer.addEventListener('touchmove', onHeroScroll, { passive: true });
+
+  // Scroll up from the top of the next page returns to hero
+  let exitCooldown = false;
+  nextPage.addEventListener('wheel', (e) => {
+    if (exitCooldown) return;
+    if (e.deltaY < 0 && nextPage.scrollTop === 0) {
+      exitCooldown = true;
+      exitNextPage();
+      setTimeout(() => { exitCooldown = false; }, 1200);
+    }
+  }, { passive: true });
+
+  // Scroll-based reveal inside next page
+  function revealVisibleItems() {
+    const items = nextPage.querySelectorAll('.np-reveal:not(.revealed)');
+    items.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.92) {
+        el.classList.add('revealed');
+      }
+    });
+  }
+  nextPage.addEventListener('scroll', () => {
+    if (directWorkMode && sectionWork && nextPage.scrollTop < sectionWork.offsetTop - 24) {
+      directWorkMode = false;
+      nextPage.classList.remove('work-direct-mode');
+    }
+    revealVisibleItems();
+    updateIntroCardMotion();
+    updateNavByScroll();
+  });
+  window.addEventListener('resize', () => {
+    introCardAnchor = null;
+    updateIntroCardMotion();
+    updateNavByScroll();
+  });
+  updateNavByScroll();
+
 </script>
 </body>
 </html>

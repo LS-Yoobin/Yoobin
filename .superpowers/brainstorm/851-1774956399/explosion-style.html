@@ -1,0 +1,79 @@
+<h2>How should the hero explode?</h2>
+<p class="subtitle">As the user scrolls, the hero disintegrates. Which style fits the HUD aesthetic?</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="shards" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#000;padding:24px 16px;min-height:200px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+      <!-- Shard explosion mockup -->
+      <div style="position:relative;width:100%;text-align:center;">
+        <div style="font-family:monospace;font-size:11px;letter-spacing:0.3em;color:#00ff8c;text-transform:uppercase;opacity:0.15;transform:translate(-18px,-22px) rotate(-8deg);position:absolute;left:10%;top:0;">YOOBIN</div>
+        <div style="font-family:monospace;font-size:11px;letter-spacing:0.3em;color:#00ff8c;text-transform:uppercase;opacity:0.12;transform:translate(22px,-10px) rotate(4deg);position:absolute;right:5%;top:10px;">SEO</div>
+        <!-- Rectangular shards flying out -->
+        <div style="position:absolute;width:40px;height:6px;background:#00ff8c;opacity:0.5;transform:translate(-60px,-40px) rotate(-25deg);top:30%;left:20%;border-radius:1px;"></div>
+        <div style="position:absolute;width:28px;height:4px;background:#00ff8c;opacity:0.35;transform:translate(50px,-55px) rotate(15deg);top:25%;right:15%;border-radius:1px;"></div>
+        <div style="position:absolute;width:18px;height:3px;background:#4fffb0;opacity:0.4;transform:translate(-30px,-70px) rotate(-40deg);top:40%;left:35%;border-radius:1px;"></div>
+        <div style="position:absolute;width:50px;height:5px;background:#00ff8c;opacity:0.28;transform:translate(70px,-35px) rotate(8deg);top:50%;right:10%;border-radius:1px;"></div>
+        <div style="position:absolute;width:12px;height:12px;background:transparent;border:1px solid #00ff8c;opacity:0.4;transform:translate(-80px,-50px) rotate(30deg);top:20%;left:10%;border-radius:2px;"></div>
+        <div style="position:absolute;width:20px;height:8px;background:#00ff8c;opacity:0.22;transform:translate(40px,-80px) rotate(-12deg);top:15%;right:20%;border-radius:1px;"></div>
+        <!-- Center remnant -->
+        <div style="font-family:monospace;font-size:22px;font-weight:900;letter-spacing:0.05em;color:#00ff8c;text-transform:uppercase;opacity:0.08;filter:blur(1px);">YOOBIN SEO</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Panel Shards</h3>
+      <p>The text and UI elements fracture into rectangular fragments — like a HUD screen taking a hit. Geometric, military, precise. Shards drift upward and fade. Feels like tech breaking apart.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="sparks" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#000;padding:24px 16px;min-height:200px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+      <!-- Spark explosion mockup -->
+      <div style="position:relative;width:100%;text-align:center;">
+        <!-- Spark dots flying outward -->
+        <div style="position:absolute;width:3px;height:3px;background:#00ff8c;border-radius:50%;opacity:0.8;transform:translate(-70px,-50px);top:50%;left:50%;box-shadow:0 0 6px #00ff8c;"></div>
+        <div style="position:absolute;width:2px;height:2px;background:#4fffb0;border-radius:50%;opacity:0.6;transform:translate(65px,-60px);top:50%;left:50%;box-shadow:0 0 4px #4fffb0;"></div>
+        <div style="position:absolute;width:4px;height:4px;background:#00ff8c;border-radius:50%;opacity:0.7;transform:translate(-20px,-85px);top:50%;left:50%;box-shadow:0 0 8px #00ff8c;"></div>
+        <div style="position:absolute;width:2px;height:2px;background:#00ff8c;border-radius:50%;opacity:0.5;transform:translate(40px,-75px);top:50%;left:50%;box-shadow:0 0 4px #00ff8c;"></div>
+        <div style="position:absolute;width:3px;height:8px;background:#00ff8c;border-radius:1px;opacity:0.55;transform:translate(-55px,-65px) rotate(-20deg);top:50%;left:50%;box-shadow:0 0 5px #00ff8c;"></div>
+        <div style="position:absolute;width:2px;height:6px;background:#4fffb0;border-radius:1px;opacity:0.45;transform:translate(80px,-40px) rotate(10deg);top:50%;left:50%;"></div>
+        <div style="position:absolute;width:2px;height:2px;background:#00ff8c;border-radius:50%;opacity:0.9;transform:translate(10px,-90px);top:50%;left:50%;box-shadow:0 0 6px #00ff8c;"></div>
+        <div style="position:absolute;width:3px;height:3px;background:#4fffb0;border-radius:50%;opacity:0.6;transform:translate(-90px,-30px);top:50%;left:50%;box-shadow:0 0 4px #4fffb0;"></div>
+        <!-- Faint text center -->
+        <div style="font-family:monospace;font-size:22px;font-weight:900;letter-spacing:0.05em;color:#00ff8c;text-transform:uppercase;opacity:0.05;filter:blur(2px);">YOOBIN SEO</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Energy Sparks</h3>
+      <p>The hero dissolves into glowing point particles — like a ship's systems shorting out. Dozens of tiny neon sparks burst upward from where text was. Feels electric and energetic.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="mixed" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#000;padding:24px 16px;min-height:200px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+      <!-- Mixed explosion: large shards + small sparks -->
+      <div style="position:relative;width:100%;text-align:center;">
+        <!-- Large shards -->
+        <div style="position:absolute;width:35px;height:5px;background:#00ff8c;opacity:0.4;transform:translate(-65px,-45px) rotate(-20deg);top:40%;left:20%;border-radius:1px;box-shadow:0 0 4px #00ff8c;"></div>
+        <div style="position:absolute;width:22px;height:4px;background:#00ff8c;opacity:0.35;transform:translate(55px,-50px) rotate(12deg);top:35%;right:18%;border-radius:1px;box-shadow:0 0 3px #00ff8c;"></div>
+        <!-- Small sparks -->
+        <div style="position:absolute;width:2px;height:2px;background:#00ff8c;border-radius:50%;opacity:0.9;transform:translate(-45px,-75px);top:50%;left:50%;box-shadow:0 0 5px #00ff8c;"></div>
+        <div style="position:absolute;width:2px;height:2px;background:#4fffb0;border-radius:50%;opacity:0.7;transform:translate(35px,-82px);top:50%;left:50%;box-shadow:0 0 4px #4fffb0;"></div>
+        <div style="position:absolute;width:2px;height:2px;background:#00ff8c;border-radius:50%;opacity:0.8;transform:translate(-10px,-90px);top:50%;left:50%;box-shadow:0 0 5px #00ff8c;"></div>
+        <div style="position:absolute;width:3px;height:3px;background:#00ff8c;border-radius:50%;opacity:0.6;transform:translate(70px,-60px);top:50%;left:50%;box-shadow:0 0 6px #00ff8c;"></div>
+        <div style="position:absolute;width:2px;height:5px;background:#00ff8c;opacity:0.5;transform:translate(-80px,-38px) rotate(-30deg);top:50%;left:50%;"></div>
+        <!-- Ring fragment -->
+        <div style="position:absolute;width:30px;height:30px;background:transparent;border:1px solid #00ff8c;opacity:0.25;transform:translate(-55px,-55px) rotate(20deg);top:30%;left:25%;border-radius:50%;"></div>
+        <!-- Center remnant -->
+        <div style="font-family:monospace;font-size:22px;font-weight:900;letter-spacing:0.05em;color:#00ff8c;text-transform:uppercase;opacity:0.06;filter:blur(1.5px);">YOOBIN SEO</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Shards + Sparks (Recommended)</h3>
+      <p>A few large panel fragments fly out while a burst of tiny sparks scatter upward — the way a real sci-fi explosion looks. The crosshair rings also break apart. Most cinematic of the three.</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:24px;font-size:11px;">All three styles are scroll-driven and progressive — the faster you scroll, the more dramatic the effect.</p>
