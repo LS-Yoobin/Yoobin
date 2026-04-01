@@ -600,6 +600,13 @@
     pointer-events: none;
     transition: opacity 0.9s cubic-bezier(0.4,0,0.2,1) 0.5s;
     z-index: 200;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  #next-page::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
   }
   #next-page.visible {
     opacity: 1;
@@ -612,9 +619,9 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 6rem 10vw;
+    padding: 6rem clamp(2rem, 12vw, 14rem);
     position: relative;
-    border-bottom: 1px solid rgba(34,197,94,0.08);
+  border-bottom: 0;
   }
 
   /* Subtle top-left bracket decoration */
@@ -800,7 +807,7 @@
     width: 1px;
     height: 80px;
     background: linear-gradient(180deg, rgba(34,197,94,0.5), transparent);
-    margin: 0 10vw;
+    margin: 0 clamp(2rem, 12vw, 14rem);
   }
 
   #next-page .np-divider,
@@ -840,6 +847,28 @@
     line-height: 1;
   }
   #section-work .work-heading .green { color: #22c55e; text-shadow: 0 0 24px rgba(34,197,94,0.35); }
+
+  #section-intro .np-label,
+  #section-intro .intro-layout {
+    width: min(100%, 1240px);
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #section-intro.np-section {
+    padding-left: clamp(2rem, 8vw, 10rem);
+    padding-right: clamp(2rem, 8vw, 10rem);
+  }
+  #section-work.np-section {
+    padding-left: clamp(2rem, 8vw, 10rem);
+    padding-right: clamp(2rem, 8vw, 10rem);
+  }
+  #section-work .np-label,
+  #section-work .work-heading,
+  #section-work .work-grid {
+    width: min(100%, 1240px);
+    margin-left: auto;
+    margin-right: auto;
+  }
 
   .work-grid {
     display: grid;
@@ -907,7 +936,7 @@
   .np-back {
     position: absolute; /* Place inside intro section flow at top */
     top: 5.2rem;
-    left: 50%;
+    left: 50vw;
     transform: translateX(-50%);
     font-size: 1.1rem;
     font-weight: 900;
@@ -933,7 +962,7 @@
   .np-next {
     position: absolute;
     bottom: 2rem;
-    left: 50%;
+    left: 50vw;
     transform: translateX(-50%);
     font-size: 1.1rem;
     font-weight: 900;
@@ -993,7 +1022,7 @@
   .top-nav {
     position: fixed;
     top: calc(env(safe-area-inset-top) + 20px);
-    left: 50%;
+    left: 50vw;
     transform: translateX(-50%);
     display: flex;
     align-items: center;
@@ -1045,7 +1074,8 @@
     position: fixed;
     top: calc(env(safe-area-inset-top) + 72px);
     left: 50%;
-    transform: translateX(-50%);
+    --hero-beta-x-shift: -4px;
+    transform: translateX(calc(-50% + var(--hero-beta-x-shift)));
     z-index: 520;
     display: inline-flex;
     align-items: center;
@@ -1070,12 +1100,13 @@
     border-color: rgba(150,255,198,0.95);
     background: rgba(34,197,94,0.12);
     box-shadow: inset 0 0 0 1px rgba(150,255,198,0.26), 0 0 22px rgba(34,197,94,0.28);
-    transform: translateX(-50%) translateY(-1px);
+    transform: translateX(calc(-50% + var(--hero-beta-x-shift))) translateY(-1px);
     outline: none;
   }
   body.is-next-page .hero-beta-link {
     top: calc(env(safe-area-inset-top) + 14px);
-    left: 12px;
+    left: auto;
+    right: 12px;
     transform: none;
     z-index: 705;
   }
@@ -3079,13 +3110,23 @@
   }
 
   const FIRE_SFX_SRC = '/ray%20gun%20sound.mp4';
-  const FIRE_SFX_VOLUME = 0.5;
+  const FIRE_SFX_VOLUME = 0.25;
   const fireSfx = new Audio(FIRE_SFX_SRC);
   fireSfx.preload = 'auto';
+  const SHIP_HIT_SFX_SRC = '/alexis_gaming_cam-ks-motion-metal-hit-351564.mp3';
+  const SHIP_HIT_SFX_VOLUME = 0.6;
+  const shipHitSfx = new Audio(SHIP_HIT_SFX_SRC);
+  shipHitSfx.preload = 'auto';
 
   function playFireSfx() {
     const sfx = fireSfx.cloneNode(true);
     sfx.volume = FIRE_SFX_VOLUME;
+    sfx.play().catch(() => {});
+  }
+
+  function playShipHitSfx() {
+    const sfx = shipHitSfx.cloneNode(true);
+    sfx.volume = SHIP_HIT_SFX_VOLUME;
     sfx.play().catch(() => {});
   }
 
@@ -3364,8 +3405,6 @@
   document.addEventListener('click', () => {
     playFireSfx();
     fireMissile(currentX, currentY);
-    // Rapid fire: shoot 3 in a slight spread
-    setTimeout(() => fireMissile(currentX, currentY), 60);
   });
 
   function updateMissiles() {
@@ -3400,6 +3439,7 @@
           const dist = Math.hypot(tx - m.x, ty - m.y);
           if (dist < HIT_RADIUS) {
             spawnExplosion(tx, ty, m.target);
+            playShipHitSfx();
             hitShips.add(m.target);
             const deadShip = m.target;
             const shipRect = deadShip.getBoundingClientRect();
