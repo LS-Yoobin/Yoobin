@@ -727,9 +727,15 @@
     display: none;
   }
   #next-page.work-direct-mode #section-work {
-    transform: none;
+    opacity: 0;
+    transform: translateY(18px);
     min-height: calc(100vh - 6.5rem);
     padding-top: 6.5rem;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+  #next-page.work-direct-mode.work-direct-visible #section-work {
+    opacity: 1;
+    transform: none;
   }
 
   /* ---- My Work section ---- */
@@ -1676,7 +1682,7 @@
       revealVisibleItems();
       updateIntroCardMotion();
       updateNavByScroll();
-    }, 600);
+    }, 260);
   }
 
   function exitNextPage() {
@@ -1692,14 +1698,15 @@
       
       // Delay un-shattering the text slightly so it fades in
       // right as the shapes hit the center
-      setTimeout(() => centerEl.classList.remove('shatter'), 600);
+      setTimeout(() => centerEl.classList.remove('shatter'), 320);
       
       setTimeout(() => {
         nextPage.scrollTop = 0;
         resetIntroCardMotion();
-      }, 500);
+      }, 260);
+      setTimeout(() => clearDirectWorkMode(), 520);
       heroScrolled = false;
-    }, 400); // 400ms delay to let the intro page start fading out first
+    }, 220); // shorter delay for snappier nav transitions
   }
 
   if (scrollHint) scrollHint.addEventListener('click', enterNextPage);
@@ -1738,6 +1745,12 @@
     }
   }
 
+  function clearDirectWorkMode() {
+    directWorkMode = false;
+    nextPage.classList.remove('work-direct-mode');
+    nextPage.classList.remove('work-direct-visible');
+  }
+
   function resetIntroCardMotion() {
     if (!introPlayerCard) return;
     introCardAnchor = null;
@@ -1750,8 +1763,6 @@
     introPlayerCard.style.transform = '';
     introPlayerCard.classList.remove('is-flipped');
     nextPage.style.setProperty('--work-push', '0px');
-    nextPage.classList.remove('work-direct-mode');
-    directWorkMode = false;
   }
 
   function updateIntroCardMotion() {
@@ -1834,10 +1845,16 @@
     if (selector === '#section-work') {
       directWorkMode = true;
       nextPage.classList.add('work-direct-mode');
+      nextPage.classList.remove('work-direct-visible');
       nextPage.style.setProperty('--work-push', '0px');
+      sectionWork?.querySelectorAll('.np-reveal').forEach((el) => el.classList.add('revealed'));
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => nextPage.classList.add('work-direct-visible'));
+      });
     } else {
       directWorkMode = false;
       nextPage.classList.remove('work-direct-mode');
+      nextPage.classList.remove('work-direct-visible');
     }
 
     if (!nextPage.classList.contains('visible')) {
@@ -1849,7 +1866,7 @@
           const target = document.querySelector(selector);
           if (target) nextPage.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
         }
-      }, 700);
+      }, 320);
     } else {
       if (selector === '#section-work') {
         nextPage.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1865,6 +1882,7 @@
       e.preventDefault();
       directWorkMode = false;
       nextPage.classList.remove('work-direct-mode');
+      nextPage.classList.remove('work-direct-visible');
       handleNavToSection('#section-intro');
       setActiveNav('nav-intro');
     });
@@ -1881,11 +1899,13 @@
   if (navHome) {
     navHome.addEventListener('click', (e) => {
       e.preventDefault();
-      directWorkMode = false;
-      nextPage.classList.remove('work-direct-mode');
       if (nextPage.classList.contains('visible')) {
+        // Keep the current mode during fade-out to avoid showing intro briefly.
         exitNextPage();
       } else {
+        directWorkMode = false;
+        nextPage.classList.remove('work-direct-mode');
+        nextPage.classList.remove('work-direct-visible');
         setActiveNav('nav-home');
       }
     });
@@ -1926,9 +1946,13 @@
     });
   }
   nextPage.addEventListener('scroll', () => {
-    if (directWorkMode && sectionWork && nextPage.scrollTop < sectionWork.offsetTop - 24) {
-      directWorkMode = false;
-      nextPage.classList.remove('work-direct-mode');
+    if (
+      nextPage.classList.contains('visible') &&
+      directWorkMode &&
+      sectionWork &&
+      nextPage.scrollTop < sectionWork.offsetTop - 24
+    ) {
+      clearDirectWorkMode();
     }
     revealVisibleItems();
     updateIntroCardMotion();
