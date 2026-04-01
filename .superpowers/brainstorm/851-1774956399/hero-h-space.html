@@ -738,13 +738,10 @@
     margin: 0 10vw;
   }
 
-  #next-page {
-    --work-push: 0px;
-  }
   #next-page .np-divider,
   #next-page #section-work {
-    transform: translateY(var(--work-push));
-    will-change: transform;
+    transform: none;
+    will-change: auto;
   }
   #next-page.work-direct-mode #section-intro .player-card {
     opacity: 0;
@@ -756,10 +753,10 @@
   }
   #next-page.work-direct-mode #section-work {
     opacity: 0;
-    transform: translateY(18px);
-    min-height: calc(100vh - 6.5rem);
-    padding-top: 6.5rem;
-    transition: opacity 0.35s ease, transform 0.35s ease;
+    transform: none;
+    min-height: inherit;
+    padding-top: inherit;
+    transition: opacity 0.35s ease;
   }
   #next-page.work-direct-mode.work-direct-visible #section-work {
     opacity: 1;
@@ -783,6 +780,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.5rem;
+    margin-top: 3.2rem;
   }
   .work-card {
     border: 1px solid rgba(34,197,94,0.15);
@@ -833,7 +831,6 @@
     color: rgba(34,197,94,0.5);
     text-transform: uppercase;
   }
-
   /* Back button */
   .np-back {
     position: absolute; /* Place inside intro section flow at top */
@@ -1026,6 +1023,7 @@
 
     #section-intro {
       padding-top: 10rem;
+      margin-bottom: 35vh;
     }
     #section-intro .intro-layout {
       margin-top: 1.2rem;
@@ -1039,7 +1037,9 @@
     }
 
     #section-work {
-      padding-top: 4.8rem !important;
+      min-height: 120vh;
+      padding-top: 6rem !important;
+      padding-bottom: 5.4rem;
     }
 
     #next-page {
@@ -1060,14 +1060,233 @@
     display: none;
   }
   #next-page #section-work {
-    transform: translateY(var(--work-push));
-    will-change: transform;
+    transform: none;
+    will-change: auto;
   }
   #next-page.work-direct-mode #section-intro {
     display: none;
   }
+  #section-intro {
+    min-height: 82vh;
+    padding-bottom: 8rem;
+    margin-bottom: 60vh;
+  }
   #section-work {
-    padding-top: 4.6rem;
+    min-height: 125vh;
+    padding-top: 8rem;
+    padding-bottom: 7rem;
+    justify-content: flex-start;
+  }
+
+  /* ---- Experience Journey section ---- */
+  #section-experience {
+    position: relative;
+    height: 560vh;
+    padding-top: 0;
+    margin-top: 30rem;
+  }
+  #section-experience .np-label {
+    position: absolute;
+    top: 2.4rem;
+    left: 3rem;
+    z-index: 12;
+  }
+  .ej-sticky {
+    position: sticky;
+    top: 6.5rem;
+    height: 100vh;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 16% 20%, rgba(34,197,94,0.14), transparent 32%),
+      radial-gradient(circle at 82% 28%, rgba(16,185,129,0.11), transparent 30%),
+      linear-gradient(to bottom, #020704 0%, #000 78%, #010402 100%);
+  }
+  .ej-bg-stars {
+    position: absolute;
+    inset: 0;
+    opacity: 0.68;
+    background-image:
+      radial-gradient(circle at 12% 24%, rgba(134,255,176,0.13), transparent 18%),
+      radial-gradient(circle at 82% 36%, rgba(56,255,162,0.1), transparent 20%),
+      radial-gradient(circle at 44% 84%, rgba(80,255,143,0.08), transparent 22%);
+    pointer-events: none;
+  }
+  .ej-lane {
+    position: absolute;
+    left: 50%;
+    top: -16%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 152%;
+    background: linear-gradient(to bottom, transparent, rgba(110,255,162,0.84), transparent);
+    box-shadow: 0 0 14px rgba(70,255,137,0.33);
+    will-change: transform;
+  }
+  .ej-lane-glow {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 0.8rem;
+    height: 34rem;
+    border-radius: 999px;
+    background: rgba(120,255,173,0.16);
+    filter: blur(1px);
+  }
+  .ej-character {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+    will-change: transform;
+  }
+  .ej-character-core {
+    position: relative;
+    width: 64px;
+    height: 116px;
+  }
+  .ej-head {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    border: 1px solid rgba(220,255,231,0.55);
+    background: rgba(74,222,128,0.9);
+    box-shadow: 0 0 18px rgba(110,255,170,0.52);
+  }
+  .ej-body {
+    position: absolute;
+    left: 50%;
+    top: 20px;
+    width: 30px;
+    height: 44px;
+    transform: translateX(-50%);
+    border-radius: 10px;
+    border: 1px solid rgba(220,255,231,0.35);
+    background: linear-gradient(to bottom, rgba(167,243,208,0.92), rgba(34,197,94,0.84));
+    box-shadow: 0 0 18px rgba(54,255,135,0.34);
+  }
+  .ej-limb {
+    position: absolute;
+    width: 6px;
+    transform-origin: top center;
+    border-radius: 999px;
+    background: rgba(220,255,231,0.85);
+    will-change: transform;
+  }
+  .ej-arm-left  { left: 16px; top: 32px; height: 30px; }
+  .ej-arm-right { right: 16px; top: 32px; height: 30px; }
+  .ej-leg-left  { left: 24px; top: 64px; height: 40px; }
+  .ej-leg-right { right: 24px; top: 64px; height: 40px; }
+  .ej-shadow {
+    margin: 8px auto 0;
+    width: 56px;
+    height: 2px;
+    background: rgba(110,255,170,0.74);
+    box-shadow: 0 0 14px rgba(90,255,152,0.66);
+  }
+  .ej-card {
+    position: absolute;
+    top: 50%;
+    width: min(34rem, 41vw);
+    transform: translateY(-50%);
+    border: 1px solid rgba(167,243,208,0.2);
+    border-radius: 16px;
+    background: rgba(0,0,0,0.38);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    padding: 1.25rem 1.35rem;
+    box-shadow:
+      0 0 0 1px rgba(120,255,170,0.06),
+      0 18px 48px rgba(5,25,12,0.58),
+      0 0 55px rgba(30,255,130,0.16);
+    opacity: 0;
+    will-change: transform, opacity, filter;
+  }
+  .ej-card.left  { right: calc(50% + 2.35rem); text-align: right; }
+  .ej-card.right { left: calc(50% + 2.35rem);  text-align: left; }
+  .ej-card .ej-chapter {
+    font-size: 0.62rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: rgba(187,247,208,0.62);
+  }
+  .ej-card .ej-role {
+    margin-top: 0.56rem;
+    font-size: clamp(1.05rem, 1.65vw, 1.28rem);
+    font-weight: 800;
+    color: rgba(236,253,245,0.96);
+  }
+  .ej-card .ej-company {
+    margin-top: 0.24rem;
+    font-size: 0.88rem;
+    color: rgba(187,247,208,0.86);
+  }
+  .ej-card .ej-dates {
+    margin-top: 0.36rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(187,247,208,0.48);
+  }
+  .ej-card ul {
+    margin: 0.86rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.44rem;
+    font-size: 0.8rem;
+    line-height: 1.55;
+    color: rgba(236,253,245,0.9);
+  }
+  .ej-card.right ul {
+    list-style: disc;
+    padding-left: 1rem;
+  }
+  .ej-card.left ul li::before {
+    content: '- ';
+    color: rgba(134,239,172,0.66);
+  }
+  .ej-vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, transparent 33%, rgba(0,0,0,0.74) 100%);
+    pointer-events: none;
+  }
+  @media (max-width: 900px) {
+    #section-experience {
+      height: 620vh;
+      margin-top: 18rem;
+    }
+    #section-experience .np-label {
+      left: 1.2rem;
+      top: 1.2rem;
+    }
+    .ej-card {
+      width: min(84vw, 26rem);
+      top: 58%;
+      text-align: left;
+    }
+    .ej-sticky {
+      top: 5.2rem;
+    }
+    .ej-card.left,
+    .ej-card.right {
+      left: 50%;
+      right: auto;
+      transform: translate(-50%, -50%);
+    }
+    .ej-card.left ul {
+      list-style: disc;
+      padding-left: 1rem;
+    }
+    .ej-card.left ul li::before {
+      content: '';
+    }
   }
 </style>
 </head>
@@ -1293,6 +1512,77 @@
         <div class="wc-desc">Photo, video, and copywriting produced for brands and personal creative projects.</div>
         <div class="wc-arrow">View Project &#8594;</div>
       </div>
+    </div>
+  </section>
+
+  <section id="section-experience">
+    <div class="np-label">//&nbsp;&nbsp;03 &mdash; Experience Journey</div>
+    <div class="ej-sticky">
+      <div class="ej-bg-stars"></div>
+      <div class="ej-lane"></div>
+      <div class="ej-lane-glow"></div>
+
+      <div class="ej-character" data-ej-character>
+        <div class="ej-character-core">
+          <div class="ej-head"></div>
+          <div class="ej-body"></div>
+          <div class="ej-limb ej-arm-left" data-ej-arm-left></div>
+          <div class="ej-limb ej-arm-right" data-ej-arm-right></div>
+          <div class="ej-limb ej-leg-left" data-ej-leg-left></div>
+          <div class="ej-limb ej-leg-right" data-ej-leg-right></div>
+        </div>
+        <div class="ej-shadow"></div>
+      </div>
+
+      <article class="ej-card left" data-ej-card data-side="left">
+        <div class="ej-chapter">Chapter 01</div>
+        <h3 class="ej-role">Frontend Engineer</h3>
+        <div class="ej-company">Aurora Labs</div>
+        <div class="ej-dates">2024 &mdash; Present</div>
+        <ul>
+          <li>Built high-fidelity UI systems for immersive marketing pages.</li>
+          <li>Reduced interaction latency by 31% through animation budgeting.</li>
+          <li>Shipped reusable motion primitives with design partners.</li>
+        </ul>
+      </article>
+
+      <article class="ej-card right" data-ej-card data-side="right">
+        <div class="ej-chapter">Chapter 02</div>
+        <h3 class="ej-role">Product Designer + Developer</h3>
+        <div class="ej-company">Nebula Studio</div>
+        <div class="ej-dates">2022 &mdash; 2024</div>
+        <ul>
+          <li>Designed and built portfolio platforms for creative founders.</li>
+          <li>Introduced a component kit that cut delivery time by 40%.</li>
+          <li>Led storytelling scroll launches across multiple brands.</li>
+        </ul>
+      </article>
+
+      <article class="ej-card left" data-ej-card data-side="left">
+        <div class="ej-chapter">Chapter 03</div>
+        <h3 class="ej-role">UI Engineer</h3>
+        <div class="ej-company">Greenframe Collective</div>
+        <div class="ej-dates">2020 &mdash; 2022</div>
+        <ul>
+          <li>Created an accessible design system with dark-first direction.</li>
+          <li>Implemented responsive animation patterns for all breakpoints.</li>
+          <li>Raised Core Web Vitals from low 70s to mid 90s.</li>
+        </ul>
+      </article>
+
+      <article class="ej-card right" data-ej-card data-side="right">
+        <div class="ej-chapter">Chapter 04</div>
+        <h3 class="ej-role">Interactive Intern</h3>
+        <div class="ej-company">Pixel Harbor</div>
+        <div class="ej-dates">2019 &mdash; 2020</div>
+        <ul>
+          <li>Prototyped scroll storytelling concepts for campaign microsites.</li>
+          <li>Built modular React-style sections for multi-brand delivery.</li>
+          <li>Documented handoff patterns that reduced QA loops.</li>
+        </ul>
+      </article>
+
+      <div class="ej-vignette"></div>
     </div>
   </section>
 </div>
@@ -1931,6 +2221,14 @@
   const navMenu = document.getElementById('nav-menu');
   const sectionIntro = document.getElementById('section-intro');
   const sectionWork = document.getElementById('section-work');
+  const sectionExperience = document.getElementById('section-experience');
+  const journeyLane = sectionExperience?.querySelector('.ej-lane');
+  const journeyCharacter = sectionExperience?.querySelector('[data-ej-character]');
+  const journeyArmLeft = sectionExperience?.querySelector('[data-ej-arm-left]');
+  const journeyArmRight = sectionExperience?.querySelector('[data-ej-arm-right]');
+  const journeyLegLeft = sectionExperience?.querySelector('[data-ej-leg-left]');
+  const journeyLegRight = sectionExperience?.querySelector('[data-ej-leg-right]');
+  const journeyCards = sectionExperience ? Array.from(sectionExperience.querySelectorAll('[data-ej-card]')) : [];
   const introDivider = document.querySelector('.np-divider');
   const introPlayerCard = sectionIntro?.querySelector('.player-card');
   let introCardAnchor = null;
@@ -1983,6 +2281,59 @@
     });
   }
 
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
+  function updateExperienceJourney() {
+    if (!sectionExperience || !nextPage.classList.contains('visible')) return;
+
+    const sectionTop = sectionExperience.offsetTop;
+    const sectionHeight = sectionExperience.offsetHeight;
+    const scrollRange = Math.max(1, sectionHeight - window.innerHeight);
+    const progress = clamp((nextPage.scrollTop - sectionTop) / scrollRange, 0, 1);
+
+    if (journeyLane) {
+      journeyLane.style.transform = 'translate3d(-50%, ' + (-160 * progress).toFixed(2) + 'px, 0)';
+    }
+
+    const stride = Math.sin(progress * Math.PI * 20);
+    if (journeyCharacter) {
+      journeyCharacter.style.transform = 'translate3d(-50%, calc(-50% + ' + (stride * 4).toFixed(2) + 'px), 0)';
+    }
+    if (journeyArmLeft) {
+      journeyArmLeft.style.transform = 'rotate(' + (-stride * 12).toFixed(2) + 'deg)';
+    }
+    if (journeyArmRight) {
+      journeyArmRight.style.transform = 'rotate(' + (stride * 12).toFixed(2) + 'deg)';
+    }
+    if (journeyLegLeft) {
+      journeyLegLeft.style.transform = 'rotate(' + (stride * 16).toFixed(2) + 'deg)';
+    }
+    if (journeyLegRight) {
+      journeyLegRight.style.transform = 'rotate(' + (-stride * 16).toFixed(2) + 'deg)';
+    }
+
+    const total = journeyCards.length || 1;
+    journeyCards.forEach((card, index) => {
+      const start = index / total;
+      const end = (index + 1) / total;
+      const chapterProgress = clamp((progress - start) / (end - start), 0, 1);
+      const reveal = chapterProgress < 0.35 ? chapterProgress / 0.35 : 1;
+      const settle = chapterProgress > 0.78 ? (chapterProgress - 0.78) / 0.22 : 0;
+      const side = card.getAttribute('data-side') === 'left' ? -1 : 1;
+
+      const opacity = clamp(0.08 + reveal * 0.92 - settle * 0.5, 0.08, 1);
+      const x = (1 - reveal) * 56 * side;
+      const scale = 0.97 + reveal * 0.03 - settle * 0.02;
+      const blur = (1 - reveal) * 10 + settle * 2;
+
+      card.style.opacity = opacity.toFixed(3);
+      card.style.transform = 'translate3d(' + x.toFixed(2) + 'px, -50%, 0) scale(' + scale.toFixed(4) + ')';
+      card.style.filter = 'blur(' + blur.toFixed(2) + 'px)';
+    });
+  }
+
   function updateNavByScroll() {
     if (!sectionIntro || !sectionWork) return;
     if (!nextPage.classList.contains('visible')) {
@@ -2017,7 +2368,6 @@
     introPlayerCard.style.zIndex = '';
     introPlayerCard.style.transform = '';
     introPlayerCard.classList.remove('is-flipped');
-    nextPage.style.setProperty('--work-push', '0px');
   }
 
   function updateIntroCardMotion() {
@@ -2031,9 +2381,8 @@
       introPlayerCard.style.margin = '';
       introPlayerCard.style.zIndex = '';
       introPlayerCard.style.transform = '';
-      nextPage.style.setProperty('--work-push', '0px');
       const localScroll = Math.max(0, nextPage.scrollTop - sectionIntro.offsetTop);
-      const introRange = Math.max(1, sectionWork.offsetTop - sectionIntro.offsetTop);
+      const introRange = Math.max(1, sectionIntro.offsetHeight);
       const mobileFlipThreshold = Math.min(340, introRange * 0.45);
       if (!mobileCardAutoFlipped && localScroll > mobileFlipThreshold) {
         mobileCardAutoFlipped = true;
@@ -2054,7 +2403,6 @@
       introPlayerCard.style.zIndex = '';
       introPlayerCard.style.transform = '';
       introPlayerCard.classList.remove('is-flipped');
-      nextPage.style.setProperty('--work-push', '0px');
       return;
     }
 
@@ -2076,11 +2424,11 @@
 
     const scaleMax = 1.32;
     const targetLeft = (window.innerWidth / 2) - (introCardAnchor.width / 2);
-    const targetTop = (window.innerHeight / 2) - (introCardAnchor.height / 2);
-    const dividerY = introDivider
-      ? introDivider.offsetTop + (introDivider.offsetHeight / 2)
-      : sectionWork.offsetTop;
-    const lockAt = Math.max(90, dividerY - sectionIntro.offsetTop - targetTop);
+    const targetTop = (window.innerHeight / 2) - (introCardAnchor.height / 2) + 44;
+    const lockAt = Math.max(
+      170,
+      Math.min(sectionIntro.offsetHeight * 0.48, window.innerHeight * 0.68),
+    );
     const progress = Math.max(0, Math.min(1, localScroll / lockAt));
 
     const left = introCardAnchor.left + ((targetLeft - introCardAnchor.left) * progress);
@@ -2089,11 +2437,6 @@
     const lockScrollTop = sectionIntro.offsetTop + lockAt;
     const anchoredAbsoluteTop = lockScrollTop + targetTop;
     const anchoredAbsoluteLeft = (nextPage.clientWidth / 2) - (introCardAnchor.width / 2);
-
-    const gap = 42;
-    const desiredWorkTopAtLock = anchoredAbsoluteTop + (introCardAnchor.height * scaleMax) + gap;
-    const workPush = Math.max(0, desiredWorkTopAtLock - sectionWork.offsetTop);
-    nextPage.style.setProperty('--work-push', `${(workPush * progress).toFixed(2)}px`);
 
     const atCenter = progress >= 0.995;
     introPlayerCard.classList.toggle('is-flipped', atCenter);
@@ -2119,38 +2462,19 @@
   }
 
   function handleNavToSection(selector) {
-    if (selector === '#section-work') {
-      directWorkMode = true;
-      nextPage.classList.add('work-direct-mode');
-      nextPage.classList.remove('work-direct-visible');
-      nextPage.style.setProperty('--work-push', '0px');
-      sectionWork?.querySelectorAll('.np-reveal').forEach((el) => el.classList.add('revealed'));
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => nextPage.classList.add('work-direct-visible'));
-      });
-    } else {
-      directWorkMode = false;
-      nextPage.classList.remove('work-direct-mode');
-      nextPage.classList.remove('work-direct-visible');
-    }
+    directWorkMode = false;
+    nextPage.classList.remove('work-direct-mode');
+    nextPage.classList.remove('work-direct-visible');
 
     if (!nextPage.classList.contains('visible')) {
       enterNextPage();
       setTimeout(() => {
-        if (selector === '#section-work') {
-          nextPage.scrollTo({ top: 0, behavior: 'smooth' });
-        } else {
-          const target = document.querySelector(selector);
-          if (target) nextPage.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
-        }
-      }, 320);
-    } else {
-      if (selector === '#section-work') {
-        nextPage.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
         const target = document.querySelector(selector);
         if (target) nextPage.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
-      }
+      }, 320);
+    } else {
+      const target = document.querySelector(selector);
+      if (target) nextPage.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
     }
   }
 
@@ -2282,14 +2606,17 @@
     }
     revealVisibleItems();
     updateIntroCardMotion();
+    updateExperienceJourney();
     updateNavByScroll();
   });
   window.addEventListener('resize', () => {
     introCardAnchor = null;
     if (!isMobileViewport()) closeMobileNav();
     updateIntroCardMotion();
+    updateExperienceJourney();
     updateNavByScroll();
   });
+  updateExperienceJourney();
   updateNavByScroll();
 
 </script>
