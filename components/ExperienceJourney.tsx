@@ -215,7 +215,7 @@ export default function ExperienceJourney() {
         </motion.div>
 
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_33%,rgba(0,0,0,0.72)_100%)]" />
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-black/90 to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-black via-black/75 to-transparent md:h-36 md:from-black/90 md:via-black/55" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-black to-transparent" />
       </div>
     </section>
