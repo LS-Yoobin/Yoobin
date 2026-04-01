@@ -3089,6 +3089,7 @@ TIME TRAVEL</span>
   preload="auto"
   autoplay
   muted
+  loop
   playsinline
 ></audio>
 
@@ -3256,13 +3257,13 @@ TIME TRAVEL</span>
       updateBgMusicDebug('primed-muted', 'markup autoplay already running');
     }
     primeBgMusicMutedAutoplay();
-    bgMusic.loop = false;
+    bgMusic.loop = true;
     bgMusic.addEventListener('playing', () => {
       bgMusicEndingFadeArmed = false;
       updateBgMusicDebug('playing-event', 'native "playing" event');
     });
     bgMusic.addEventListener('timeupdate', () => {
-      if (!bgMusic || bgMusic.paused || bgMusicEndingFadeArmed) return;
+      if (!bgMusic || bgMusic.loop || bgMusic.paused || bgMusicEndingFadeArmed) return;
       if (!Number.isFinite(bgMusic.duration) || bgMusic.duration <= 0) return;
       const remaining = bgMusic.duration - bgMusic.currentTime;
       if (remaining <= BG_MUSIC_END_FADE_LEAD_SECONDS) {

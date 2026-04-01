@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, type MotionValue, useScroll, useTransform } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { EXPERIENCE_ITEMS, type ExperienceItem } from "@/components/experienceJourneyData";
+import { trackProjectView } from "@/lib/analytics";
 
 const CHAPTER_SPAN = 1 / EXPERIENCE_ITEMS.length;
 
@@ -115,6 +116,7 @@ function JourneyCard({
       aria-label={`${item.role} at ${item.company}, ${item.dates}`}
       onClick={() => {
         if (!onOpen || !cardRef.current) return;
+        trackProjectView(item.role, "experience_timeline", "react_card");
         onOpen(item, index, cardRef.current.getBoundingClientRect());
       }}
     >

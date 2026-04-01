@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
+import AnalyticsEventBridge from "@/components/AnalyticsEventBridge";
 import SmoothScroll from "@/components/SmoothScroll";
 
 export const metadata: Metadata = {
@@ -30,6 +31,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body>
+        <AnalyticsEventBridge />
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
