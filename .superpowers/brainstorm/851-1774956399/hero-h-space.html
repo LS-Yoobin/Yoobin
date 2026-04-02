@@ -291,37 +291,91 @@
   }
 
   .id-tag {
-    font-size: 0.6rem;
-    letter-spacing: 0.3em;
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    font-size: clamp(0.58rem, 1.6vw, 0.68rem);
+    letter-spacing: 0.22em;
     color: #fff;
     font-weight: 800;
     text-transform: uppercase;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.1rem;
     animation: fade-in 1s ease 0.5s both;
   }
 
-  .name {
+  /* Y (asset) + SEO / OOBIN wordmark — reference layout */
+  .name.wordmark {
     font-family: 'Arial Black', 'Arial', sans-serif;
-    font-size: clamp(3rem, 8vw, 6rem);
-    font-weight: 900;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
     text-transform: uppercase;
-    letter-spacing: -0.03em;
-    line-height: 0.9;
-    color: #fff;
-    text-shadow: 0 0 60px rgba(34,197,94,0.1);
     animation: fade-in 1s ease 0.2s both;
   }
-  .name .green { color: var(--hero-green); text-shadow: 0 0 30px rgba(34,197,94,0.4); }
+  .wordmark-y-wrap {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: clamp(5rem, 15.5vw, 8.75rem);
+    margin-right: clamp(-2.8rem, -5vw, -2rem);
+    overflow: visible;
+    max-width: clamp(5.5rem, 14vw, 8.5rem);
+    background: transparent;
+  }
+  .wordmark-y {
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    display: block;
+    object-fit: contain;
+    object-position: left center;
+    background: transparent;
+  }
+  .wordmark-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0.02em;
+    line-height: 0.95;
+    transform: translateX(-0.1em) translateY(calc(clamp(0.2rem, 0.5vw, 0.32rem) - 2px));
+  }
+  .wordmark-seo {
+    font-size: clamp(1.2rem, 3.8vw, 2.35rem);
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    color: var(--hero-green);
+    text-shadow: 0 0 28px rgba(34,197,94,0.5);
+    /* Shift SEO slightly to the right over OOBIN */
+    align-self: flex-end;
+  }
+  .wordmark-oobin {
+    font-size: clamp(2.5rem, 8vw, 5.5rem);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.95);
+    text-shadow: 0 0 18px rgba(34, 197, 94, 0.12);
+  }
 
   .role {
-    font-size: 1.4rem;
+    font-family: 'Arial Black', 'Arial', sans-serif;
+    font-size: clamp(0.78rem, 1.85vw, 1.05rem);
     font-weight: 900;
-    letter-spacing: 0.25em;
-    -webkit-text-stroke: 0.5px rgba(34,197,94,0.4);
-    color: rgba(34,197,94,0.6);
+    letter-spacing: 0.18em;
+    color: var(--hero-green);
     text-transform: uppercase;
-    margin-top: 1.2rem;
+    margin-top: 1.15rem;
     animation: fade-in 1s ease 0.8s both;
+  }
+  .role .role-dot {
+    display: inline-block;
+    color: var(--hero-green);
+    margin: 0 0.35em;
+    opacity: 0.95;
+    font-weight: 900;
   }
   .role .role-mobile {
     display: none;
@@ -365,10 +419,10 @@
     text-align: center;
     line-height: 1;
     padding: 0.78rem 1.5rem;
-    border: 1px solid rgba(34,197,94,0.56);
+    border: 1px solid rgba(34,197,94,0.75);
     border-radius: 999px;
-    background: linear-gradient(180deg, rgba(2,14,9,0.66), rgba(1,10,7,0.5));
-    box-shadow: 0 0 20px rgba(34,197,94,0.18), inset 0 0 18px rgba(34,197,94,0.1);
+    background: transparent;
+    box-shadow: 0 0 22px rgba(34,197,94,0.2);
     transition: box-shadow 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
   }
   .scroll-hint .hint-desktop,
@@ -1285,6 +1339,35 @@
       font-size: 1rem;
       font-weight: 900;
       text-transform: uppercase;
+    }
+
+    .name.wordmark {
+      flex-direction: row;
+      align-items: center;
+      gap: 0;
+    }
+    .wordmark-y-wrap {
+      height: clamp(3.2rem, 18vw, 5rem);
+      max-width: clamp(3.2rem, 18vw, 5rem);
+      margin-right: clamp(-1.8rem, -5vw, -1.2rem);
+      overflow: visible;
+    }
+    .wordmark-text {
+      align-items: flex-start;
+      justify-content: center;
+      transform: translateX(-0.1em) translateY(clamp(0.25rem, 1vw, 0.4rem));
+    }
+    .wordmark-seo {
+      align-self: flex-end;
+      font-size: clamp(0.75rem, 2.8vw, 1.2rem);
+    }
+    .wordmark-oobin {
+      font-size: clamp(1.6rem, 6vw, 3rem);
+    }
+    .wordmark-y {
+      object-fit: contain;
+      width: 100%;
+      height: 100%;
     }
 
     #section-intro {
@@ -2673,9 +2756,17 @@
 
   <div class="center">
     <div class="id-tag" id="hud-kill-counter">Click to Shoot</div>
-    <div class="name">YOOBIN<br><span class="green">SEO</span></div>
+    <div class="name wordmark" aria-label="Yoobin SEO">
+      <div class="wordmark-y-wrap">
+        <img class="wordmark-y" src="/hero-y-logo.png" alt="" width="200" height="220" decoding="async" />
+      </div>
+      <div class="wordmark-text">
+        <span class="wordmark-seo">SEO</span>
+        <span class="wordmark-oobin" aria-hidden="true">OOBIN</span>
+      </div>
+    </div>
     <div class="role">
-      <span class="role-desktop">UI/UX Designer · Co-Founder · Product Builder</span>
+      <span class="role-desktop">UI/UX DESIGNER <span class="role-dot" aria-hidden="true">•</span> CO-FOUNDER <span class="role-dot" aria-hidden="true">•</span> PRODUCT BUILDER</span>
       <span class="role-mobile">UI/UX DESIGNER</span>
       <span class="role-mobile">CO-FOUNDER</span>
       <span class="role-mobile">PRODUCT BUILDER</span>
@@ -3401,10 +3492,16 @@ TIME TRAVEL</span>
       updateBgMusicDebug('error-event', 'native audio error');
     });
 
-    // Ensure background music does not continue when app/browser is exited/backgrounded.
+    // Mobile web: stop when the tab is hidden (saves battery, matches app-like behavior).
+    // Desktop / wide viewports: keep playing when switching tabs; still stop on real unload via pagehide/beforeunload.
+    function shouldStopBgMusicOnDocumentHidden() {
+      return window.matchMedia('(max-width: 900px)').matches;
+    }
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'hidden') {
-        stopBgMusicForPageExit('visibility-hidden', true);
+        if (shouldStopBgMusicOnDocumentHidden()) {
+          stopBgMusicForPageExit('visibility-hidden', true);
+        }
         return;
       }
       attemptResumeBgMusicFromReturn('visibility-visible');
@@ -4136,6 +4233,7 @@ TIME TRAVEL</span>
   let tickerSwitchTimer = null;
   let experienceSnapLock = false;
   let experienceEntrySnapDone = false;
+  let ejChapterSnapLock = false;
 
   if (npNext && sectionWork) {
     npNext.addEventListener('click', () => {
@@ -4442,6 +4540,40 @@ TIME TRAVEL</span>
     setActiveNav('nav-resume');
     setTimeout(() => { experienceSnapLock = false; }, 700);
     return true;
+  }
+
+  function maybeSnapExperienceChapter(deltaY) {
+    if (ejChapterSnapLock || experienceSnapLock || !sectionExperience || !nextPage.classList.contains('visible')) return false;
+    const viewportHeight = nextPage.clientHeight || window.innerHeight;
+    const sectionTop = sectionExperience.offsetTop;
+    const sectionEnd = sectionTop + sectionExperience.offsetHeight - viewportHeight;
+    const inExperience = nextPage.scrollTop >= sectionTop - 10 && nextPage.scrollTop <= sectionEnd + 10;
+    if (!inExperience) return false;
+    const currentIndex = getActiveExperienceIndex();
+    const total = journeyCards.length;
+    if (deltaY > 0) {
+      if (currentIndex >= total - 1) {
+        // At last card — snap directly to expertise so we never overshoot and bounce back
+        if (!sectionExpertise || nextPage.scrollTop >= sectionExpertise.offsetTop - 10) return false;
+        ejChapterSnapLock = true;
+        experienceSnapLock = true;
+        nextPage.scrollTo({ top: sectionExpertise.offsetTop, behavior: 'smooth' });
+        setActiveNav('nav-more');
+        setTimeout(() => { ejChapterSnapLock = false; experienceSnapLock = false; }, 900);
+        return true;
+      }
+      ejChapterSnapLock = true;
+      scrollToExperienceChapter(currentIndex + 1);
+      setTimeout(() => { ejChapterSnapLock = false; }, 850);
+      return true;
+    } else if (deltaY < 0) {
+      if (currentIndex <= 0) return false; // let normal scroll handle exit at top
+      ejChapterSnapLock = true;
+      scrollToExperienceChapter(currentIndex - 1);
+      setTimeout(() => { ejChapterSnapLock = false; }, 850);
+      return true;
+    }
+    return false;
   }
 
   function updateIntroNextCtaVisibility() {
@@ -4754,6 +4886,10 @@ TIME TRAVEL</span>
       e.preventDefault();
       return;
     }
+    if (maybeSnapExperienceChapter(e.deltaY)) {
+      e.preventDefault();
+      return;
+    }
     if (maybeSnapExperienceToMore(e.deltaY)) {
       e.preventDefault();
       return;
@@ -4795,7 +4931,14 @@ TIME TRAVEL</span>
     }
   }, { passive: true });
 
-  nextPage.addEventListener('touchend', () => {
+  nextPage.addEventListener('touchend', (e) => {
+    if (!nextTouchHandled && nextTouchStartY != null && e.changedTouches && e.changedTouches.length > 0) {
+      const endY = e.changedTouches[0].clientY;
+      const deltaY = nextTouchStartY - endY;
+      if (Math.abs(deltaY) > 40 && maybeSnapExperienceChapter(deltaY)) {
+        nextTouchHandled = true;
+      }
+    }
     nextTouchStartY = null;
     nextTouchHandled = false;
   }, { passive: true });
