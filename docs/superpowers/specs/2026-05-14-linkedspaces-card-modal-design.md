@@ -21,6 +21,7 @@ The existing LinkedSpaces card needs two updates to reflect the travel app frami
 | Tag (`.wc-tag`) | `UI / UX Design` | `Product / Travel App` |
 | Title (`.wc-title`) | `LinkedSpaces` | `LINKEDSPACES` |
 | Description (`.wc-desc`) | "End-to-end product design for a professional networking start-up connecting people through shared spaces." | "A social travel platform built to help people map, save, and share the places that matter to them." |
+| Arrow (`.wc-arrow`) | `View Project →` | unchanged — leave as-is |
 
 The card also needs:
 - `id="work-card-linkedspaces"` added for JS targeting
@@ -106,5 +107,5 @@ Inherits the same breakpoint as the Bloggo modal — no new media query needed.
 - All changes confined to `hero-h-space.html`
 - **CSS:** No new styles needed — LinkedSpaces modal reuses all existing `bm-*` and `bloggo-modal-*` class rules. Add new ID-based selectors only if needed.
 - **HTML:** Add `id="work-card-linkedspaces"` to the existing LinkedSpaces card div. Update card tag/title/desc. Add a new modal node (parallel to `#bloggo-modal`) after the Bloggo modal closing tag.
-- **JS:** Add a new IIFE parallel to the Bloggo modal IIFE — same open/close/Escape pattern, referencing `#linkedspaces-modal`, `#work-card-linkedspaces`, `#linkedspaces-modal-close`. Register `window.closeLinkedSpacesModal` and hook it into the existing Escape keydown handler.
+- **JS:** Add a new IIFE parallel to the Bloggo modal IIFE — same open/close/Escape pattern, referencing `#linkedspaces-modal`, `#work-card-linkedspaces`, `#linkedspaces-modal-close`. Register `window.closeLinkedSpacesModal` on the IIFE. Do **not** add a second `keydown` listener. Instead, edit the single existing `document.addEventListener('keydown', ...)` block in-place (currently at ~line 5358) to add `if (window.closeLinkedSpacesModal) window.closeLinkedSpacesModal();` as a second line inside the `if (e.key === 'Escape')` body, alongside the existing `closeBloggoModal` call.
 - No new dependencies required.
