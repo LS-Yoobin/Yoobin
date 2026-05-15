@@ -5509,11 +5509,83 @@ TIME TRAVEL</span>
   })();
   // ── End LinkedSpaces modal ────────────────────────────────
 
+  // ── Graphic Design modal ──────────────────────────────────
+  (function () {
+    const backdrop = document.getElementById('graphic-design-modal');
+    const card     = document.getElementById('work-card-graphic-design');
+    const closeBtn = document.getElementById('graphic-design-modal-close');
+    if (!backdrop || !card || !closeBtn) return;
+
+    function openGraphicDesignModal() {
+      backdrop.classList.remove('closing');
+      backdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      closeBtn.focus();
+    }
+
+    function closeGraphicDesignModal() {
+      if (!backdrop.classList.contains('open')) return;
+      backdrop.classList.add('closing');
+      backdrop.addEventListener('animationend', function handler() {
+        backdrop.classList.remove('open', 'closing');
+        document.body.style.overflow = '';
+        backdrop.removeEventListener('animationend', handler);
+        card.focus();
+      });
+    }
+
+    window.closeGraphicDesignModal = closeGraphicDesignModal;
+
+    card.addEventListener('click', openGraphicDesignModal);
+    closeBtn.addEventListener('click', closeGraphicDesignModal);
+    backdrop.addEventListener('click', function (e) {
+      if (e.target === backdrop) closeGraphicDesignModal();
+    });
+  })();
+  // ── End Graphic Design modal ──────────────────────────────
+
+  // ── Digital Media modal ───────────────────────────────────
+  (function () {
+    const backdrop = document.getElementById('digital-media-modal');
+    const card     = document.getElementById('work-card-digital-media');
+    const closeBtn = document.getElementById('digital-media-modal-close');
+    if (!backdrop || !card || !closeBtn) return;
+
+    function openDigitalMediaModal() {
+      backdrop.classList.remove('closing');
+      backdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      closeBtn.focus();
+    }
+
+    function closeDigitalMediaModal() {
+      if (!backdrop.classList.contains('open')) return;
+      backdrop.classList.add('closing');
+      backdrop.addEventListener('animationend', function handler() {
+        backdrop.classList.remove('open', 'closing');
+        document.body.style.overflow = '';
+        backdrop.removeEventListener('animationend', handler);
+        card.focus();
+      });
+    }
+
+    window.closeDigitalMediaModal = closeDigitalMediaModal;
+
+    card.addEventListener('click', openDigitalMediaModal);
+    closeBtn.addEventListener('click', closeDigitalMediaModal);
+    backdrop.addEventListener('click', function (e) {
+      if (e.target === backdrop) closeDigitalMediaModal();
+    });
+  })();
+  // ── End Digital Media modal ───────────────────────────────
+
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       closeOiPopup();
       if (window.closeBloggoModal) window.closeBloggoModal(); // set by Bloggo modal IIFE
       if (window.closeLinkedSpacesModal) window.closeLinkedSpacesModal(); // set by LinkedSpaces modal IIFE
+      if (window.closeGraphicDesignModal) window.closeGraphicDesignModal(); // set by Graphic Design modal IIFE
+      if (window.closeDigitalMediaModal)  window.closeDigitalMediaModal();  // set by Digital Media modal IIFE
     }
   });
 
