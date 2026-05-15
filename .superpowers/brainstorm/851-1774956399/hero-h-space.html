@@ -5320,8 +5320,44 @@ TIME TRAVEL</span>
     });
   }
 
+  // ── Bloggo modal ──────────────────────────────────────────
+  (function () {
+    const backdrop = document.getElementById('bloggo-modal');
+    const card     = document.getElementById('work-card-bloggo');
+    const closeBtn = document.getElementById('bloggo-modal-close');
+    if (!backdrop || !card || !closeBtn) return;
+
+    function openBloggoModal() {
+      backdrop.classList.remove('closing');
+      backdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeBloggoModal() {
+      if (!backdrop.classList.contains('open')) return;
+      backdrop.classList.add('closing');
+      backdrop.addEventListener('animationend', function handler() {
+        backdrop.classList.remove('open', 'closing');
+        document.body.style.overflow = '';
+        backdrop.removeEventListener('animationend', handler);
+      });
+    }
+
+    window.closeBloggoModal = closeBloggoModal;
+
+    card.addEventListener('click', openBloggoModal);
+    closeBtn.addEventListener('click', closeBloggoModal);
+    backdrop.addEventListener('click', function (e) {
+      if (e.target === backdrop) closeBloggoModal();
+    });
+  })();
+  // ── End Bloggo modal ──────────────────────────────────────
+
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeOiPopup();
+    if (e.key === 'Escape') {
+      closeOiPopup();
+      closeBloggoModal(); // calls window.closeBloggoModal set by the IIFE above
+    }
   });
 
   oiCards.forEach((card) => {
