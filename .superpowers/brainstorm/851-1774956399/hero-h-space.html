@@ -5395,10 +5395,46 @@ TIME TRAVEL</span>
   })();
   // ── End Bloggo modal ──────────────────────────────────────
 
+  // ── LinkedSpaces modal ────────────────────────────────────
+  (function () {
+    const backdrop = document.getElementById('linkedspaces-modal');
+    const card     = document.getElementById('work-card-linkedspaces');
+    const closeBtn = document.getElementById('linkedspaces-modal-close');
+    if (!backdrop || !card || !closeBtn) return;
+
+    function openLinkedSpacesModal() {
+      backdrop.classList.remove('closing');
+      backdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      closeBtn.focus();
+    }
+
+    function closeLinkedSpacesModal() {
+      if (!backdrop.classList.contains('open')) return;
+      backdrop.classList.add('closing');
+      backdrop.addEventListener('animationend', function handler() {
+        backdrop.classList.remove('open', 'closing');
+        document.body.style.overflow = '';
+        backdrop.removeEventListener('animationend', handler);
+        card.focus();
+      });
+    }
+
+    window.closeLinkedSpacesModal = closeLinkedSpacesModal;
+
+    card.addEventListener('click', openLinkedSpacesModal);
+    closeBtn.addEventListener('click', closeLinkedSpacesModal);
+    backdrop.addEventListener('click', function (e) {
+      if (e.target === backdrop) closeLinkedSpacesModal();
+    });
+  })();
+  // ── End LinkedSpaces modal ────────────────────────────────
+
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       closeOiPopup();
       if (window.closeBloggoModal) window.closeBloggoModal(); // set by Bloggo modal IIFE
+      if (window.closeLinkedSpacesModal) window.closeLinkedSpacesModal(); // set by LinkedSpaces modal IIFE
     }
   });
 
