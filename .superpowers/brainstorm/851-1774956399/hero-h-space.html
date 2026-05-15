@@ -1025,12 +1025,12 @@
     width: 100%;
     max-width: 700px;
     position: relative;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     animation: bm-scale-in 0.22s ease-out;
     font-family: 'Courier New', monospace;
     color: #fff;
     max-height: 90vh;
-    overflow-y: auto;
   }
   .bloggo-modal-backdrop.closing .bloggo-modal-panel {
     animation: bm-scale-out 0.18s ease-in forwards;
@@ -1104,7 +1104,7 @@
     margin-top: 1.1rem;
     display: block;
   }
-  .bm-label:first-child { margin-top: 0; }
+  .bm-right > .bm-label:first-of-type { margin-top: 0; }
   .bm-body {
     font-size: 0.78rem;
     line-height: 1.75;
@@ -5331,6 +5331,7 @@ TIME TRAVEL</span>
       backdrop.classList.remove('closing');
       backdrop.classList.add('open');
       document.body.style.overflow = 'hidden';
+      closeBtn.focus();
     }
 
     function closeBloggoModal() {
@@ -5340,6 +5341,7 @@ TIME TRAVEL</span>
         backdrop.classList.remove('open', 'closing');
         document.body.style.overflow = '';
         backdrop.removeEventListener('animationend', handler);
+        card.focus();
       });
     }
 
@@ -5356,7 +5358,7 @@ TIME TRAVEL</span>
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       closeOiPopup();
-      closeBloggoModal(); // calls window.closeBloggoModal set by the IIFE above
+      if (window.closeBloggoModal) window.closeBloggoModal(); // set by Bloggo modal IIFE
     }
   });
 
