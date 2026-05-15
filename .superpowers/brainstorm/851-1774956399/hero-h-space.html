@@ -991,6 +991,8 @@
   .work-card:hover .wc-arrow {
     color: var(--hero-green) !important;
   }
+  /* Bloggo card — clickable */
+  #work-card-bloggo { cursor: pointer; }
   /* Back button */
   .np-back {
     position: absolute; /* Place inside intro section flow at top */
@@ -2840,7 +2842,7 @@
       My<br><span class="green">Work.</span>
     </h2>
     <div class="work-grid">
-      <div class="work-card np-reveal" style="transition-delay:0.18s">
+      <div class="work-card np-reveal" id="work-card-bloggo" style="transition-delay:0.18s">
         <div class="wc-tag">Product / Social Platform</div>
         <div class="wc-title">BLOGGO</div>
         <div class="wc-desc">Developing a beta social writing platform focused on lightweight publishing, creator identity, and community discovery.</div>
