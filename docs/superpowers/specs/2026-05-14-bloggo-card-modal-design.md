@@ -15,8 +15,8 @@ When a user clicks the BLOGGO work card in the MY WORK section, a modal overlay 
 ## Trigger
 
 - **Interaction:** Click anywhere on the `.work-card` element whose `.wc-title` is "BLOGGO"
-- Other work cards remain non-interactive (no modal for them at this stage)
-- The existing hover style on `.work-card` already signals interactivity
+- The BLOGGO card gets `cursor: pointer` to signal interactivity
+- Other work cards are unchanged — no `cursor` override, no modal behaviour
 
 ---
 
@@ -27,8 +27,8 @@ When a user clicks the BLOGGO work card in the MY WORK section, a modal overlay 
 | Open trigger | Click on BLOGGO card |
 | Close trigger | Click outside modal, click ✕ button, press Escape |
 | Animation in | `opacity: 0→1` + `scale: 0.95→1`, 220ms ease-out |
-| Animation out | Reverse, remove from DOM after transition |
-| Scroll lock | Body scroll disabled while modal is open |
+| Animation out | Reverse animation plays, then modal is hidden via `display:none` (persistent DOM node toggled by class — not injected/removed) |
+| Scroll lock | `document.body.style.overflow = 'hidden'` on open; restored on close. No scrollbar-shift compensation needed (site body is `overflow: hidden` by default). |
 
 ---
 
@@ -48,7 +48,7 @@ Matches existing dark green terminal aesthetic throughout the site.
 
 ### Left Column
 - Tag: `Product / Social Platform` (green, uppercase, small caps)
-- Title: `BLOGGO` (Arial Black, large, white)
+- Title: `BLOGGO` (`font-family: 'Arial Black', Arial, sans-serif` — same stack already used by `.wc-title` throughout the work grid, so no new font loading required)
 - Description: "A local-first travel blogging platform that converts photo metadata into structured blog narratives — eliminating blank page anxiety for travelers."
 - CTA 1 (primary, filled green): **Try Beta Today** → `https://testflight.apple.com/join/RMzfPzCf`
 - CTA 2 (outlined): **Visit Website** → `https://bloggo.linkedspaces.com/`
@@ -78,6 +78,8 @@ Matches existing dark green terminal aesthetic throughout the site.
 |---|---|
 | ≥ 560px | Two-column grid |
 | < 560px | Single column — left stacked above right, border-top instead of border-left |
+
+Resize while open: the CSS media query handles layout reflow automatically. No JS resize listener is needed.
 
 ---
 
